@@ -7,12 +7,12 @@ import styles from "assets/jss/layout/main-menu-style.js";
 const useStyles = makeStyles(styles);
 
 export default function MainMenu({...rest}){
-
+    // styles 
     const classes = useStyles(); 
 
     return (
         <div className={classses.wrapper}>
-            
+            <Sie>
         </div>
     );
 } 
