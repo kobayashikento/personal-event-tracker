@@ -1,8 +1,7 @@
-const mainMenuStyle = theme => ({
-    wrapper: {
-        position: "relative",
-        height: "100vh"
-    },
+const drawerWidth = 240;
+
+const responsivedrawerStyle = theme => ({
+
     drawer: {
         [theme.breakpoints.up('sm')]: {
             width: drawerWidth,
@@ -21,7 +20,6 @@ const mainMenuStyle = theme => ({
             display: 'none',
         },
     },
-    // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
         width: drawerWidth,
@@ -31,5 +29,3 @@ const mainMenuStyle = theme => ({
         padding: theme.spacing(3),
     },
 });
-
-export default mainMenuStyle;
