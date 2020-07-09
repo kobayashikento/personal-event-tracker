@@ -14,8 +14,8 @@ const responsivedrawerStyle = theme => ({
             marginLeft: drawerWidth,
         },
     },
-    drawerButoon: {
-        marginRight: theme.spacing,
+    drawerButton: {
+        marginRight: theme.spacing(2),
         [theme.breakpoints.up('sm')]: {
             display: 'none',
         },
@@ -29,3 +29,5 @@ const responsivedrawerStyle = theme => ({
         padding: theme.spacing(3),
     },
 });
+
+export default responsivedrawerStyle;
