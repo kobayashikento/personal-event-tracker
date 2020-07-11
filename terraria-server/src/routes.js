@@ -22,7 +22,7 @@ const mainmenuRoutes = [
         icon: SettingsRoundedIcon
     }, 
     {
-        paht: "/manageplayer",
+        path: "/manageplayer",
         name: "ManagePlayer",
         component: ManagePlayerView,
         icon: SupervisedUserCircleRoundedIcon
