@@ -5,7 +5,7 @@ import SupervisedUserCircleRoundedIcon from '@material-ui/icons/SupervisedUserCi
 
 // import views 
 import DashBoardView from './views/DashBoardView.js';
-import ManagerServerView from './views/ManageServerView.js';
+import ManageServerView from './views/ManageServerView.js';
 import ManagePlayerView from './views/ManagePlayerView.js';
 
 const mainmenuRoutes = [

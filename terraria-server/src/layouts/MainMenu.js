@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ResponsiveDrawer from '../components/ResponsiveDrawer.js';
 import styles from '../assets/jss/layouts/mainMenuStyle.js';
 
-import routes from "./routes.js"; 
+import routes from "../routes.js"; 
 
 const useStyles = makeStyles(styles);
 
@@ -26,7 +26,7 @@ const switchRoutes = (
     </Switch>
 );
 
-export default function MainMenu({...rest}){
+export default function MainMenu(){
     // styles 
     const classes = useStyles(); 
     // states
@@ -34,9 +34,7 @@ export default function MainMenu({...rest}){
     return (
         <div className={classes.wrapper}>
             <ResponsiveDrawer
-                routes={routes}
-                open={mobileOpen}                
-                {...rest} 
+                routes={routes}          
             />
         </div>
     );

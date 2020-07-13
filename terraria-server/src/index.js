@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 
+// import layouts
 import MainMenu from './layouts/MainMenu.js';
-
 import './assets/css/index.css';
 
+const history = createBrowserHistory();
+
 ReactDOM.render(
-  <React.StrictMode>
-    <CssBaseline />
-    <MainMenu />
-  </React.StrictMode>,
+  <Router history={history}>
+    <Switch>
+      <Route path="/mainMenu" component={MainMenu} />
+      <Redirect from="/" to="/mainMenu/dashbaord" />
+    </Switch>
+  </Router>,
   document.getElementById('root')
 );
