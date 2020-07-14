@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createBrowserHistory } from "history";
+
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 // import layouts
@@ -12,7 +13,9 @@ const history = createBrowserHistory();
 ReactDOM.render(
   <Router history={history}>
     <Switch>
-      <Route path="/mainMenu" component={MainMenu} />
+      <Route path="/mainMenu">
+        <MainMenu />
+      </Route>
       <Redirect from="/" to="/mainMenu/dashbaord" />
     </Switch>
   </Router>,

@@ -32,10 +32,10 @@ export default function ResponsiveDrawer(props) {
     }
 
     // reccusively create the list items for the drawer
-    const drawerItems = (
-        <List className={classes.list}>
+    var drawerItems = (
+        <List className={classes.list}> 
             {routes.map((prop, key) => {
-                return (
+                return(
                     // create the href for the list item
                     <NavLink
                         to={"/main_menu" + prop.path}
@@ -43,31 +43,30 @@ export default function ResponsiveDrawer(props) {
                         activeClassname="selected"
                         key={key}
                     >
-                        <ListItem button className={classes.button + prop.name}>
+                        {/* <ListItem button className={classes.button + prop.name}>
                             <ListItemIcon>{prop.icon}</ListItemIcon>
                             <ListItemText primary={prop.name} />
-                        </ListItem>
+                        </ListItem> */}
                     </NavLink>
                 );
-            })};
+            })}
         </List>
     );
 
-    return (
-        <div>
-            <Hidden smUp implementation="css">
-                <Drawer
-                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                    classes={{ paper: classes.drawerPaper, }}
-                    onClose={handleDrawerToggle}
-                    variant="temporary"
-                    ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
-                    }}
-                >
-                    {drawerItems}
-                </Drawer>
-            </Hidden>
-        </div>
+    return (     
+        <Hidden smDown implementation="css">
+            {console.log(drawerItems)}
+            <Drawer
+                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                classes={{ paper: classes.drawerPaper}}
+                onClose={handleDrawerToggle}
+                variant="permanent"
+                ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                }}
+            >        
+            {drawerItems}           
+            </Drawer>
+        </Hidden>
     );
 }

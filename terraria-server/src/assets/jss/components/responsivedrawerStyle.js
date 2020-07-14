@@ -28,6 +28,28 @@ const responsivedrawerStyle = theme => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
+    list: {
+        marginTop: "20px",
+        paddingLeft: "0",
+        paddingTop: "0",
+        paddingBottom: "0",
+        marginBottom: "0",
+        listStyle: "none",
+        position: "unset"
+    },
+    item: {
+        position: "relative",
+        display: "block",
+        textDecoration: "none",
+    },
+    sidebarWrapper: {
+        position: "relative",
+        height: "calc(100vh - 75px)",
+        overflow: "auto",
+        width: "260px",
+        zIndex: "4",
+        overflowScrolling: "touch"
+      },
 });
 
 export default responsivedrawerStyle;
