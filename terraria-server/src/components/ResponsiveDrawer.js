@@ -47,9 +47,10 @@ export default function ResponsiveDrawer(props) {
                             key={prop.name}
                         >
                             <ListItemIcon>
-                                {prop.icon}
+                                <prop.icon />
                             </ListItemIcon>
                             <ListItem primary={prop.name} />
+                            {console.log(prop.name)}
                         </ListItem>
                     </NavLink>
                 );
@@ -59,7 +60,6 @@ export default function ResponsiveDrawer(props) {
 
     return (
         <Hidden smDown implementation="css">
-            {console.log(drawerItems)}
             <Drawer
                 anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                 classes={{ paper: classes.drawerPaper }}
