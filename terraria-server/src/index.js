@@ -6,6 +6,7 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 // import layouts
 import MainMenu from './layouts/MainMenu.js';
+
 import './assets/css/index.css';
 
 const history = createBrowserHistory();

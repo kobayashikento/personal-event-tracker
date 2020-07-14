@@ -2,12 +2,12 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 // import material-ui/cores
-import Icon from '@material-ui/core/Icon';
+import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListitemIcon';
+import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
-import { AppBar, Toolbar, useTheme, Hidden, Drawer } from '@material-ui/core';
+import { useTheme, Hidden, Drawer } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
 import styles from 'assets/jss/components/responsivedrawerStyle.js';
@@ -42,15 +42,12 @@ export default function ResponsiveDrawer(props) {
                         className={classes.item}
                         key={key}
                     >
-                        <ListItem button 
-                            className={classes.drawerButton}
+                        <ListItem button
+                            // className={classes.drawerButton}
                             key={prop.name}
                         >
-                            <ListItemIcon>
-                                <prop.icon />
-                            </ListItemIcon>
-                            <ListItem primary={prop.name} />
-                            {console.log(prop.name)}
+                            <prop.icon />
+                            <ListItemText primary={prop.name} />
                         </ListItem>
                     </NavLink>
                 );
@@ -69,6 +66,13 @@ export default function ResponsiveDrawer(props) {
                     keepMounted: true, // Better open performance on mobile.
                 }}
             >
+                <Typography 
+                    className={ classes.webName }
+                    variant="h6"
+                >
+                    Some Clever Title
+                </Typography>
+                <Divider />
                 {drawerItems}
             </Drawer>
         </Hidden>
