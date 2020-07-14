@@ -11,19 +11,19 @@ import ManagePlayerView from './views/ManagePlayerView.js';
 const mainmenuRoutes = [
     {
         path: "/dashboard",
-        name: "DashBoard",
+        name: "Dashboard",
         component: DashBoardView,
         icon: DashboardRoundedIcon
     },
     {
         path: "/manageserver",
-        name: "ManageServer",
+        name: "Manage Server",
         compoenent: ManageServerView, 
         icon: SettingsRoundedIcon
     }, 
     {
         path: "/manageplayer",
-        name: "ManagePlayer",
+        name: "Manage Player",
         component: ManagePlayerView,
         icon: SupervisedUserCircleRoundedIcon
     }

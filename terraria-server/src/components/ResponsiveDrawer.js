@@ -43,11 +43,16 @@ export default function ResponsiveDrawer(props) {
                         key={key}
                     >
                         <ListItem button
-                            // className={classes.drawerButton}
+                            className={classes.drawerButton}
                             key={prop.name}
                         >
-                            <prop.icon />
-                            <ListItemText primary={prop.name} />
+                            <prop.icon
+                                className={classes.drawerIcon}
+                                fontSize="large"
+                            />
+                            <ListItemText
+                                primary={prop.name}
+                            />
                         </ListItem>
                     </NavLink>
                 );
@@ -66,13 +71,13 @@ export default function ResponsiveDrawer(props) {
                     keepMounted: true, // Better open performance on mobile.
                 }}
             >
-                <Typography 
-                    className={ classes.webName }
+                <Typography
+                    className={classes.webName}
                     variant="h6"
                 >
                     Some Clever Title
                 </Typography>
-                <Divider />
+                <Divider variant="middle"/>
                 {drawerItems}
             </Drawer>
         </Hidden>
