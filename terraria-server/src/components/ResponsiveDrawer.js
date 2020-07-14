@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 // import material-ui/cores
-import Divider from '@material-ui/core/Divider';
+import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListitemIcon';
@@ -33,39 +33,43 @@ export default function ResponsiveDrawer(props) {
 
     // reccusively create the list items for the drawer
     var drawerItems = (
-        <List className={classes.list}> 
+        <List className={classes.list}>
             {routes.map((prop, key) => {
-                return(
+                return (
                     // create the href for the list item
                     <NavLink
                         to={"/main_menu" + prop.path}
-                        className={prop.path + classes.item}
-                        activeClassname="selected"
+                        className={classes.item}
                         key={key}
                     >
-                        {/* <ListItem button className={classes.button + prop.name}>
-                            <ListItemIcon>{prop.icon}</ListItemIcon>
-                            <ListItemText primary={prop.name} />
-                        </ListItem> */}
+                        <ListItem button 
+                            className={classes.drawerButton}
+                            key={prop.name}
+                        >
+                            <ListItemIcon>
+                                {prop.icon}
+                            </ListItemIcon>
+                            <ListItem primary={prop.name} />
+                        </ListItem>
                     </NavLink>
                 );
             })}
         </List>
     );
 
-    return (     
+    return (
         <Hidden smDown implementation="css">
             {console.log(drawerItems)}
             <Drawer
                 anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                classes={{ paper: classes.drawerPaper}}
+                classes={{ paper: classes.drawerPaper }}
                 onClose={handleDrawerToggle}
                 variant="permanent"
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
                 }}
-            >        
-            {drawerItems}           
+            >
+                {drawerItems}
             </Drawer>
         </Hidden>
     );
