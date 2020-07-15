@@ -11,6 +11,7 @@ import ManagePlayerView from './views/ManagePlayerView.js';
 const mainmenuRoutes = [
     {
         path: "/dashboard",
+        exact: true,
         name: "Dashboard",
         component: DashBoardView,
         icon: DashboardRoundedIcon

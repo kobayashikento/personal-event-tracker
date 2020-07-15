@@ -14,10 +14,10 @@ const history = createBrowserHistory();
 ReactDOM.render(
   <Router history={history}>
     <Switch>
-      <Route path="/main_menu">
+      <Route path="/mainmenu">
         <MainMenu />
       </Route>
-      <Redirect from="/" to="/main_menu/dashbaord" />
+      <Redirect from="/" to="/mainmenu/dashboard" />
     </Switch>
   </Router>,
   document.getElementById('root')

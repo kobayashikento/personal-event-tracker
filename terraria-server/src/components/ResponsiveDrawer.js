@@ -17,34 +17,39 @@ const useStyles = makeStyles(styles);
 
 export default function ResponsiveDrawer(props) {
     const classes = useStyles();
-    // still done understand the purpose of the line of code below 
+    // still dont understand the purpose of the line of code below 
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    // set states 
+    const [selectedIndex, setSelectedIndex] = React.useState(1);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     }
 
-    // check if the current item is selected. this fucntion is necessary
-    // for highlighting the item when seleceted 
-    function activeRoute(routeName) {
-        return window.location.href.indexOf(routeName) > -1 ? true : false;
-    }
+    // handle onclick 
+    const handleListItemClick = (event, index) => {
+        setSelectedIndex(index);
+      };
 
     // reccusively create the list items for the drawer
     var drawerItems = (
         <List className={classes.list}>
-            {routes.map((prop, key) => {
+            {routes.map((prop, index) => {
                 return (
                     // create the href for the list item
                     <NavLink
-                        to={"/main_menu" + prop.path}
+                        to={"/mainmenu" + prop.path}
                         className={classes.item}
-                        key={key}
+                        key={index}
                     >
-                        <ListItem button
+                        <ListItem 
+                            button
                             className={classes.drawerButton}
                             key={prop.name}
+                            selected={selectedIndex === index}
+                            onClick={(event) => handleListItemClick(event, index)}
                         >
                             <prop.icon
                                 className={classes.drawerIcon}

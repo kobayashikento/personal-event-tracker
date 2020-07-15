@@ -12,14 +12,12 @@ const useStyles = makeStyles(styles);
 
 const switchRoutes = (
     <Switch> 
-        {routes.map((prop, key) => {
+        {routes.map((prop, index) => {
             return ( 
                 <Route
-                    path={"/main_menu" + prop.path}
-                    // links the path to the specific view
-                    component={prop.comdponent}
-                    // keys help react identify changed elements 
-                    key={key}
+                    key={index}
+                    path={"/mainmenu" + prop.path}
+                    exact={routes.exact}                 
                 />
             );
         })}
@@ -36,6 +34,7 @@ export default function MainMenu(){
             <ResponsiveDrawer
                 routes={routes}          
             />
+            <div>{switchRoutes}</div>
         </div>
     );
 } 
