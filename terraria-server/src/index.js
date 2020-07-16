@@ -13,12 +13,8 @@ const history = createBrowserHistory();
 
 ReactDOM.render(
   <Router history={history}>
-    <Switch>
-      <Route path="/mainmenu">
-        <MainMenu />
-      </Route>
-      <Redirect from="/" to="/mainmenu/dashboard" />
-    </Switch>
+      <Route path="/main-menu" component={MainMenu}/>
+      <Redirect from="/" to="/main-menu/dashboard" /> 
   </Router>,
   document.getElementById('root')
-);
+  );

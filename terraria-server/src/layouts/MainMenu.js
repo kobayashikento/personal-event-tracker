@@ -16,8 +16,7 @@ const switchRoutes = (
             return ( 
                 <Route
                     key={index}
-                    path={"/mainmenu" + prop.path}
-                    exact={routes.exact}                 
+                    path={"/mainmenu" + prop.path}             
                 />
             );
         })}
@@ -31,10 +30,11 @@ export default function MainMenu(){
 
     return (
         <div className={classes.wrapper}>
-            <ResponsiveDrawer
+            <a>HELLLO</a>
+            {/* <ResponsiveDrawer
                 routes={routes}          
-            />
-            <div>{switchRoutes}</div>
+            /> */}
+            {/* <div>{switchRoutes}</div> */}
         </div>
     );
 } 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // import material-ui/cores
 import Typography from '@material-ui/core/Typography';
@@ -39,8 +39,8 @@ export default function ResponsiveDrawer(props) {
             {routes.map((prop, index) => {
                 return (
                     // create the href for the list item
-                    <NavLink
-                        to={"/mainmenu" + prop.path}
+                    <Link
+                        to={"/main-menu" + prop.path}
                         className={classes.item}
                         key={index}
                     >
@@ -59,7 +59,7 @@ export default function ResponsiveDrawer(props) {
                                 primary={prop.name}
                             />
                         </ListItem>
-                    </NavLink>
+                    </Link>
                 );
             })}
         </List>
