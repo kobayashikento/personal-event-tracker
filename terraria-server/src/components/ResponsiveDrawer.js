@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 
 // import material-ui/cores
 import Typography from '@material-ui/core/Typography';
@@ -7,18 +8,22 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
-import { useTheme, Hidden, Drawer } from '@material-ui/core';
+import { Hidden, Drawer } from '@material-ui/core';
 
+// import styles 
 import { makeStyles } from '@material-ui/core/styles';
-import styles from 'assets/jss/components/responsivedrawerStyle.js';
+import styles from 'assets/jss/responsivedrawerStyle.js';
+import { createMuiTheme } from '@material-ui/core/styles';
+
 import routes from '../routes.js';
 
 const useStyles = makeStyles(styles);
 
+
+
 export default function ResponsiveDrawer(props) {
     const classes = useStyles();
-    // still dont understand the purpose of the line of code below 
-    const theme = useTheme();
+
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     // set states 
@@ -31,11 +36,11 @@ export default function ResponsiveDrawer(props) {
     // handle onclick 
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
-      };
+    };
 
     // reccusively create the list items for the drawer
     var drawerItems = (
-        <List className={classes.list}>
+        <List className={classes.list}> 
             {routes.map((prop, index) => {
                 return (
                     // create the href for the list item
@@ -44,11 +49,13 @@ export default function ResponsiveDrawer(props) {
                         className={classes.item}
                         key={index}
                     >
-                        <ListItem 
+                        <ListItem
                             button
-                            className={classes.drawerButton}
-                            key={prop.name}
                             selected={selectedIndex === index}
+                            className={classNames(
+                                classes.drawerButton
+                            )}
+                            key={prop.name}
                             onClick={(event) => handleListItemClick(event, index)}
                         >
                             <prop.icon
@@ -56,6 +63,8 @@ export default function ResponsiveDrawer(props) {
                                 fontSize="large"
                             />
                             <ListItemText
+                                disableTypography
+                                className={classes.listText}
                                 primary={prop.name}
                             />
                         </ListItem>
@@ -68,7 +77,6 @@ export default function ResponsiveDrawer(props) {
     return (
         <Hidden smDown implementation="css">
             <Drawer
-                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                 classes={{ paper: classes.drawerPaper }}
                 onClose={handleDrawerToggle}
                 variant="permanent"
@@ -82,7 +90,7 @@ export default function ResponsiveDrawer(props) {
                 >
                     Some Clever Title
                 </Typography>
-                <Divider variant="middle"/>
+                <Divider variant="middle" />
                 {drawerItems}
             </Drawer>
         </Hidden>
