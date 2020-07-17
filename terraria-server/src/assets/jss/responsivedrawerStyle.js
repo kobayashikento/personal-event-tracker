@@ -1,5 +1,5 @@
 
-import bg from '../images/black-building-under-white-sky.jpg';
+// import bg from '../images/black-building-under-white-sky.jpg';
 import bg1 from '../images/mountain-scenery-1450082.jpg';
 
 const responsivedrawerStyle = theme => ({
@@ -40,6 +40,7 @@ const responsivedrawerStyle = theme => ({
         color: "black",
         align: "center",
         boxShadow: "0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)",
+        borderRadius: "5px",
     },
     drawerIcon: {
         float: "left",

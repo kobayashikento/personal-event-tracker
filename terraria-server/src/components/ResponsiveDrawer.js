@@ -13,7 +13,6 @@ import { Hidden, Drawer } from '@material-ui/core';
 // import styles 
 import { makeStyles } from '@material-ui/core/styles';
 import styles from 'assets/jss/responsivedrawerStyle.js';
-import { createMuiTheme } from '@material-ui/core/styles';
 
 import routes from '../routes.js';
 
@@ -27,7 +26,7 @@ export default function ResponsiveDrawer(props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     // set states 
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -40,7 +39,7 @@ export default function ResponsiveDrawer(props) {
 
     // reccusively create the list items for the drawer
     var drawerItems = (
-        <List className={classes.list}> 
+        <List className={classes.list}>
             {routes.map((prop, index) => {
                 return (
                     // create the href for the list item
@@ -52,9 +51,9 @@ export default function ResponsiveDrawer(props) {
                         <ListItem
                             button
                             selected={selectedIndex === index}
-                            className={classNames(
-                                classes.drawerButton
-                            )}
+                            className={
+                                classNames(classes.drawerButton)
+                            }
                             key={prop.name}
                             onClick={(event) => handleListItemClick(event, index)}
                         >

@@ -36,7 +36,9 @@ export default function MainMenu() {
         overrides: {
             MuiListItem: {
                 root: {
-                    "&$selected": { backgroundColor: "orange" }
+                    "&$selected": {
+                        backgroundColor: "rgba(68,100,145,0.6)",
+                    },
                 }
             }
         }
