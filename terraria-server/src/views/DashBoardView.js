@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function DashBoardView(){
+export default function DashBoardView() {
     return (
     <div>
-        HELLLO
+        Dashboard
         </div>
     );
 }

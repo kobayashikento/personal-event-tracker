@@ -1,15 +1,21 @@
-
 // import bg from '../images/black-building-under-white-sky.jpg';
-import bg1 from '../images/mountain-scenery-1450082.jpg';
+// import bg1 from '../images/mountain-scenery-1450082.jpg';
+
+const drawerWidth="260px";
 
 const responsivedrawerStyle = theme => ({
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
     drawerPaper: {
-        width: "250px",
-        backgroundImage: `url(${bg1})`,
+        width: drawerWidth,
+        flexShrink: 0,
+        backgroundColor: "rgba(45,51,50,1)",
         backgroundSize: "cover",
     },
     list: {
-        marginTop: "0",
+        marginTop: "10px",
         paddingLeft: "0",
         paddingTop: "0",
         paddingBottom: "0",
@@ -24,10 +30,10 @@ const responsivedrawerStyle = theme => ({
     },
     webName: {
         display: "block",
-        margin: "5px",
         padding: "30px",
         textAlign: "center",
-        color: "black",
+        color: "white",
+        height: "80px",
     },
     drawerButton: {
         width: "auto",
@@ -37,7 +43,7 @@ const responsivedrawerStyle = theme => ({
         marginTop: "30px",
         marginBottom: "30px",
         padding: "5px",
-        color: "black",
+        color: "white",
         align: "center",
         boxShadow: "0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)",
         borderRadius: "5px",
@@ -49,7 +55,7 @@ const responsivedrawerStyle = theme => ({
     },
     listText: {
         paddingTop: "3px",
-        fontSize: "20px",
+        fontSize: "18px",
     },
 });
 
