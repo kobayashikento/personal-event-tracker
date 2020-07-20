@@ -7,7 +7,7 @@ import { Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import assests 
-import styles from 'assets/jss/appbarStyle.js';
+import styles from '../assets/jss/components/appbarStyle.js';
 
 
 const useStyles = makeStyles(styles);

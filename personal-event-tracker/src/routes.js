@@ -1,14 +1,14 @@
 // import material-ui/icons
 import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
 //import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
-import SupervisedUserCircleRoundedIcon from '@material-ui/icons/SupervisedUserCircleRounded';
+import StraightenIcon from '@material-ui/icons/Straighten';
 import TuneIcon from '@material-ui/icons/Tune';
-import StorageIcon from '@material-ui/icons/Storage';
+import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 
 // import views 
 import DashBoardView from './views/DashBoardView.js';
-import ManageServerView from './views/ManageServerView.js';
-import ManagePlayerView from './views/ManagePlayerView.js';
+import PianoView from './views/PianoView.js';
+import GymView from './views/GymView.js';
 import ManageThemeView from './views/ManageThemeView.js';
 
 const mainmenuRoutes = [
@@ -16,22 +16,22 @@ const mainmenuRoutes = [
         path: "/main-menu/dashboard",
         name: "Dashboard",
         component: DashBoardView,
-        icon: DashboardRoundedIcon
+        icon: DashboardRoundedIcon,
     },
     {
-        path: "/main-menu/manage-server",
-        name: "Manage Server",
-        compoenent: ManageServerView, 
-        icon: StorageIcon
+        path: "/main-menu/gym",
+        name: "Gym Progress",
+        compoenent: PianoView, 
+        icon: FitnessCenterIcon,
     }, 
     {
-        path: "/main-menu/manage-player",
-        name: "Manage Player",
-        component: ManagePlayerView,
-        icon: SupervisedUserCircleRoundedIcon
+        path: "/main-menu/piano",
+        name: "Piano Progress",
+        component: GymView,
+        icon: StraightenIcon,
     },
     {
-        path: "/main-menu/manage-theme",
+        path: "/main-menu/theme",
         name: "Manage Theme",
         component: ManageThemeView,
         icon: TuneIcon

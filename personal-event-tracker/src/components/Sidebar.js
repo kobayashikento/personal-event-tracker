@@ -14,7 +14,7 @@ import { Hidden, Drawer } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import files 
-import styles from 'assets/jss/sidebarStyle.js';
+import styles from '../assets/jss/components/sidebarStyle.js';
 
 const useStyles = makeStyles(styles);
 
@@ -88,7 +88,7 @@ export default function SideBar(props) {
                     className={classes.webName}
                     variant="h6"
                 >
-                    Some Clever Title
+                    Record Keeper
                 </Typography>
                 <Divider variant="middle" />
                 {drawerItems}

@@ -1,5 +1,5 @@
 // import bg from '../images/black-building-under-white-sky.jpg';
-import bg1 from '../images/mountain-scenery-1450082.jpg';
+import bg1 from '../../images/mountain-scenery-1450082.jpg';
 
 const drawerWidth="260px";
 
@@ -34,8 +34,9 @@ const responsivedrawerStyle = theme => ({
         display: "block",
         padding: "30px",
         textAlign: "center",
-        color: "white",
+        color: "rgba(16,88,88,1)",
         height: "80px",
+        textSize: "25px",
     },
     drawerButton: {
         width: "auto",

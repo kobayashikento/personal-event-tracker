@@ -12,7 +12,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // import files 
 import Sidebar from './Sidebar.js';
 import Header from './Appbar.js';
-import styles from '../assets/jss/mainmenuStyle.js';
+import Dashboard from '../views/DashBoardView.js';
+import styles from '../assets/jss/components/mainmenuStyle.js';
 
 import routes from '../routes.js';
 
@@ -60,6 +61,9 @@ export default function MainMenu() {
                 <Sidebar
                     routes={routes}
                 />
+                <div className={classes.maincontainer}>
+                    <Dashboard />
+                </div>
                 {/* {switchRoutes} */}
             </div>
         </MuiThemeProvider>
