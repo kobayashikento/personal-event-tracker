@@ -1,4 +1,4 @@
-const drawerWidth="260px";
+const drawerWidth="280px";
 const appbarHeight="80px";
 
 const mainMenuStyle = theme => ({

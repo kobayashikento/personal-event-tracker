@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(styles);
 
-export default function App() {
+export default function Cal() {
     const classes = useStyles();
     const [value, onChange] = useState(new Date());
 
@@ -17,6 +17,7 @@ export default function App() {
                 className={classes.wrapper}
                 onChange={onChange}
                 value={value}
+                border="none"
             />
         </div>
     );
