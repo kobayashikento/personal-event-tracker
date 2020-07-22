@@ -9,7 +9,7 @@ const dashboardStyle = theme => ({
         height: "100%",
     },
     grid: {
-        paddingTop: "40px",
+        padding: "40px",
     }
 });
 

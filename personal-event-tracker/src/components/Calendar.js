@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
-// import packages
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
- 
-const localizer = momentLocalizer(moment)
- 
-const MyCalendar = props => (
-  <div>
-    <Calendar
-      localizer={localizer}
-      events={myEventsList}
-      startAccessor="start"
-      endAccessor="end"
-      style={{ height: 500 }}
-    />
-  </div>
-)
+import styles from '../assets/jss/components/calendarStyle.js';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default MyCalendar;
+const useStyles = makeStyles(styles);
+
+export default function App() {
+    const classes = useStyles();
+    const [value, onChange] = useState(new Date());
+
+    return (
+        <div>
+            <Calendar
+                className={classes.wrapper}
+                onChange={onChange}
+                value={value}
+            />
+        </div>
+    );
+}

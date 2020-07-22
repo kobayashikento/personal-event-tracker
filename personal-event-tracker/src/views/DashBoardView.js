@@ -5,8 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-// import js files 
+// import dashbaord componenets files 
 import Calendar from '../components/Calendar.js';
+import ProgressCalendar from '../components/ProgressCalendar.js';
 
 import styles from '../assets/jss/views/dashboardStyle.js';
 
@@ -17,23 +18,23 @@ export default function DashBoardView() {
 
     return (
         // implement gird with breakpoints to adjust for chagne in window size 
-        <Grid 
-            container 
+        <Grid
+            container
             justify="space-evenly"
-            alignItems="flex-start"
+            alignItems="center"
             className={classes.grid}
+            spacing={5}
         >
-            <Grid item xs={6} sm={3}>
-               <Paper className={classes.paper}>
-                    <Calendar/>
-                   </Paper>
+            <Grid item xs={8}>
+                <Paper className={classes.paper} elevation={3}>
+                    {/* <ProgressCalendar /> */}
+                </Paper>
             </Grid>
-            <Grid item xs={6} sm={3}>
-               <Paper className={classes.paper}>xs=6 sm=3</Paper>
-            </Grid>
-            <Grid item xs={6} sm={3}>
-               <Paper className={classes.paper}>xs=6 sm=3</Paper>
-            </Grid>
+            <Grid item xs={4} >
+                <Paper className={classes.paper} elevation={3}>
+                    <Calendar />
+                </Paper>
+            </Grid>            
         </Grid>
     );
 }
