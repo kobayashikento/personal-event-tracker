@@ -6,7 +6,12 @@ const dashboardStyle = theme => ({
         textAlign: "center",
     },
     paperProgressCalendar: {
-        padding: "10px",
+        padding: "0px",
+        textAlign: "center",
+        height: "350px",
+    },
+    paperLineGraph: {
+        padding: "0px",
         textAlign: "center",
         height: "350px",
     },
@@ -14,7 +19,7 @@ const dashboardStyle = theme => ({
         height: "100%",
     },
     grid: {
-        padding: "40px",
+        padding: "20px",
     },
     calTitle: {
         paddingTop: "30px",
