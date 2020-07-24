@@ -25,7 +25,7 @@ export default function SideBar(props) {
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
-    // set states 
+    // set states, index corresponds to the list index 
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     const handleDrawerToggle = () => {

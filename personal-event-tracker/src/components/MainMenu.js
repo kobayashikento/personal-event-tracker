@@ -27,6 +27,7 @@ const switchRoutes = (
                     path={prop.path}
                     component={prop.component}
                 >
+                   
                 </Route>
             );
         })}

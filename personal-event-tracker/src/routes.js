@@ -21,7 +21,7 @@ const mainmenuRoutes = [
     {
         path: "/main-menu/gym",
         name: "Gym",
-        compoenent: GymView, 
+        component: GymView, 
         icon: FitnessCenterIcon,
     }, 
     {
