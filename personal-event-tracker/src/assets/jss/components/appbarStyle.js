@@ -1,11 +1,15 @@
-const drawerWidth="260px";
+import { 
+    drawerWidth,
+    primaryColor,
+    appbarHeight,
+} from '../masterStyle.js';
 
 const appbarStyle = theme => ({
     appBar: {
         width: `calc(100% - ${drawerWidth})`,
         marginLeft: drawerWidth,
-        height: "80px",
-        backgroundColor: "rgba(16,88,88,1)",
+        height: appbarHeight,
+        backgroundColor: primaryColor,
     },
     appText: {
         marginLeft: "20px",

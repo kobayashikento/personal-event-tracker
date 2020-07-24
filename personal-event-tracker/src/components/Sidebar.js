@@ -39,60 +39,61 @@ export default function SideBar(props) {
 
     // reccusively create the list items for the drawer
     var drawerItems = (
-            <List className={classes.list}>
-                {props.routes.map((prop, index) => {
-                    return (
-                        // create the href for the list item
-                        <Link
-                            to={prop.path}
-                            className={classes.item}
-                            key={index}
+        <List className={classes.list}>
+            {props.routes.map((prop, index) => {
+                return (
+                    // create the href for the list item
+                    <Link
+                        to={prop.path}
+                        className={classes.item}
+                        key={index}
+                    >
+                        <ListItem
+                            button
+                            selected={selectedIndex === index}
+                            className={
+                                classNames(classes.drawerButton)
+                            }
+                            key={prop.name}
+                            onClick={(event) => handleListItemClick(event, index)}
                         >
-                            <ListItem
-                                button
-                                selected={selectedIndex === index}
-                                className={
-                                    classNames(classes.drawerButton)
-                                }
-                                key={prop.name}
-                                onClick={(event) => handleListItemClick(event, index)}
-                            >
-                                <prop.icon
-                                    className={classes.drawerIcon}
-                                    fontSize="large"
-                                />
-                                <ListItemText
-                                    disableTypography
-                                    className={classes.listText}
-                                    primary={prop.name}
-                                />
-                            </ListItem>
-                        </Link>
-                    );
-                })}
-            </List>
+                            <prop.icon
+                                className={classes.buttonIcon}
+                                fontSize="large"
+                            />
+                            <ListItemText
+                                disableTypography
+                                className={classes.buttonText}
+                                primary={prop.name}
+                            />
+                        </ListItem>
+                    </Link>
+                );
+            })}
+        </List>
     );
 
     return (
-        <Hidden smDown implementation="css">
-            <Drawer
-                className={classes.drawer}
-                classes={{ paper: classes.drawerPaper }}
-                onClose={handleDrawerToggle}
-                variant="permanent"
-                ModalProps={{
-                    keepMounted: true, // Better open performance on mobile.
-                }}
-            >
-                <Typography
-                    className={classes.webName}
-                    variant="h6"
+        <div className={classes.wrapper}>
+            <Hidden smDown implementation="css">
+                <Drawer
+                    classes={{ paper: classes.drawerPaper }}
+                    onClose={handleDrawerToggle}
+                    variant="permanent"
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
                 >
-                    Record Keeper
+                    <Typography
+                        className={classes.sidebarTitle}
+                        variant="h6"
+                    >
+                        Record Keeper
                 </Typography>
-                <Divider variant="middle" />
-                {drawerItems}
-            </Drawer>
-        </Hidden>
+                    <Divider variant="middle" />
+                    {drawerItems}
+                </Drawer>
+            </Hidden>
+        </div>
     );
 }

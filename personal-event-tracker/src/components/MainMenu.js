@@ -1,8 +1,7 @@
 import React from 'react';
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 // import styles
-import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 
@@ -11,9 +10,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 // import files 
 import Sidebar from './Sidebar.js';
-import Header from './Appbar.js';
-import Dashboard from '../views/DashBoardView.js';
+import Appbar from './Appbar.js';
 import styles from '../assets/jss/components/mainmenuStyle.js';
+import {theme1} from '../assets/jss/masterStyle.js';
 
 import routes from '../routes.js';
 
@@ -26,45 +25,30 @@ const switchRoutes = (
                 <Route
                     key={index}
                     path={prop.path}
-                    render={() => <prop.component />}
-                />
+                    component={prop.component}
+                >
+                </Route>
             );
         })}
     </Switch>
 );
 
-const theme = createMuiTheme({
-    typography: {
-        fontFamily: 'Roboto',
-    },
-    overrides: {
-        MuiListItem: {
-            root: {
-                "&$selected": {
-                    backgroundColor: "rgba(16,88,88,0.8)",
-                },
-            }
-        }
-    }
-});
-
 export default function MainMenu() {
     const classes = useStyles();
 
     return (
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={theme1}>
             <CssBaseline />
             <div className={classes.wrapper}>
-                <Header
+                <Appbar
                     routes={routes}
                 />
                 <Sidebar
                     routes={routes}
-                />
-                <div className={classes.maincontainer}>
-                    <Dashboard />
-                </div>
-                {/* {switchRoutes} */}
+                />         
+                <div className={classes.contentsWrapper}>
+                    {switchRoutes}  
+                </div>            
             </div>
         </MuiThemeProvider>
     );

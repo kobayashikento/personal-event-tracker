@@ -20,14 +20,14 @@ const mainmenuRoutes = [
     },
     {
         path: "/main-menu/gym",
-        name: "Gym Progress",
-        compoenent: PianoView, 
+        name: "Gym",
+        compoenent: GymView, 
         icon: FitnessCenterIcon,
     }, 
     {
         path: "/main-menu/piano",
-        name: "Piano Progress",
-        component: GymView,
+        name: "Piano",
+        component: PianoView,
         icon: StraightenIcon,
     },
     {

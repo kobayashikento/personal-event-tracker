@@ -1,15 +1,14 @@
-const drawerWidth="280px";
-const appbarHeight="80px";
+import {
+    drawerWidth,
+    appbarHeight,
+} from '../masterStyle.js'
 
 const mainMenuStyle = theme => ({
     wrapper: {
         position: "relative",
         top: "0",
-        height: "100%",
     },
-    maincontainer: {
-        width: `calc(100% - ${drawerWidth})`,
-        height: `calc(100% - ${appbarHeight})`,
+    contentsWrapper: {       
         marginLeft: drawerWidth,
         marginTop: appbarHeight,
     },

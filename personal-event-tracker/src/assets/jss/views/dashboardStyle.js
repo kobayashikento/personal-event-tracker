@@ -1,6 +1,11 @@
-const appbarHeight="80px";
+import {
+    appbarHeight,
+} from '../masterStyle.js';
 
 const dashboardStyle = theme => ({
+    container: {
+        height: `calc(100% - ${appbarHeight})`,
+    },
     paperNormalCalendar: {
         padding: theme.spacing(3),
         textAlign: "center",

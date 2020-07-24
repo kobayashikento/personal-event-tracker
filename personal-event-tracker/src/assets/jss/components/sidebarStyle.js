@@ -1,18 +1,26 @@
-// import bg from '../images/black-building-under-white-sky.jpg';
-import bg1 from '../../images/mountain-scenery-1450082.jpg';
-
-const drawerWidth="260px";
+import {
+    bg1,
+    drawerWidth,
+    primaryColor,
+} from '../masterStyle.js';
 
 const responsivedrawerStyle = theme => ({
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
+    wrapper: {
+        display: "flex",
+    },
+    sidebarTitle: {
+        display: "block",
+        padding: "30px",
+        textAlign: "center",
+        color: primaryColor,
+        height: "80px",
+        textSize: "25px",
     },
     drawerPaper: {
         width: drawerWidth,
-        flexShrink: 0,
+        borderRightWidth: "0px",
+        right: "0px",
         backgroundImage: `url(${bg1})`,
-        //"rgba(45,51,50,0.8)",
         backgroundSize: "cover",
         boxShadow: "0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)",
     },
@@ -30,14 +38,6 @@ const responsivedrawerStyle = theme => ({
         display: "block",
         textDecoration: "none",
     },
-    webName: {
-        display: "block",
-        padding: "30px",
-        textAlign: "center",
-        color: "rgba(16,88,88,1)",
-        height: "80px",
-        textSize: "25px",
-    },
     drawerButton: {
         width: "auto",
         display: "block",
@@ -51,12 +51,12 @@ const responsivedrawerStyle = theme => ({
         boxShadow: "0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)",
         borderRadius: "5px",
     },
-    drawerIcon: {
+    buttonIcon: {
         float: "left",
         textAlign: "center",
         marginRight: "10px",
     },
-    listText: {
+    buttonText: {
         paddingTop: "3px",
         fontSize: "18px",
     },
