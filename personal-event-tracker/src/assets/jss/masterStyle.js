@@ -20,6 +20,10 @@ const theme1 = createMuiTheme({
             }
         },
         MuiGrid: {
+            "spacing-xs-4":{
+                width: "100%",
+                margin: "0px"
+            }
         }
     }
 });
