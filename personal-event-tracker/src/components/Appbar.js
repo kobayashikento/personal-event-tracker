@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 // import assests 
 import styles from 'assets/jss/components/appbarStyle.js';
 
-
 const useStyles = makeStyles(styles);
 
 export default function Appbar(prop) {

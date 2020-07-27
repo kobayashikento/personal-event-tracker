@@ -27,9 +27,9 @@ export default function DashBoardView() {
             >
                 <Grid item xs={9} sm={9}>
                     <Paper className={classes.paperCalendar} elevation={3}>
-                    <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
-                        <Calendar 
-                            margin={{ top:60, right: 40, bottom: 40, left: 40 }}
+                        <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
+                        <Calendar
+                            margin={{ top: 60, right: 40, bottom: 40, left: 40 }}
                             align="top"
                             translateY={-40}
                             itemTextColor="transparent"
@@ -39,7 +39,10 @@ export default function DashBoardView() {
                 </Grid>
                 <Grid item xs={3} sm={3}>
                     <Paper elevation={3}>
-                        <Typography className={classes.listTitle} variant="h6">Activity</Typography>
+                        <Paper elevation={3}>
+                            <Typography className={classes.listTitle} variant="h6">Activity</Typography>
+                        </Paper>
+                        
                     </Paper>
                 </Grid>
             </Grid>
