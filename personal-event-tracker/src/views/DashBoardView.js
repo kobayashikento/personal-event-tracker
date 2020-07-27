@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 
 // import dashbaord componenets files 
 import Calendar from '../components/ProgressCalendar.js';
-
 import styles from '../assets/jss/views/dashboardStyle.js';
+import CalendarList from '../components/list/DashList.js';
 
 const useStyles = makeStyles(styles);
 
@@ -25,7 +25,7 @@ export default function DashBoardView() {
                 className={classes.grid}
                 spacing={4}
             >
-                <Grid item xs={9} sm={9}>
+                <Grid item xs={10} sm={10}>
                     <Paper className={classes.paperCalendar} elevation={3}>
                         <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
                         <Calendar
@@ -37,12 +37,11 @@ export default function DashBoardView() {
                         />
                     </Paper>
                 </Grid>
-                <Grid item xs={3} sm={3}>
+                <Grid item xs={2} sm={2}>
                     <Paper elevation={3}>
-                        <Paper elevation={3}>
-                            <Typography className={classes.listTitle} variant="h6">Activity</Typography>
-                        </Paper>
-                        
+                       <CalendarList 
+
+                       />
                     </Paper>
                 </Grid>
             </Grid>

@@ -7,9 +7,6 @@ const dashboardStyle = theme => ({
         textAlign: "center",
         height: "350px",
     },
-    listTitle: {
-        textAlign: "center",
-    },
     calTitle: {
         paddingTop: "30px",
     },
