@@ -30,7 +30,11 @@ export default function GymView() {
                 <Grid item xs={12} >
                     <Paper className={classes.paperProgressCalendar} elevation={3}>
                         <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
-                        <ProgressCalendar />
+                        <ProgressCalendar 
+                            translateY={-40}
+                            margin={{ top:40, right: 40, bottom: 40, left: 40 }}
+                            align="top"
+                        />
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={8}>

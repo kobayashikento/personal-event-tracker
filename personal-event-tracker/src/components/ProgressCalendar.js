@@ -3,7 +3,7 @@ import { ResponsiveCalendar } from '@nivo/calendar';
 
 let data = require('../assets/data/calendar.json');
 
-export default function MyResponsiveCalendar() {
+export default function MyResponsiveCalendar(props) {
   return (
       <ResponsiveCalendar
         data={data}
@@ -12,22 +12,25 @@ export default function MyResponsiveCalendar() {
         emptyColor="#eeeeee"
         colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
         minValue={-8}
-        margin={{ top:40, right: 40, bottom: 40, left: 40 }}
+        margin={props.margin}
         yearSpacing={0}
         monthBorderColor="#ffffff"
         dayBorderWidth={2}
         dayBorderColor="#ffffff"
-        align="top"
+        align={props.align}
         legends={[
           {
             anchor: 'bottom-right',
             direction: 'row',
-            translateY: -20,
-            itemCount: 4,
+            translateY: props.translateY,
+            itemCount: props.itemCount
+            
+            ,
             itemWidth: 42,
             itemHeight: 36,
             itemsSpacing: 14,
-            itemDirection: 'right-to-left'
+            itemDirection: 'right-to-left',
+            itemTextColor: props.itemTextColor,
           }
         ]}
       />

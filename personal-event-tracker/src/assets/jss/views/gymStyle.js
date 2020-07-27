@@ -1,4 +1,7 @@
 const gymStyle = theme => ({
+    container: {
+        padding: "20px",
+    },
     paperNormalCalendar: {
         padding: theme.spacing(3),
         textAlign: "center",
@@ -15,9 +18,6 @@ const gymStyle = theme => ({
     },
     items: {
         height: "100%",
-    },
-    grid: {
-        padding: "20px",
     },
     calTitle: {
         paddingTop: "30px",
