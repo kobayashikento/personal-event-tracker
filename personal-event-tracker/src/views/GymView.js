@@ -11,6 +11,9 @@ import NormalCalendar from '../components/StandardCalendar.js';
 import ProgressCalendar from '../components/ProgressCalendar.js';
 import LineGraph from '../components/LineGraph.js';
 
+// generate random events for the calendar 
+import data from '../assets/data/dashEvents.json';
+
 import styles from '../assets/jss/views/gymStyle.js';
 
 const useStyles = makeStyles(styles);
@@ -31,9 +34,11 @@ export default function GymView() {
                     <Paper className={classes.paperProgressCalendar} elevation={3}>
                         <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
                         <ProgressCalendar 
+                            data={data}
                             translateY={-40}
                             margin={{ top:40, right: 40, bottom: 40, left: 40 }}
                             align="top"
+                            colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
                         />
                     </Paper>
                 </Grid>

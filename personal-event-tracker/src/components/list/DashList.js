@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 
 // import styles from MUI
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import StraightenIcon from '@material-ui/icons/Straighten';
+import BlockIcon from '@material-ui/icons/Block';
 
 // import files
 import styles from '../../assets/jss/components/list/dashlistStyle.js';
@@ -34,6 +34,10 @@ export default function DashActivityList() {
         {
             name: "Piano activity",
             icon: StraightenIcon,
+        },
+        {
+            name: "No activity",
+            icon: BlockIcon,
         }
     ]
 

@@ -11,6 +11,9 @@ import Calendar from '../components/ProgressCalendar.js';
 import styles from '../assets/jss/views/dashboardStyle.js';
 import CalendarList from '../components/list/DashList.js';
 
+// generate random events for the calendar 
+import data from '../assets/data/dashEvents.json';
+
 const useStyles = makeStyles(styles);
 
 export default function DashBoardView() {
@@ -30,10 +33,12 @@ export default function DashBoardView() {
                         <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
                         <Calendar
                             margin={{ top: 60, right: 40, bottom: 40, left: 40 }}
+                            colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
                             align="top"
                             translateY={-40}
                             itemTextColor="transparent"
                             itemCount={0}
+                            data={data}
                         />
                     </Paper>
                 </Grid>
