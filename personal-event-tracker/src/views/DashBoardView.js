@@ -9,15 +9,35 @@ import Typography from '@material-ui/core/Typography';
 // import dashbaord componenets files 
 import Calendar from '../components/ProgressCalendar.js';
 import styles from '../assets/jss/views/dashboardStyle.js';
-import CalendarList from '../components/list/DashList.js';
+import DashList from '../components/list/DashList.js';
 
 // generate random events for the calendar 
 import data from '../assets/data/dashEvents.json';
+import {activities} from '../assets/jss/masterStyle.js';
 
 const useStyles = makeStyles(styles);
 
+// function that takes in the events json file and seperates the events  
+// into the same events
+// 0=none, 1=piano, 2=gym, 3=both
+function getEvents() {
+    var unsortedEvents = [];
+    for(var i = 0; i < activties.length; i++){
+        unsortedEvents.push([])
+    }
+    data.forEach(event => {
+        
+    })
+}
+
 export default function DashBoardView() {
     const classes = useStyles();
+
+    const [calendarIndex, setCalendarIndex] = React.useState(0);
+
+    const handleItemClicked = (index) => {
+        setCalendarIndex(index);
+    }
 
     return (
         <div className={classes.container}>
@@ -38,15 +58,15 @@ export default function DashBoardView() {
                             translateY={-40}
                             itemTextColor="transparent"
                             itemCount={0}
-                            data={data}
+                            data={getEvents()[calendarIndex]}
                         />
                     </Paper>
                 </Grid>
                 <Grid item xs={2} sm={2}>
                     <Paper elevation={3}>
-                       <CalendarList 
-
-                       />
+                        <DashList
+                            handleChange={(index) => handleItemClicked(index)}
+                        />
                     </Paper>
                 </Grid>
             </Grid>

@@ -8,56 +8,33 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-// import icons
-import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
-import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
-import StraightenIcon from '@material-ui/icons/Straighten';
-import BlockIcon from '@material-ui/icons/Block';
-
 // import files
 import styles from '../../assets/jss/components/list/dashlistStyle.js';
+import {activities} from '../../assets/jss/masterStyle.js';
 
 const useStyles = makeStyles(styles);
 
-export default function DashActivityList() {
+export default function DashActivityList(props) {
     const classes = useStyles();
-
-    const activity = [
-        {
-            name: "All activities",
-            icon: CalendarViewDayIcon,
-        },
-        {
-            name: "Gym activity",
-            icon: FitnessCenterIcon,
-        },
-        {
-            name: "Piano activity",
-            icon: StraightenIcon,
-        },
-        {
-            name: "No activity",
-            icon: BlockIcon,
-        }
-    ]
 
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     // handle onclick 
-    const handleListItemClick = (event, index) => {
+    const handleListItemClick = (index) => {    
         setSelectedIndex(index);
+        props.handleChange(index);
     };
 
     var calendarList = (
         <List className={classes.list}>
-            {activity.map((prop, index) => {
+            {activities.map((prop, index) => {
                 return (
                     // create the href for the list item
                     <ListItem
                         button
                         selected={selectedIndex === index}
                         key={prop.name}
-                        onClick={(event) => handleListItemClick(event, index)}
+                        onClick={() => handleListItemClick(index)}
                     >
                         <prop.icon
                             className={classes.icon}

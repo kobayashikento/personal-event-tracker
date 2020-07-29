@@ -1,39 +1,35 @@
 const fs = require('fs');
 
+var daysCounter = 0;
+
 function probPlayPiano() {
     //80% chance of playing the piano 
-    if ((Math.floor(Math.random() * 10)) > 3) {
+    if ((Math.floor(Math.random() * 10)) > 2) {
         return true;
     } else { return false; }
 }
 
-// takes in the count of days 0-6(7days) since day 3 and 6 are reset days and returns the 
-// acitivty number
-function blue() {
-    if (daysCounter === 3 || daysCounter === 6) {
+// takes in the count of days 0-6(7days) since day 3 and 6 are reset days and returns the acitivty number
+// 0=all activities, 1=piano, 2=gym, 3=none
+function createEvent() {
+    if (daysCounter === 3) {
+        daysCounter++;
         if (probPlayPiano()) {
             return 1;
-        } else { return 0 }
-    } else {
+        } else { return 3 }
+    } else if (daysCounter === 6) {
+        daysCounter = 0;
         if (probPlayPiano()) {
-            return 3;
+            return 1;
+        } else { return 3 }
+    } else {
+        daysCounter++;
+        if (probPlayPiano()) {
+            return 0;
         } else { return 2 }
     }
 }
 
-function green() {
-    if (daysCounter === 6) {
-        daysCounter = 0;
-        return blue();
-    } else { return blue() }
-}
-
-
-//0 = no activity 
-//1 = piano 
-//2 = gym
-//3 = piano and gym
-var daysCounter = 0;
 function generateCalendar() {
     var data = [];
     var now = new Date();
@@ -53,9 +49,8 @@ function generateCalendar() {
           ] = dateTimeFormat.formatToParts(d);
         data.push({
             "day":`${year}-${month}-${day}`,
-            "value": green()
+            "value": createEvent()
         })
-        daysCounter++;
     }
     return data;
 }
