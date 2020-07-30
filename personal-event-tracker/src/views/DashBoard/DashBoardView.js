@@ -7,28 +7,14 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 // import dashbaord componenets files 
-import Calendar from '../components/ProgressCalendar.js';
-import styles from '../assets/jss/views/dashboardStyle.js';
-import DashList from '../components/list/DashList.js';
+import Calendar from '../../components/ProgressCalendar.js';
+import styles from '../../assets/jss/views/dashboardStyle.js';
+import DashList from '../../components/list/DashList.js';
 
-// generate random events for the calendar 
-import data from '../assets/data/dashEvents.json';
-import {activities} from '../assets/jss/masterStyle.js';
+// import function used to generate the arrays for the calendar
+import dashFunc from './dashFunctions.js';
 
 const useStyles = makeStyles(styles);
-
-// function that takes in the events json file and seperates the events  
-// into the same events
-function getEvents() {
-    var sortedEvents = [];
-    activities.map(prop =>{
-        sortedEvents.push([])      
-    })
-    data.forEach(event => {
-        events[event.value].push(event)
-    })
-    return events
-}
 
 export default function DashBoardView() {
     const classes = useStyles();
@@ -58,7 +44,7 @@ export default function DashBoardView() {
                             translateY={-40}
                             itemTextColor="transparent"
                             itemCount={0}
-                            data={getEvents()[calendarIndex]}
+                            data={dashFunc.getAllActivity()[calendarIndex]}
                         />
                     </Paper>
                 </Grid>

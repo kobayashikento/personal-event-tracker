@@ -6,7 +6,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 
 // import views 
-import DashBoardView from './views/DashBoardView.js';
+import DashBoardView from './views/DashBoard/DashBoardView.js';
 import PianoView from './views/PianoView.js';
 import GymView from './views/GymView.js';
 import ManageThemeView from './views/ManageThemeView.js';
