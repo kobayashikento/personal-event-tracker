@@ -18,6 +18,15 @@ function getAllActivity(){
         })
         //case 2: array of only piano
         switch (getNumActivity(event)){
+            case 3: pianoAct.push({
+                "day": event.day,
+                "value": 1
+            }) 
+            gymAct.push({
+                "day": event.day, 
+                "value": 1
+            })
+            break;
             case 2: pianoAct.push({
                 "day": event.day,
                 "value": 1
