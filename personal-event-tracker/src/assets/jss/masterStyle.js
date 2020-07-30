@@ -15,22 +15,22 @@ const primaryColor = "rgba(16,88,88,1)";
 const activities = [
     {
         name: "All Activities",
-        index: 0,
+        value: 3,
         icon: CalendarViewDayIcon,
     },
     {
         name: "Piano",
-        index: 1,
+        value: 2,
         icon: StraightenIcon,
     },
     {
         name: "Gym",
-        index: 2,
+        value: 1,
         icon: FitnessCenterIcon,
     },
     {
         name: "No Activities",
-        index: 3,
+        value: 0,
         icon: BlockIcon,
     },
 ]

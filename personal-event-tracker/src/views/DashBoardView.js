@@ -19,15 +19,15 @@ const useStyles = makeStyles(styles);
 
 // function that takes in the events json file and seperates the events  
 // into the same events
-// 0=none, 1=piano, 2=gym, 3=both
 function getEvents() {
-    var unsortedEvents = [];
-    for(var i = 0; i < activties.length; i++){
-        unsortedEvents.push([])
-    }
-    data.forEach(event => {
-        
+    var sortedEvents = [];
+    activities.map(prop =>{
+        sortedEvents.push([])      
     })
+    data.forEach(event => {
+        events[event.value].push(event)
+    })
+    return events
 }
 
 export default function DashBoardView() {
