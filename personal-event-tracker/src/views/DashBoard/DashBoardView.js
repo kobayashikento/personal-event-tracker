@@ -42,42 +42,39 @@ export default function DashBoardView() {
             >
                 <Grid item xs={10} sm={10}>
                     <Paper className={classes.paperCalendar} elevation={3}>
-                        <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
-                        <Calendar
-                            margin={{ top: 60, right: 40, bottom: 40, left: 40 }}
-                            colors={activities[calendarIndex].color}
-                            align="top"
-                            translateY={-40}
-                            itemCount={0}
-                            data={dashFunc.getAllActivity()[calendarIndex]}
-                        />
+                        <Typography className={classes.calTitle} variant="h5">Daily Activity</Typography>
                         <ThemeProvider>
-                            <SvgWrapper
-                                height={100}
+                            <SvgWrapper 
+                                height={70}
                                 width={400}
                                 margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
                             >
                                 <BoxLegendSvg
                                     anchor="center"
-                                    data={activities[calendarIndex].legends}
                                     containerWidth={400}
-                                    containerHeight={100}
+                                    containerHeight={70}
                                     height={100}
                                     width={400}
+                                    data={activities[calendarIndex].legends}
                                     direction="row"
-                                    // itemDirection="right-to-left"
                                     itemWidth={90}
                                     itemHeight={20}
                                     itemsSpacing={15}
-                                    // itemOpacity={.5}
                                     padding={10}
-                                    // translateX={-50}
-                                    // translateY={-100}
-                                    symbolSize={12}
+                                    symbolSize={20}
                                     symbolShape="square"
+                                    fontSize="30px"
                                 />
                             </SvgWrapper>
                         </ThemeProvider>
+                        <Calendar
+                            margin={{ top: 20, right: 40, bottom: 40, left: 40 }}
+                            colors={activities[calendarIndex].color}
+                            align="top"
+                            translateY={-40}
+                            itemCount={0}
+                            data={dashFunc.getAllActivity()[calendarIndex]}
+                        />                       
                     </Paper>
                 </Grid>
                 <Grid item xs={2} sm={2}>

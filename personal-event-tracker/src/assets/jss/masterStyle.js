@@ -19,18 +19,22 @@ const activities = [
         icon: CalendarViewDayIcon,
         legends: [
             {
+                id: "",
                 label: "All activity",
                 color: "#f47560"
             },
             {
+                id: "",
                 label: "Piano",
                 color: "#e8c1a0"
             },
             {
+                id: "",
                 label: "Gym",
                 color: "#97e3d5"
             },
             {
+                id: "",
                 label: "No activity",
                 color: "#61cdbb"
             },
@@ -42,6 +46,7 @@ const activities = [
         icon: StraightenIcon,
         legends: [
             {
+                id: "",
                 label: "Piano",
                 color: "#e8c1a0"
             }
@@ -53,6 +58,7 @@ const activities = [
         icon: FitnessCenterIcon,
         legends: [
             {
+                id: "",
                 label: "Gym",
                 color: "#97e3d5"
             }
@@ -64,6 +70,7 @@ const activities = [
         icon: BlockIcon,
         legends: [
             {
+                id: "",
                 label: "No Activities",
                 color: "#61cdbb"
             }
