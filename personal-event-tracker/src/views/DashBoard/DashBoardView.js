@@ -15,7 +15,9 @@ import { ThemeProvider, SvgWrapper } from '@nivo/core';
 import Calendar from '../../components/ProgressCalendar.js';
 import styles from '../../assets/jss/views/dashboardStyle.js';
 import DashList from '../../components/list/DashList.js';
-import { activities } from '../../assets/jss/masterStyle.js';
+import {
+    activities
+} from '../../assets/jss/masterStyle.js';
 
 // import function used to generate the arrays for the calendar
 import dashFunc from './dashFunctions.js';
@@ -40,14 +42,42 @@ export default function DashBoardView() {
                 className={classes.grid}
                 spacing={4}
             >
+                <Grid item xs={6} sm={3}>
+                    <Paper elevation={3} className={classes.allActBackground}>
+                        <Typography className={classes.statTitle} variant="h5">Total Activity</Typography>
+                        <Typography className={classes.statTitle} variant="h5">{dashFunc.getAllActivity()[0].length}</Typography>
+                        <Typography className={classes.statTitle} variant="h6">Days</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                    <Paper elevation={3} className={classes.pianoBackground}>
+                    <Typography className={classes.statTitle} variant="h5">Piano</Typography>
+                    <Typography className={classes.statTitle} variant="h5">{dashFunc.getAllActivity()[1].length}</Typography>
+                    <Typography className={classes.statTitle} variant="h6">Days</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                    <Paper elevation={3} className={classes.gymBackground}>
+                    <Typography className={classes.statTitle} variant="h5">Gym</Typography>
+                    <Typography className={classes.statTitle} variant="h5">{dashFunc.getAllActivity()[2].length}</Typography>
+                    <Typography className={classes.statTitle} variant="h6">Days</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                    <Paper elevation={3} className={classes.noActBackground}>
+                    <Typography className={classes.statTitle} variant="h5">No Activity</Typography>
+                    <Typography className={classes.statTitle} variant="h5">{dashFunc.getAllActivity()[3].length}</Typography>
+                    <Typography className={classes.statTitle} variant="h6">Days</Typography>
+                    </Paper>
+                </Grid>
                 <Grid item xs={10} sm={10}>
                     <Paper className={classes.paperCalendar} elevation={3}>
                         <Typography className={classes.calTitle} variant="h5">Daily Activity</Typography>
                         <ThemeProvider>
-                            <SvgWrapper 
+                            <SvgWrapper
                                 height={70}
                                 width={400}
-                                margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                                margin={{ left: 0, right: 0, top: 10, bottom: 0 }}
                             >
                                 <BoxLegendSvg
                                     anchor="center"
@@ -68,13 +98,13 @@ export default function DashBoardView() {
                             </SvgWrapper>
                         </ThemeProvider>
                         <Calendar
-                            margin={{ top: 20, right: 40, bottom: 40, left: 40 }}
+                            margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
                             colors={activities[calendarIndex].color}
                             align="top"
                             translateY={-40}
                             itemCount={0}
                             data={dashFunc.getAllActivity()[calendarIndex]}
-                        />                       
+                        />
                     </Paper>
                 </Grid>
                 <Grid item xs={2} sm={2}>

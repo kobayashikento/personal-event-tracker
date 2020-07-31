@@ -1,7 +1,12 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+// import background images
 import bg1 from '../images/mountain-scenery-1450082.jpg';
 import bg from '../images/black-building-under-white-sky.jpg';
+import gymbg from '../images/gym-dumbells.jpg';
+import pianobg from '../images/piano.jpg';
+import allactbg from '../images/allactivity.jpg';
+import noactbg from '../images/noactbg.jpg';
 
 // import icons
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
@@ -107,4 +112,8 @@ export {
     appbarHeight,
     theme1,
     activities,
+    gymbg,
+    pianobg,
+    allactbg,
+    noactbg
 }
