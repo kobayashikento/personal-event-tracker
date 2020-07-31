@@ -15,21 +15,6 @@ export default function MyResponsiveCalendar(props) {
         dayBorderWidth={2}
         dayBorderColor="#ffffff"
         align={props.align}
-        legends={[
-          {
-            anchor: 'bottom-right',
-            direction: 'row',
-            translateY: props.translateY,
-            itemCount: props.itemCount
-            
-            ,
-            itemWidth: 42,
-            itemHeight: 36,
-            itemsSpacing: 14,
-            itemDirection: 'right-to-left',
-            itemTextColor: props.itemTextColor,
-          }
-        ]}
       />
   );
 }

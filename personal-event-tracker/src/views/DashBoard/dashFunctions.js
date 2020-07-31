@@ -13,39 +13,38 @@ function getAllActivity(){
         // 4 cases
         // case 1: array of all events
         allAct.push({
-            "day": event.day,
-            "value": getNumActivity(event)
+            day: event.day,
+            value: getNumActivity(event)
         })
         //case 2: array of only piano
         switch (getNumActivity(event)){
             case 3: pianoAct.push({
-                "day": event.day,
-                "value": 1
+                day: event.day,
+                value: 1
             }) 
             gymAct.push({
-                "day": event.day, 
-                "value": 1
+                day: event.day, 
+                value: 1
             })
             break;
             case 2: pianoAct.push({
-                "day": event.day,
-                "value": 1
+                day: event.day,
+                value: 1
             }) 
             break;
             case 1: gymAct.push({
-                "day": event.day, 
-                "value": 1
+                day: event.day, 
+                value: 1
             })
             break;
             case 0: noAct.push({
-                "day": event.day,
-                "value": 1
+                day: event.day,
+                value: 1
             })
             break;
             default:
         }
     })
-    console.log([allAct,pianoAct,gymAct,noAct])
     return [allAct,pianoAct,gymAct,noAct];
 }
 
