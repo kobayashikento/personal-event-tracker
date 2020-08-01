@@ -20,6 +20,7 @@ const primaryColor = "rgba(16,88,88,1)";
 const activities = [
     {
         name: "All Activities",
+        id: "allAct",
         color: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'],
         icon: CalendarViewDayIcon,
         legends: [
@@ -47,6 +48,7 @@ const activities = [
     },
     {
         name: "Piano",
+        id: "piano",
         color: ['#e8c1a0'],
         icon: StraightenIcon,
         legends: [
@@ -59,6 +61,7 @@ const activities = [
     },
     {
         name: "Gym",
+        id: "gym",
         color: ['#97e3d5'],
         icon: FitnessCenterIcon,
         legends: [
@@ -71,6 +74,7 @@ const activities = [
     },
     {
         name: "No Activities",
+        id: "noAct",
         color: ['#61cdbb'],
         icon: BlockIcon,
         legends: [

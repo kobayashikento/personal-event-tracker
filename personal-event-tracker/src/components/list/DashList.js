@@ -10,30 +10,31 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 // import files
 import styles from '../../assets/jss/components/list/dashlistStyle.js';
-import {activities} from '../../assets/jss/masterStyle.js';
+import { activities } from '../../assets/jss/masterStyle.js';
 
 const useStyles = makeStyles(styles);
 
 export default function DashActivityList(props) {
     const classes = useStyles();
 
+    // set states 
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     // handle onclick 
-    const handleListItemClick = (index) => {    
+    const handleListItemClick = (index) => {
         setSelectedIndex(index);
         props.handleChange(index);
     };
 
     var calendarList = (
-        <List className={classes.list}>
+        <List>
             {activities.map((prop, index) => {
                 return (
                     // create the href for the list item
                     <ListItem
                         button
                         selected={selectedIndex === index}
-                        key={prop.name}
+                        key={index}
                         onClick={() => handleListItemClick(index)}
                     >
                         <prop.icon
@@ -49,6 +50,7 @@ export default function DashActivityList(props) {
             })}
         </List>
     );
+    
     return (
         <Paper>
             <Typography className={classes.listTitle} variant="h6">Activity</Typography>

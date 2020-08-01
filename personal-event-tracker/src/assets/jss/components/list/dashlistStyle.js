@@ -5,7 +5,7 @@ const dashlistStyle = theme =>({
     },
     icon: {
         marginRight: "10px",
-    }
+    },
 })
 
 export default dashlistStyle;

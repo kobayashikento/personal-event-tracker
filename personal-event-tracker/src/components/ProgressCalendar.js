@@ -5,13 +5,14 @@ export default function MyResponsiveCalendar(props) {
   return (
       <ResponsiveCalendar
         data={props.data}
-        from="2020-01-03"
-        to="2020-07-24"
+        from={"2020-05-01"}
+        to={"2020-09-01"}
+        granularity="month"
         emptyColor="#eeeeee"
         colors={props.colors}
         margin={props.margin}
         yearSpacing={0}
-        monthBorderColor="#ffffff"
+        monthBorderColor="grey"
         dayBorderWidth={2}
         dayBorderColor="#ffffff"
         align={props.align}
