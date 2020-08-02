@@ -15,7 +15,7 @@ function createEvent() {
         daysCounter++;
         if (probPlayPiano()) {
             return [{
-                name: "piano"
+                name: "Piano"
             }];
         } else {
             return []
@@ -24,7 +24,7 @@ function createEvent() {
         daysCounter = 0;
         if (probPlayPiano()) {
             return [{
-                name: "piano"
+                name: "Piano"
             }];
         } else {
             return []
@@ -33,14 +33,14 @@ function createEvent() {
         daysCounter++;
         if (probPlayPiano()) {
             return [{
-                name: "piano"
+                name: "Piano"
             }, {
-                name: "gym"
+                name: "Gym"
             }
             ];
         } else {
             return [{
-                name: "gym"
+                name: "Gym"
             }];
         }
     }
@@ -65,7 +65,8 @@ function generateCalendar() {
         ] = dateTimeFormat.formatToParts(d);
         data.push({
             "day": `${year}-${month}-${day}`,
-            activity: createEvent()
+            date: d,
+            activity: createEvent() // returns an object with the name field 
         })
     }
     return data;

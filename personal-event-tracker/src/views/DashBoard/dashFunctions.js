@@ -53,7 +53,7 @@ function getNumActivity(event) {
     if (event.activity.length === 2) {
         return 3;
     } else if (event.activity.length === 1) {
-        if (event.activity[0].name === "gym") {
+        if (event.activity[0].name === "Gym") {
             return 1
         } else {
             return 2;
@@ -64,13 +64,55 @@ function getNumActivity(event) {
 }
 
 // get avg per month
-function getEventsMonth(event) {
-    var events = [];
-    for (var i = 0; i < event.length; i++) {
+function getEventsDetail() {
+    // format 
+    // data = [{
+    //      name: name of event 
+    //      events: [{
+    //                  monthName: 
+    //                   days: [{
+    //                          date: date object for the corresponding month 
+    //                          }]
+    //              }]
+    // }]
+    var eventDetailsArr = [{
+        name: "",
+        events: []
+    }];
+    data.forEach(d => {
+        if (d.activity.name === "") {
+            if (!monthExists(d.date.getMonth())) {
+                eventDetailsArr.events.push(
+                    {
+                        monthName: d.date.getMonth(),
+                        days: [{
+                            date: d.date
+                        }]
+                    }
+                )
+            } else {
+                var index = eventDetailsArr.events.indexOf(d.date.getMonth())
+                eventDetailsArr.events[index].days.push({
+                    date: d.date
+                })
+            }
+        }
+    })
+    console.log(eventDetailsArr)
+    return eventDetailsArr;
+}
 
-    }
+function monthExists(data, month) {
+    var exists = false;
+    data.events.forEach(event => {
+        if (event.monthName === month) {
+            return true;
+        }
+    })
+    return exists;
 }
 
 export default {
-    getAllActivity
+    getAllActivity,
+    getEventsDetail
 }

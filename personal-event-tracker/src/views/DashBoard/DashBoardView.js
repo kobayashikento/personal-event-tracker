@@ -31,11 +31,6 @@ export default function DashBoardView() {
     const [calendarIndex, setCalendarIndex] = React.useState(0);
 
     // set states
-    const defaultChecked = () => {
-        var arr = [];
-        activities.forEach(ele => arr.push(true));
-        return arr;
-    }
     const [isActive, setActive] = React.useState(false);
     const [activeIndex, setactiveIndex] = React.useState(0);
 
@@ -55,11 +50,8 @@ export default function DashBoardView() {
     var allActDisplay = (
         activities.map((prop, index) => {
             return (
-                <Zoom in={!isActive}>
-                    <Grid
-                        item xs={6} sm={3}
-                        key={index}
-                    >
+                <Zoom in={!isActive} key={index}>
+                    <Grid item xs={6} sm={3}>
                         <Paper
                             elevation={3}
                             className={
@@ -85,12 +77,13 @@ export default function DashBoardView() {
                 alignItems="center"
                 spacing={4}
             >
-                {isActive? 
-                <Overview
-                    totalDays={dashFunc.getAllActivity()[activeIndex].length}
-                    name={activities[activeIndex].name}
-                    avgDays={}
-                />:allActDisplay}
+                {isActive ?
+                    <Overview
+                        totalDays={dashFunc.getAllActivity()[activeIndex].length}
+                        name={activities[activeIndex].name}
+                        avgDays={null}
+                    /> 
+                    : allActDisplay}
                 <Grid
                     item
                     xs={10} sm={10}
