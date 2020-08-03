@@ -10,7 +10,9 @@ const mainMenuStyle = theme => ({
     },
     contentsWrapper: {       
         marginLeft: drawerWidth,
-        marginTop: appbarHeight,
+        
+        // margin when appbar is present 
+        // marginTop: appbarHeight,
     },
 });
 

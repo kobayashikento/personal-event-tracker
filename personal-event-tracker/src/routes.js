@@ -9,7 +9,7 @@ import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import DashBoardView from './views/DashBoard/DashBoardView.js';
 import PianoView from './views/PianoView.js';
 import GymView from './views/GymView.js';
-import ManageThemeView from './views/ManageThemeView.js';
+import ManageThemeView from './views/ManageTheme.js/ManageThemeView.js';
 
 const mainmenuRoutes = [
     {
@@ -35,7 +35,7 @@ const mainmenuRoutes = [
         name: "Manage Theme",
         component: ManageThemeView,
         icon: TuneIcon
-    }
+    },
 ]
 
 export default mainmenuRoutes;

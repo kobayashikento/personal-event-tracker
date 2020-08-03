@@ -14,7 +14,7 @@ import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import StraightenIcon from '@material-ui/icons/Straighten';
 import BlockIcon from '@material-ui/icons/Block';
 
-const drawerWidth = "250px";
+const drawerWidth = "15vw";
 const appbarHeight = "80px";
 const primaryColor = "rgba(16,88,88,1)";
 const activities = [

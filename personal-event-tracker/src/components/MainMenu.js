@@ -40,9 +40,10 @@ export default function MainMenu() {
         <MuiThemeProvider theme={theme1}>
             <CssBaseline />
             <div className={classes.wrapper}>
-                <Appbar
+                {/* Remove Appbar for now */}
+                {/* <Appbar
                     routes={routes}
-                />
+                /> */}
                 <Sidebar
                     routes={routes}
                 />         
