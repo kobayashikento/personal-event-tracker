@@ -1,16 +1,21 @@
-import {
-    drawerWidth
-} from '../../../jss/masterStyle.js';
-
-const phi = 0.61803;
-
 const themeStyle = theme => ({
-    paper:{
-        padding: "20px",
-        width: "27vw"
+    inputpaper: {
+        padding: "2rem",
+        width: "49.4%",
+        paddingBottom: "30.5%",
+        height: "0"
     },
-    grid:{
-        margin: "20px",
+    palettepaper: {
+        padding: "2rem",
+        width: "49.4%",
+        paddingBottom: "49.4%",
+        height: "0"
+    },
+    inputgrid: {
+        margin: "2rem",
+    },
+    palettegrid: {
+        marginLeft: "2rem",
     }
 })
 

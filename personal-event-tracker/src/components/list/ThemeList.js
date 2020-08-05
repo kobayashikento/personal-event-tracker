@@ -1,12 +1,10 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { BlockPicker } from 'react-color';
-import { SliderPicker } from 'react-color';
 
 // import styles from MUI
 import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -19,9 +17,8 @@ const useStyles = makeStyles(styles);
 export default function ThemeList(props) {
     const classes = useStyles();
 
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit } = useForm();
     const onSubmit = data => console.log(data);
-
 
     // set default theme 
     let defaultTheme;
@@ -32,36 +29,28 @@ export default function ThemeList(props) {
     })
 
     return (
-        <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-            className={classes.grid}
-        >
-            <Grid
-                item
-                xs={8} sm={8}
-            >
-                <Paper className={classes.paper} elevation={3}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <TextField id="primary-color" label="Primary Color" defaultValue={defaultTheme.colors.primary} variant="outlined" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <List>
+                <ListItem>
+                    <TextField ref={register} id="primary-color" label="Primary Color" defaultValue={defaultTheme.colors.primary} variant="outlined" />
+                </ListItem>
+                <ListItem>
+                    <TextField ref={register} id="scondary-color" label="Secondary Color" defaultValue={defaultTheme.colors.secondary} variant="outlined" />
+                </ListItem>
+                <ListItem>
+                    <TextField ref={register} id="tertiary-color" label="Tertiary Color" defaultValue={defaultTheme.colors.tertiary} variant="outlined" />
+                </ListItem>
+                <ListItem>
+                    <TextField ref={register} id="tertiary-color" label="Tertiary Color" defaultValue={defaultTheme.colors.tertiary} variant="outlined" />
+                </ListItem>
+                <ListItem>
+                    <TextField ref={register} id="prim-text-color" label="Primary Text Color" defaultValue={defaultTheme.colors.primarytextColor} variant="outlined" />
+                </ListItem>
+                <ListItem>
+                    <TextField ref={register} id="secon-text-color" label="Secondary Text Color" defaultValue={defaultTheme.colors.secondarytextColor} variant="outlined" />
+                </ListItem>
+            </List>
 
-
-                    </form>
-                </Paper>
-            </Grid>
-            <Grid
-                item
-                xs={4} sm={4}
-            >
-                <Paper className={classes.paper} elevation={3}>
-                    <SliderPicker />
-                    <BlockPicker
-                        triangle="hide"
-                    />
-                </Paper>
-            </Grid>
-        </Grid>
+        </form>
     );
 }

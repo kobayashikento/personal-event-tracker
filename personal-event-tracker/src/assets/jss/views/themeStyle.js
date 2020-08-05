@@ -1,16 +1,25 @@
-const phi = 1.61803;
+const goldenratio = 1.61803398875;
 
 const themeStyle = theme => ({
     container: {
-        padding: "20px",
         height: "100%",
+        margin: "auto"
+    },
+    grid: {
+        paddingBottom: "50%",
+        width: "80%",
+        height: "0",
+        margin: "auto !important",
     },
     pagename: {
-        padding: "15px"
+        padding: "1.5rem"
     },
-    paper: {
-        margin: "20px"
-    }
+    previewpaper: {
+        margin: "2rem",
+        paddingBottom: "75%",
+        width: "75%",
+        height: "0"
+    },
 })
 
 export default themeStyle;
