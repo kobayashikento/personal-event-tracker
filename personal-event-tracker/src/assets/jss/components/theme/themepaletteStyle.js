@@ -6,10 +6,19 @@ const themepaletteStyle = theme => ({
         justifyContent: "space-evenly",
         width: "100%"
     },
+    innercontainer: {
+        display: "flex",
+        flexWrap: "wrap",
+        flexDirection: "column",
+        justifyContent: "center",
+    },
     sliderpicker:{
         width: "90%"
     },
     blockpicker:{
+        marginTop: "1rem"
+    },
+    inputbutton:{
         marginTop: "1rem"
     }
 })

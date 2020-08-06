@@ -22,10 +22,9 @@ export default function ManageThemeView() {
             <Typography className={classes.pagename} variant="h5">Themes</Typography>
             <Divider />
             <section>
-
                 <div class="flex-col-2">
-                    <div class="tall-rect"><Themelist/></div>
-                    <div class="wide-rect"><ColorPalette/>
+                    <div class="tall-rect"><Themelist /></div>
+                    <div class="wide-rect"><ColorPalette />
                     </div>
                 </div>
                 <div class="square">

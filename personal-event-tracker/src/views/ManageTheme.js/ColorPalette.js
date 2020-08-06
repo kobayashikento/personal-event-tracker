@@ -21,12 +21,14 @@ export default function ColorPalette(props) {
     return (
         <div className={classes.container}>
             <BlockPicker
-                width="60%"
+                width="70%"
                 className={classes.blockpicker}
                 triangle="hide"
             />
-            <Button className={classes.inputButton} variant="outlined">Save</Button>
-            <Button className={classes.inputButton} variant="outlined">Reset</Button>
+            <div className={classes.innercontainer}>
+                <Button variant="outlined">Save</Button>
+                <Button className={classes.inputbutton} variant="outlined">Reset</Button>
+            </div>
             <SliderPicker
                 className={classes.sliderpicker}
             />
