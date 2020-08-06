@@ -1,5 +1,3 @@
-const goldenratio = 1.61803398875;
-
 const themeStyle = theme => ({
     container: {
         height: "100%",
