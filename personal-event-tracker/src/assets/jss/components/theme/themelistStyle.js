@@ -6,10 +6,10 @@ const themelistStyle = theme => ({
         justifyContent: "space-evenly" 
     },
     select: {
-        marginTop: "3rem",
+        marginTop: "2rem",
         marginLeft: "2.5rem",
         marginRight: "2.5rem",
-        height: "2rem",
+        height: "2.5rem",
         width: "100%",
         textAlign: "center"
     },

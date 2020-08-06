@@ -11,6 +11,7 @@ const themepaletteStyle = theme => ({
         flexWrap: "wrap",
         flexDirection: "column",
         justifyContent: "center",
+        width: "34%"
     },
     sliderpicker:{
         width: "90%"
@@ -18,8 +19,14 @@ const themepaletteStyle = theme => ({
     blockpicker:{
         marginTop: "1rem"
     },
-    inputbutton:{
-        marginTop: "1rem"
+    savebutton:{
+        width: "80%",
+        alignSelf: "center"
+    },
+    resetbutton:{
+        width: "80%",
+        marginTop: "1rem",
+        alignSelf: "center"
     }
 })
 
