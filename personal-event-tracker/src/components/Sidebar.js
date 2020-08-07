@@ -36,7 +36,6 @@ export default function SideBar(props) {
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
-                    PaperProps={{ backgroundColor: 'blue' }}
                 >
                     <Typography
                         className={classes.sidebarTitle}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route } from "react-router-dom";
+import { useState } from 'react';
 
 // import styles
 import { makeStyles, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
@@ -22,7 +23,7 @@ const useStyles = makeStyles(styles);
 export default function MainMenu() {
     const classes = useStyles();
 
-    let theme;
+    var theme;
     themes.forEach(th => {
         if (typeof (th) != undefined) {
             if (th.themeName === "default") {
@@ -30,11 +31,12 @@ export default function MainMenu() {
             }
         }
     })
-    
-    // states 
-    const [activeTheme, setTheme] = React.useState(theme)
-       const handleChange = (event, theme) => {
 
+    // states 
+    const [activeTheme, setTheme] = useState(theme)
+    // theme is an object that follows the themes.json scheme
+    const handleChange = (newtheme) => {
+        setTheme(newtheme);
     }
 
     // set it to defualt until a file manager is code
@@ -46,7 +48,7 @@ export default function MainMenu() {
                     <Route
                         key={index}
                         path={prop.path}
-                        render={(props) => <prop.component {...props} theme={theme} />}
+                        render={(props) => <prop.component {...props} theme={theme} handleChange={(theme) => handleChange(theme)} />}
                     >
                     </Route>
                 );
@@ -59,20 +61,16 @@ export default function MainMenu() {
             MuiListItem: {
                 root: {
                     "&$selected": {
-                        backgroundColor: theme.colors.secondary,
-                    }
+                        backgroundColor: activeTheme.colors.secondary,
+                    },
+                    "&:hover": {
+                        backgroundColor: activeTheme.colors.tertiary + "!important",
+                    },
                 }
             },
         },
-        palette:{
-            primary: {
-                main: theme.colors.primary
-            },
-            secondary: {
-                main: theme.colors.secondary
-            },
-        },
     })
+
     muiTheme = responsiveFontSizes(muiTheme)
 
     return (
@@ -86,7 +84,6 @@ export default function MainMenu() {
                 <Sidebar
                     routes={routes}
                     theme={activeTheme}
-                    handleChange={() => handleChange}
                 />
                 <div className={classes.contentsWrapper}>
                     {switchRoutes}

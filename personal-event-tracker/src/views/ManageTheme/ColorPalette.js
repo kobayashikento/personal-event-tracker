@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // import material ui
@@ -16,21 +17,19 @@ const useStyles = makeStyles(styles);
 var Color = require('color');
 
 export default function ColorPalette(props) {
+    // props: handleColorChange(color,index), color, index
     const classes = useStyles();
     
     // states
-    const [currColor, setColor] = React.useState(Color('rgb(255, 255, 255)').hex());
-
-
     const handleChangeComplete = (color, event) => {
         try {
-            setColor(color.hex);
+            props.handleColorChange(color.hex, props.index);
         } catch(e) { }
     }
 
     const handleChange = (color, event) => {
         try {
-            setColor(color.hex);
+            props.handleColorChange(color.hex, props.index);
         } catch(e) { }
     }
 
@@ -40,7 +39,7 @@ export default function ColorPalette(props) {
                 width="60%"
                 className={classes.blockpicker}
                 triangle="hide"
-                color={currColor}
+                color={props.color}
                 onChangeComplete={handleChangeComplete}
             />
             <div className={classes.innercontainer}>
@@ -49,7 +48,7 @@ export default function ColorPalette(props) {
             </div>
             <SliderPicker
                 className={classes.sliderpicker}
-                color={currColor}
+                color={props.color}
                 onChangeComplete={handleChangeComplete}
                 onChange={handleChange}
             />
