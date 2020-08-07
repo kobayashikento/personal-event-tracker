@@ -14,10 +14,12 @@ const themepaletteStyle = theme => ({
         width: "34%"
     },
     sliderpicker:{
-        width: "90%"
+        width: "95%",
+        marginBottom: "1rem",
+        marginTop: "1rem"
     },
     blockpicker:{
-        marginTop: "1rem"
+        marginTop: "0.55rem"
     },
     savebutton:{
         width: "80%",

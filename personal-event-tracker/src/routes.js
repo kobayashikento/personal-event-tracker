@@ -7,9 +7,9 @@ import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 
 // import views 
 import DashBoardView from './views/DashBoard/DashBoardView.js';
-import PianoView from './views/PianoView.js';
-import GymView from './views/GymView.js';
-import ManageThemeView from './views/ManageTheme.js/ManageThemeView.js';
+import PianoView from './views/Piano/PianoView.js';
+import GymView from './views/Gym/GymView.js';
+import ManageThemeView from './views/ManageTheme/ManageThemeView.js';
 
 const mainmenuRoutes = [
     {

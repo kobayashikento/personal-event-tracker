@@ -15,7 +15,7 @@ import styles from '../../assets/jss/components/list/drawerlistStyle.js';
 
 const useStyles = makeStyles(styles);
 
-export default function DrawerList(routes) {
+export default function DrawerList(props) {
     const classes = useStyles();
 
     const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -28,7 +28,7 @@ export default function DrawerList(routes) {
     //reccusively create the list items for the drawer
     var drawerItems = (
         <List className={classes.list}>
-            {routes.map((prop, index) => {
+            {props.routes.map((prop, index) => {
                 return (
                     // create the href for the list item
                     <Link

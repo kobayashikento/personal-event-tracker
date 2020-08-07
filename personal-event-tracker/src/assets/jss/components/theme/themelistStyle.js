@@ -33,13 +33,15 @@ const themelistStyle = theme => ({
         marginRight: "0rem",
         marginTop: "2rem",
         width: "30%",
-        height: "10%"
+        height: "10%",
+        fontSize: "1rem"
     },
     colortext:{
         textAlign: "center",
         marginTop: "3rem",
         marginLeft: "10%",
         marginRight: "10%",
+        fontSize: "1rem"
     },
     inputButton:{
         marginTop: "3rem",

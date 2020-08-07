@@ -87,33 +87,12 @@ const activities = [
     },
 ]
 
-const theme1 = createMuiTheme({
-    typography: {
-        fontFamily: 'Roboto',
-    },
-    overrides: {
-        MuiListItem: {
-            root: {
-                "&$selected": {
-                    backgroundColor: "rgba(16,88,88,0.8)",
-                }
-            }
-        },
-        MuiGrid: {
-            root: {
-                flexGrow: "1",
-            }
-        }
-    }
-});
-
 export {
     drawerWidth,
     bg1,
     bg,
     primaryColor,
     appbarHeight,
-    theme1,
     activities,
     gymbg,
     pianobg,

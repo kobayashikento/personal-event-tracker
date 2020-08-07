@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 import './ManageThemeView.scss';
+
 // import all local files 
 import styles from '../../assets/jss/components/theme/themeStyle.js';
 
@@ -14,7 +15,7 @@ import ColorPalette from './ColorPalette.js';
 
 const useStyles = makeStyles(styles);
 
-export default function ManageThemeView() {
+export default function ManageThemeView(props) {
     const classes = useStyles();
 
     return (
@@ -22,12 +23,16 @@ export default function ManageThemeView() {
             <Typography className={classes.pagename} variant="h5">Themes</Typography>
             <Divider />
             <section>
-                <div class="flex-col-2">
-                    <div class="tall-rect"><Themelist /></div>
-                    <div class="wide-rect"><ColorPalette />
+                <div className="flex-col-2">
+                    <div className="tall-rect">
+                        <Themelist
+                            theme={props.theme}
+                        />
+                    </div>
+                    <div className="wide-rect"><ColorPalette />
                     </div>
                 </div>
-                <div class="square">
+                <div className="square">
                 </div>
             </section>
         </div>

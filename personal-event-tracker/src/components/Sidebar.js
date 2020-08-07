@@ -15,7 +15,10 @@ import drawerItems from './list/DrawerList.js';
 const useStyles = makeStyles(styles);
 
 export default function SideBar(props) {
-    const classes = useStyles();
+    const styleProps = {
+        color: props.theme.colors.primary
+    }
+    const classes = useStyles(styleProps);
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -33,6 +36,7 @@ export default function SideBar(props) {
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
+                    PaperProps={{ backgroundColor: 'blue' }}
                 >
                     <Typography
                         className={classes.sidebarTitle}
@@ -41,7 +45,7 @@ export default function SideBar(props) {
                         Record Keeper
                 </Typography>
                     <Divider variant="middle" />
-                    {drawerItems(props.routes)}
+                    {drawerItems(props)}
                 </Drawer>
             </Hidden>
         </div>

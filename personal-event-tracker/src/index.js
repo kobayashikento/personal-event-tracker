@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 // import layouts
-import MainMenu from './components/MainMenu.js';
+import MainMenu from './views/MainMenu.js';
 
 import './assets/css/index.css';
 

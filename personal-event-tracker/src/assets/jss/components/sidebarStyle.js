@@ -1,5 +1,4 @@
 import {
-    bg1,
     drawerWidth,
     primaryColor,
 } from '../masterStyle.js';
@@ -16,14 +15,14 @@ const responsivedrawerStyle = theme => ({
         height: "80px",
         textSize: "25px",
     },
-    drawerPaper: {
+    drawerPaper: props => ({
         width: drawerWidth,
         borderRightWidth: "0px",
         right: "0px",
-        backgroundImage: `url(${bg1})`,
         backgroundSize: "cover",
         boxShadow: "0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)",
-    },
+        backgroundColor: props.color
+    }),
     list: {
         marginTop: "10px",
         paddingLeft: "0",

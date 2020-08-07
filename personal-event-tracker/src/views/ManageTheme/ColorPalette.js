@@ -13,10 +13,26 @@ import themes from '../../assets/data/themes.json';
 
 const useStyles = makeStyles(styles);
 
-
+var Color = require('color');
 
 export default function ColorPalette(props) {
     const classes = useStyles();
+    
+    // states
+    const [currColor, setColor] = React.useState(Color('rgb(255, 255, 255)').hex());
+
+
+    const handleChangeComplete = (color, event) => {
+        try {
+            setColor(color.hex);
+        } catch(e) { }
+    }
+
+    const handleChange = (color, event) => {
+        try {
+            setColor(color.hex);
+        } catch(e) { }
+    }
 
     return (
         <div className={classes.container}>
@@ -24,6 +40,8 @@ export default function ColorPalette(props) {
                 width="60%"
                 className={classes.blockpicker}
                 triangle="hide"
+                color={currColor}
+                onChangeComplete={handleChangeComplete}
             />
             <div className={classes.innercontainer}>
                 <Button className={classes.savebutton} variant="outlined">Save</Button>
@@ -31,6 +49,9 @@ export default function ColorPalette(props) {
             </div>
             <SliderPicker
                 className={classes.sliderpicker}
+                color={currColor}
+                onChangeComplete={handleChangeComplete}
+                onChange={handleChange}
             />
         </div>
     );

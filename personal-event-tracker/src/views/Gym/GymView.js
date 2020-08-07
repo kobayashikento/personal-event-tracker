@@ -7,14 +7,14 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 // import components
-import NormalCalendar from '../components/StandardCalendar.js';
-import ProgressCalendar from '../components/ProgressCalendar.js';
-import LineGraph from '../components/LineGraph.js';
+import NormalCalendar from '../../components/StandardCalendar.js';
+import ProgressCalendar from '../../components/ProgressCalendar.js';
+import LineGraph from '../../components/LineGraph.js';
 
 // generate random events for the calendar 
-import data from '../assets/data/dashEvents.json';
+import data from '../../assets/data/dashEvents.json';
 
-import styles from '../assets/jss/views/gymStyle.js';
+import styles from '../../assets/jss/views/gymStyle.js';
 
 const useStyles = makeStyles(styles);
 
