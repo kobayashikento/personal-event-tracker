@@ -11,9 +11,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 // import files 
 import Sidebar from '../components/Sidebar.js';
-import Appbar from '../components/Appbar.js';
+//import Appbar from '../components/Appbar.js';
 import styles from '../assets/jss/components/mainmenuStyle.js';
-import { theme1 } from '../assets/jss/masterStyle.js';
 
 import routes from '../routes.js';
 
@@ -33,10 +32,27 @@ export default function MainMenu() {
     })
 
     // states 
-    const [activeTheme, setTheme] = useState(theme)
+    const [activeTheme, setTheme] = useState(theme);
+    const [didChange, setChange] = useState(false);
+
     // theme is an object that follows the themes.json scheme
     const handleChange = (newtheme) => {
         setTheme(newtheme);
+    }
+
+    // check if the theme exists 
+    const checknotChanged = () =>{
+        themes.map(theme => {
+            return (Object.keys(theme)===Object.keys(activeTheme));
+        })
+        return false; 
+    }
+
+    const handleSideBarClick = () => {
+        console.log(checknotChanged());
+        if (didChange) {
+             
+        }
     }
 
     // set it to defualt until a file manager is code
@@ -48,7 +64,7 @@ export default function MainMenu() {
                     <Route
                         key={index}
                         path={prop.path}
-                        render={(props) => <prop.component {...props} theme={theme} handleChange={(theme) => handleChange(theme)} />}
+                        render={(props) => <prop.component {...props} theme={activeTheme} handleChange={(theme) => handleChange(theme)} />}
                     >
                     </Route>
                 );
@@ -84,6 +100,7 @@ export default function MainMenu() {
                 <Sidebar
                     routes={routes}
                     theme={activeTheme}
+                    handleSideBarClick={()=>handleSideBarClick()}
                 />
                 <div className={classes.contentsWrapper}>
                     {switchRoutes}

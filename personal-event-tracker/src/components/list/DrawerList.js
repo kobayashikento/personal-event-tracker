@@ -23,6 +23,7 @@ export default function DrawerList(props) {
     // handle onclick 
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
+        props.handleSideBarClick();
     };
 
     //reccusively create the list items for the drawer

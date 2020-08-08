@@ -1,5 +1,3 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-
 // import background images
 import bg1 from '../images/mountain-scenery-1450082.jpg';
 import bg from '../images/black-building-under-white-sky.jpg';

@@ -1,6 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 // import material ui
 import Button from '@material-ui/core/Button';
@@ -10,26 +8,23 @@ import { BlockPicker } from 'react-color';
 import { SliderPicker } from 'react-color';
 
 import styles from '../../assets/jss/components/theme/themepaletteStyle.js';
-import themes from '../../assets/data/themes.json';
 
 const useStyles = makeStyles(styles);
-
-var Color = require('color');
 
 export default function ColorPalette(props) {
     // props: handleColorChange(color,index), color, index
     const classes = useStyles();
     
     // states
-    const handleChangeComplete = (color, event) => {
+    const handleChangeComplete = (color) => {
         try {
-            props.handleColorChange(color.hex, props.index);
+            props.handleColorChange(color.hex);
         } catch(e) { }
     }
 
-    const handleChange = (color, event) => {
+    const handleChange = (color) => {
         try {
-            props.handleColorChange(color.hex, props.index);
+            props.handleColorChange(color.hex);
         } catch(e) { }
     }
 
@@ -43,7 +38,6 @@ export default function ColorPalette(props) {
                 onChangeComplete={handleChangeComplete}
             />
             <div className={classes.innercontainer}>
-                <Button className={classes.savebutton} variant="outlined">Save</Button>
                 <Button className={classes.resetbutton} variant="outlined">Reset</Button>
             </div>
             <SliderPicker

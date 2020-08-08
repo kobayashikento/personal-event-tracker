@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 // import styles from MUI
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import styles from '../../assets/jss/components/theme/themelistStyle.js';
 import themes from '../../assets/data/themes.json';
@@ -19,39 +19,62 @@ export default function ThemeList(props) {
     const classes = useStyles();
 
     // states
-    const [selectedIndex, setIndex] = useState([true, false, false, false, false]);
-    const { register, handleSubmit } = useForm();
-    const onSubmit = data => console.log(data);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = (theme) => {
+        setAnchorEl(null);
+        if (theme.themeName != null) {
+            props.handleChange(theme)
+        }
+    };
 
     const handleClick = (index, color) => {
-        let arr = [false, false, false, false, false];
-        arr[index] = true;
-        props.handleColorChange(color, index);
-        setIndex(arr);
+        props.handleChangeIndex(index);
+        props.handleColorChange(color);
+    }
+
+    const isElevated = (index) => {
+        if (props.index === index) {
+            return 3;
+        }
+        return 0;
     }
 
     return (
-        <form className={classes.container} onSubmit={handleSubmit(onSubmit)}>
-            <select className={classes.select} name="selector" ref={register}>
+        <form className={classes.container}>
+            <Button className={classes.select} aria-controls="simple-menu" aria-haspopup="true" variant="outlined" onClick={handleMenuClick}>
+                {props.theme.themeName}
+            </Button>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+            >
                 {themes.map((theme, index) => {
                     return (
-                        <option key={index} value={theme}>{theme.themeName}</option>
+                        <MenuItem onClick={() => handleMenuClose(theme)} key={index}>{theme.themeName}</MenuItem>
                     );
                 })}
-            </select>
+            </Menu>
             <Paper className={classes.box}
                 elevation={
-                    selectedIndex[0] ? 3 : 0
+                    isElevated(0)
                 }
             >
                 <Typography className={classes.text}>Primary Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.primary }} variant="contained" className={classes.button}
-                    onClick={() => handleClick(0, props.theme.colors.primary)}
+                    onClick={() => props.handleColorChange(0, props.theme.colors.primary)}
                 />
             </Paper>
             <Paper className={classes.box}
                 elevation={
-                    selectedIndex[1] ? 3 : 0
+                    isElevated(1)
                 }
             >
                 <Typography className={classes.text}>Secondary Color</Typography>
@@ -60,27 +83,28 @@ export default function ThemeList(props) {
                 />
             </Paper>
             <Paper className={classes.box} elevation={
-                    selectedIndex[2] ? 3 : 0
-                }>
+                isElevated(2)
+            }>
                 <Typography className={classes.text}>Tertiary Color</Typography>
-                <Button style={{ backgroundColor: props.theme.colors.tertiary }} variant="contained" className={classes.button} 
-                onClick={() => handleClick(2, props.theme.colors.tertiary)}/>
+                <Button style={{ backgroundColor: props.theme.colors.tertiary }} variant="contained" className={classes.button}
+                    onClick={() => handleClick(2, props.theme.colors.tertiary)} />
             </Paper>
             <Paper className={classes.boxcolor} elevation={
-                    selectedIndex[3] ? 3 : 0
-                }>
+                isElevated(3)
+            }>
                 <Typography className={classes.colortext}>Primary Text Color</Typography>
-                <Button style={{ backgroundColor: props.theme.colors.primarytext }} variant="contained" className={classes.colorbutton} 
-                onClick={() => handleClick(3, props.theme.colors.primarytext)}/>
+                <Button style={{ backgroundColor: props.theme.colors.primarytext }} variant="contained" className={classes.colorbutton}
+                    onClick={() => handleClick(3, props.theme.colors.primarytext)} />
             </Paper>
             <Paper className={classes.boxcolor} elevation={
-                    selectedIndex[4] ? 3 : 0
-                }>
+                isElevated(4)
+            }>
                 <Typography className={classes.colortext}>Secondary Text Color</Typography>
-                <Button style={{ backgroundColor: props.theme.colors.secondarytext }} variant="contained" className={classes.colorbutton} 
-                onClick={() => handleClick(4, props.theme.colors.secondarytext)}/>
+                <Button style={{ backgroundColor: props.theme.colors.secondarytext }} variant="contained" className={classes.colorbutton}
+                    onClick={() => handleClick(4, props.theme.colors.secondarytext)} />
             </Paper>
+            <Button className={classes.inputButton} variant="outlined">Save</Button>
             <Button className={classes.inputButton} variant="outlined">Reset</Button>
-        </form>
+        </form >
     );
 }

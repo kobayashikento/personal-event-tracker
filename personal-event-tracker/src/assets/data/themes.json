@@ -8,5 +8,15 @@
             "primarytext": "white",
             "secondarytext": "black"
         }
+    },
+    {
+        "themeName": "cheerful and energetic",
+        "colors":{
+            "primary": "#FBE8A6",
+            "secondary": "#F4976C",
+            "tertiary": "#303C6C",
+            "primarytext": "white",
+            "secondarytext": "black"
+        }
     }
 ]
