@@ -22,7 +22,13 @@ export default function ManageThemeView(props) {
     const classes = useStyles();
 
     // states
-    const [currIndex, setIndex] = useState(0);
+    const [currIndex, setIndex] = React.useState(0);
+
+    const handleChangeIndex = (index, color) => {
+        setIndex(index, ()=>{
+            handleColorChange(color)
+        })
+    }
 
     const handleColorChange = (color) => {
         let newtheme = {
@@ -53,10 +59,6 @@ export default function ManageThemeView(props) {
         props.handleChange(newtheme)
     }
 
-    const handleChangeIndex = (index) => {
-        setIndex(index)
-    }
-
     const getCurrColor = () => {
         try {
             switch (currIndex) {
@@ -82,7 +84,7 @@ export default function ManageThemeView(props) {
                             index={currIndex}
                             handleColorChange={(color) => handleColorChange(color)}
                             handleChange={(theme) => props.handleChange(theme)}
-                            handleChangeIndex={(index) => handleChangeIndex(index)}
+                            handleChangeIndex={(index,color) => handleChangeIndex(index,color)}
                         />
                     </div>
                     <div className="wide-rect">

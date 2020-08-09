@@ -33,8 +33,7 @@ export default function ThemeList(props) {
     };
 
     const handleClick = (index, color) => {
-        props.handleChangeIndex(index);
-        props.handleColorChange(color);
+        props.handleChangeIndex(index, color);
     }
 
     const isElevated = (index) => {
@@ -69,7 +68,7 @@ export default function ThemeList(props) {
             >
                 <Typography className={classes.text}>Primary Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.primary }} variant="contained" className={classes.button}
-                    onClick={() => props.handleColorChange(0, props.theme.colors.primary)}
+                    onClick={() => props.handleChangeIndex(0, props.theme.colors.primary)}
                 />
             </Paper>
             <Paper className={classes.box}
@@ -79,7 +78,7 @@ export default function ThemeList(props) {
             >
                 <Typography className={classes.text}>Secondary Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.secondary }} variant="contained" className={classes.button}
-                    onClick={() => handleClick(1, props.theme.colors.secondary)}
+                    onClick={() => props.handleChangeIndex(1, props.theme.colors.secondary)}
                 />
             </Paper>
             <Paper className={classes.box} elevation={
@@ -87,21 +86,21 @@ export default function ThemeList(props) {
             }>
                 <Typography className={classes.text}>Tertiary Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.tertiary }} variant="contained" className={classes.button}
-                    onClick={() => handleClick(2, props.theme.colors.tertiary)} />
+                    onClick={() => props.handleChangeIndex(2, props.theme.colors.tertiary)} />
             </Paper>
             <Paper className={classes.boxcolor} elevation={
                 isElevated(3)
             }>
                 <Typography className={classes.colortext}>Primary Text Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.primarytext }} variant="contained" className={classes.colorbutton}
-                    onClick={() => handleClick(3, props.theme.colors.primarytext)} />
+                    onClick={() => props.handleChangeIndex(3, props.theme.colors.primarytext)} />
             </Paper>
             <Paper className={classes.boxcolor} elevation={
                 isElevated(4)
             }>
                 <Typography className={classes.colortext}>Secondary Text Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.secondarytext }} variant="contained" className={classes.colorbutton}
-                    onClick={() => handleClick(4, props.theme.colors.secondarytext)} />
+                    onClick={() => props.handleChangeIndex(4, props.theme.colors.secondarytext)} />
             </Paper>
             <Button className={classes.inputButton} variant="outlined">Save</Button>
             <Button className={classes.inputButton} variant="outlined">Reset</Button>
