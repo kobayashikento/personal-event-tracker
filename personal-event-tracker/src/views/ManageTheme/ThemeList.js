@@ -69,7 +69,7 @@ export default function ThemeList(props) {
             >
                 <Typography className={classes.text}>Primary Color</Typography>
                 <Button style={{ backgroundColor: props.theme.colors.primary }} variant="contained" className={classes.button}
-                    onClick={() => props.handleColorChange(0, props.theme.colors.primary)}
+                    onClick={() => handleClick(0, props.theme.colors.primary)}
                 />
             </Paper>
             <Paper className={classes.box}

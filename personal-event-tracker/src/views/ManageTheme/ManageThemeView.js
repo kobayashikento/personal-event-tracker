@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 
 // import all ui cores
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,7 +21,11 @@ export default function ManageThemeView(props) {
     const classes = useStyles();
 
     // states
-    const [currIndex, setIndex] = useState(0);
+    const [currIndex, setIndex] = React.useEffect(() => { setIndex(0) }, []);
+
+    const handleChangeIndex = (index) => {
+        React.useEffect(() => { setIndex(index) }, [])
+    }
 
     const handleColorChange = (color) => {
         let newtheme = {
@@ -35,7 +38,6 @@ export default function ManageThemeView(props) {
                 secondarytext: props.theme.colors.secondarytext
             }
         }
-        console.log(currIndex)
         switch (currIndex) {
             case 0: newtheme.colors["primary"] = color
                 break;
@@ -49,12 +51,7 @@ export default function ManageThemeView(props) {
                 break;
             default:
         }
-        console.log(newtheme.colors.primary)
         props.handleChange(newtheme)
-    }
-
-    const handleChangeIndex = (index) => {
-        setIndex(index)
     }
 
     const getCurrColor = () => {
