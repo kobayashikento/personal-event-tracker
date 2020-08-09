@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import styles from '../../assets/jss/components/theme/themelistStyle.js';
+import styles from '../../assets/styles/components/theme/themelistStyle.js';
 import themes from '../../assets/data/themes.json';
 
 const useStyles = makeStyles(styles);
@@ -31,10 +31,6 @@ export default function ThemeList(props) {
             props.handleChange(theme)
         }
     };
-
-    const handleClick = (index, color) => {
-        props.handleChangeIndex(index, color);
-    }
 
     const isElevated = (index) => {
         if (props.index === index) {
