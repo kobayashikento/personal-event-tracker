@@ -1,0 +1,32 @@
+[
+    {
+        "name": "bench press",
+        "musclegroup": "chest",
+        "movement": "push"
+    }, 
+    {
+        "name": "chest-supported row",
+        "musclegroup": "back",
+        "movement": "pull"
+    },
+    {
+        "name": "standing overhead press",
+        "musclegroup": "shoulder",
+        "movement": "push"
+    },
+    {
+        "name": "lat pulldown",
+        "musclegroup": "back",
+        "movement": "pull"
+    },
+    {
+        "name": "high to low cable flies",
+        "musclegroup": "chest",
+        "movement": "pull"
+    },
+    {
+        "name": "lying face pulls",
+        "musclegroup": "back",
+        "movement": "pull"
+    }
+]

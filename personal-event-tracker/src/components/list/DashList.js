@@ -9,8 +9,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 // import files
-import styles from '../../assets/jss/components/list/dashlistStyle.js';
-import { activities } from '../../assets/jss/masterStyle.js';
+import styles from '../../assets/styles/components/list/dashlistStyle.js';
+import { activities } from '../../assets/styles/masterStyle.js';
 
 const useStyles = makeStyles(styles);
 

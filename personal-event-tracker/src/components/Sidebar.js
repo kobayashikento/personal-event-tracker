@@ -9,7 +9,7 @@ import { Hidden, Drawer } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import files 
-import styles from '../assets/jss/components/sidebarStyle.js';
+import styles from '../assets/styles/components/sidebarStyle.js';
 import drawerItems from './list/DrawerList.js';
 
 const useStyles = makeStyles(styles);

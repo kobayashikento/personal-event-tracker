@@ -1,0 +1,27 @@
+[
+    {
+        "workout": {
+            "name": "bench press",
+            "musclegroup": "chest",
+            "movement": "push"
+        },
+        "data": [
+            {
+                "date": "2020-01-05",
+                "weight": 115
+            },
+            {
+                "date": "2020-01-08",
+                "weight": 117.5
+            },
+            {
+                "date": "2020-01-11",
+                "weight": 117.5
+            },
+            {
+                "date": "2020-01-14",
+                "weight": 118
+            }
+        ]
+    }
+]

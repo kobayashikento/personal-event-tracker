@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import files 
-import styles from '../../assets/jss/components/list/drawerlistStyle.js';
+import styles from '../../assets/styles/components/list/drawerlistStyle.js';
 
 const useStyles = makeStyles(styles);
 

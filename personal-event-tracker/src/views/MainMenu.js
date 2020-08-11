@@ -12,7 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // import files 
 import Sidebar from '../components/Sidebar.js';
 //import Appbar from '../components/Appbar.js';
-import styles from '../assets/jss/components/mainmenuStyle.js';
+import styles from '../assets/styles/components/mainmenuStyle.js';
 
 import routes from '../routes.js';
 

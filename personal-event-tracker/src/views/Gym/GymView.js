@@ -14,7 +14,7 @@ import LineGraph from '../../components/LineGraph.js';
 // generate random events for the calendar 
 import data from '../../assets/data/dashEvents.json';
 
-import styles from '../../assets/jss/views/gymStyle.js';
+import styles from '../../assets/styles/views/gymStyle.js';
 
 const useStyles = makeStyles(styles);
 

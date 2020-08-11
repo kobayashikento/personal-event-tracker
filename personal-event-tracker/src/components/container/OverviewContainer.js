@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 
 // import files
-import styles from '../../assets/jss/components/list/dashlistStyle.js';
+import styles from '../../assets/styles/components/list/dashlistStyle.js';
 const useStyles = makeStyles(styles);
 
 // props the event should be passed to this class so it could populate the data accordingly 

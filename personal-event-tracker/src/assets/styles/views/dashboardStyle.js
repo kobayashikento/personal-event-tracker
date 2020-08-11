@@ -1,10 +1,3 @@
-import {
-    gymbg,
-    pianobg,
-    allactbg,
-    noactbg
-} from '../../jss/masterStyle.js';
-
 const dashboardStyle = theme => ({
     container: {
         height: "100%",

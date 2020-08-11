@@ -4,7 +4,7 @@
         "colors": {
             "primary": "#88BDBC",
             "secondary": "#254E58",
-            "tertiary": "#112D32",
+            "tertiary": "#88BDBC",
             "primarytext": "white",
             "secondarytext": "black"
         }
