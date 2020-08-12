@@ -27,8 +27,7 @@ export default function DashGraph(props) {
 
     return (
         <Paper className={classes.paper}>
-            {console.log(props.gymData.data)}
-            <LineChart width={600} height={400} data={props.gymData.data}
+            <LineChart width={500} height={400} data={props.gymData.data}
                 margin={{ top: 30, right: 50, left: 20, bottom: 20 }}>
                 <XAxis dataKey="date" />
                 <YAxis dataKey="weight" domain={['auto', 'auto']} />

@@ -25,7 +25,11 @@ export default function DashBoardView(props) {
     const [activeIndex, setActiveIndex] = React.useState(0);
 
     const handleIndexChange = (index) => {
-        setActiveIndex(index);
+        if (activeIndex == index) {
+            setActiveIndex(0);
+        } else {
+            setActiveIndex(index);
+        }
     }
 
     return (
@@ -41,7 +45,7 @@ export default function DashBoardView(props) {
                 </div>
                 <div className="flex-col-2">
                     <div className="tall-rect">
-                        {(activeIndex === 1) &&
+                        {(activeIndex == 1) &&
                             <DashGraph
                                 gymData={gymData[0]}
                             />
@@ -51,7 +55,6 @@ export default function DashBoardView(props) {
 
                     </div>
                 </div>
-
             </section>
         </div>
     );

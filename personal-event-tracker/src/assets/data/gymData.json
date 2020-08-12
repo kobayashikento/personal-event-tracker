@@ -23,5 +23,30 @@
                 "weight": 118
             }
         ]
+    },
+    {
+        "workout": {
+            "name": "chest-supported row",
+            "musclegroup": "back",
+            "movement": "pull"
+        },
+        "data": [
+            {
+                "date": "2020-01-05",
+                "weight": 55
+            },
+            {
+                "date": "2020-01-08",
+                "weight": 55
+            },
+            {
+                "date": "2020-01-11",
+                "weight": 60
+            },
+            {
+                "date": "2020-01-14",
+                "weight": 65
+            }
+        ]
     }
 ]

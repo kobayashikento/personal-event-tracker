@@ -98,7 +98,6 @@ function getEventsDetail() {
             }
         }
     })
-    console.log(eventDetailsArr)
     return eventDetailsArr;
 }
 

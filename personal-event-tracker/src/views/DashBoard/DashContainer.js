@@ -26,6 +26,18 @@ import styles from '../../assets/styles/components/container/dashcontainerStyle.
 const useStyle = makeStyles(styles);
 
 export default function DashContainer(props) {
+    // states 
+    const [expanded, setExpanded] = React.useState(false);
+    const [selectedCell, setSelectedCell] = React.useState(1);
+    const handleChange = (panel, index) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+        props.handleIndexChange(index);
+    }
+
+    const handleCellChange = (cell) => {
+        setSelectedCell(cell);
+    }
+
     // styles 
     const classes = useStyle();
     const StyledTableCell = withStyles({
@@ -39,17 +51,12 @@ export default function DashContainer(props) {
     })(TableCell)
     const StyledTableRow = withStyles({
         root: {
-            '&:nth-of-type(odd)': {
+            [`&:nth-of-type(${selectedCell})`]: {
                 backgroundColor: props.theme.colors.tertiary,
             },
         },
     })(TableRow)
 
-    // states 
-    const [expanded, setExpanded] = React.useState(false);
-    const handleChange = (panel) => (event, isExpanded, index) => {
-        setExpanded(isExpanded ? panel : false, () => { props.handleIndexChange(index) });
-    }
 
     return (
         <div className={classes.container}>
@@ -84,7 +91,7 @@ export default function DashContainer(props) {
                         <TableBody>
                             {workoutRoutine[0].workouts.map((routine, index) => {
                                 return (
-                                    <StyledTableRow key={index}>
+                                    <StyledTableRow onClick={() => { handleCellChange(index+1) }} key={index}>
                                         <StyledTableCell className={classes.tableitem} component="th" scope="row">{routine.workout.name}</StyledTableCell>
                                         <StyledTableCell className={classes.tableitem} align="right">{routine.sets}</StyledTableCell>
                                         <StyledTableCell className={classes.tableitem} align="right">{routine.reps}</StyledTableCell>
@@ -143,7 +150,6 @@ export default function DashContainer(props) {
                     <Button size="large">More Details</Button>
                 </AccordionActions>
             </Accordion>
-
             <Typography className={classes.typo} variant="h5">Piano</Typography>
             <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3', 3)} className={classes.accordion}>
                 <AccordionSummary
