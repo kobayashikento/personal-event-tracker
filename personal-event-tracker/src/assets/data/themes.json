@@ -5,8 +5,8 @@
             "primary": "#88BDBC",
             "secondary": "#254E58",
             "tertiary": "#88BDBC",
-            "primarytext": "white",
-            "secondarytext": "black"
+            "primarytext": "#FFFFFF",
+            "secondarytext": "#000000"
         }
     },
     {

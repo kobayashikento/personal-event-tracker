@@ -73,6 +73,11 @@ export default function MainMenu() {
     );
 
     let muiTheme = createMuiTheme({
+        palette: {
+            primary: {
+                main: activeTheme.colors.primary
+            },
+        },
         overrides: {
             MuiListItem: {
                 root: {
