@@ -5,27 +5,18 @@
 $golden-ratio: 1.61803398875;
 
 section {
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 1rem;
     display: flex;
     flex-wrap: wrap;
-    width: 85%;
-
     .square {
-        flex: $golden-ratio;
         display: flex;
         flex-wrap: wrap;
-        margin-left: 1rem;
-        margin-right: 1rem;
-        // /box-shadow: 5px 5px 25px rgba(black, 0.1);
         &:before {
             content: "";
             display: block;
             padding-top: 100%;
         }
     }
-
     .squarenomargin {
         flex: $golden-ratio;
         display: flex;

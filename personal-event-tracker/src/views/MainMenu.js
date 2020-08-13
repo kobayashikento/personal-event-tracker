@@ -8,10 +8,10 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 
 // import core ui 
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Hidden from '@material-ui/core/Hidden';
 
 // import files 
 import Sidebar from '../components/Sidebar.js';
-//import Appbar from '../components/Appbar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
 import routes from '../routes.js';
@@ -41,17 +41,17 @@ export default function MainMenu() {
     }
 
     // check if the theme exists 
-    const checknotChanged = () =>{
+    const checknotChanged = () => {
         themes.map(theme => {
-            return (Object.keys(theme)===Object.keys(activeTheme));
+            return (Object.keys(theme) === Object.keys(activeTheme));
         })
-        return false; 
+        return false;
     }
 
     const handleSideBarClick = () => {
         console.log(checknotChanged());
         if (didChange) {
-             
+
         }
     }
 
@@ -93,14 +93,10 @@ export default function MainMenu() {
         <MuiThemeProvider theme={muiTheme}>
             <CssBaseline />
             <div className={classes.wrapper}>
-                {/* Remove Appbar for now */}
-                {/* <Appbar
-                    routes={routes}
-                /> */}
                 <Sidebar
                     routes={routes}
                     theme={activeTheme}
-                    handleSideBarClick={()=>handleSideBarClick()}
+                    handleSideBarClick={() => handleSideBarClick()}
                 />
                 <div className={classes.contentsWrapper}>
                     {switchRoutes}

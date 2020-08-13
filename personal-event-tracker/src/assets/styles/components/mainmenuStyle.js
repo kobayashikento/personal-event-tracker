@@ -9,8 +9,9 @@ const mainMenuStyle = theme => ({
         top: "0",
     },
     contentsWrapper: {       
-        marginLeft: drawerWidth,
-        
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: drawerWidth,
+        }
         // margin when appbar is present 
         // marginTop: appbarHeight,
     },

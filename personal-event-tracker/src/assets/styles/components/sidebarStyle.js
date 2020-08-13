@@ -13,10 +13,17 @@ const responsivedrawerStyle = theme => ({
         textAlign: "center",
         color: primaryColor,
         height: "80px",
-        textSize: "25px",
+        fontSize: "1rem",
+        [theme.breakpoints.up('sm')]: {
+            fontSize: "1.5rem",
+        }
+        
     },
     drawerPaper: props => ({
-        width: drawerWidth,
+        width: "60%",
+        [theme.breakpoints.up('sm')]: {
+            width: drawerWidth,
+        },
         borderRightWidth: "0px",
         right: "0px",
         backgroundSize: "cover",
@@ -46,7 +53,6 @@ const responsivedrawerStyle = theme => ({
         marginBottom: "30px",
         padding: "5px",
         color: "white",
-        align: "center",
         boxShadow: "0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)",
         borderRadius: "5px",
     },
@@ -57,7 +63,10 @@ const responsivedrawerStyle = theme => ({
     },
     buttonText: {
         paddingTop: "3px",
-        fontSize: "18px",
+        fontSize: "1rem",
+        [theme.breakpoints.up('sm')]: {
+            fontSize: "2rem",
+        }
     },
 });
 export default responsivedrawerStyle;

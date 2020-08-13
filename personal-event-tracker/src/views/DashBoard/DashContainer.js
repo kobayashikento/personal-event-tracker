@@ -14,6 +14,9 @@ import TableRow from '@material-ui/core/TableRow';
 import AccordionActions from '@material-ui/core/AccordionActions';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 // import material ui icons 
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -29,6 +32,8 @@ export default function DashContainer(props) {
     // states 
     const [expanded, setExpanded] = React.useState(false);
     const [selectedCell, setSelectedCell] = React.useState(1);
+    const [state, setState] = React.useState({ checkedSwitch: false });
+
     const handleChange = (panel, index) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
         props.handleIndexChange(index);
@@ -38,17 +43,24 @@ export default function DashContainer(props) {
         setSelectedCell(cell);
     }
 
+    const handleSwitchChange = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    };
+
     // styles 
     const classes = useStyle();
-    const StyledTableCell = withStyles({
+    const StyledTableCell = withStyles(theme => ({
         head: {
             backgroundColor: props.theme.colors.secondary,
             color: props.theme.colors.primarytext
         },
         body: {
-            fontSize: "1.2rem",
+            fontSize: "0.8rem",
+            [theme.breakpoints.up("sm")]: {
+                fontSize: "1.2rem",
+            }
         },
-    })(TableCell)
+    }))(TableCell)
     const StyledTableRow = withStyles({
         root: {
             [`&:nth-of-type(${selectedCell})`]: {
@@ -60,7 +72,16 @@ export default function DashContainer(props) {
 
     return (
         <div className={classes.container}>
-            <Typography className={classes.typo} variant="h5">Gym</Typography>
+            <div className={classes.toggleText}>
+                <Typography className={classes.typo} variant="h5">Gym</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        className={classes.typo}
+                        control={<Switch checked={state.checkedSwitch} onChange={handleSwitchChange} name="checkedSwitch" />}
+                        label={<Typography className={classes.switchTypo} variant="h4">Gym Mode</Typography>}
+                    />
+                </FormGroup>
+            </div>
             <Accordion
                 expanded={expanded === 'panel1'}
                 onChange={handleChange('panel1', 1)}
@@ -91,7 +112,7 @@ export default function DashContainer(props) {
                         <TableBody>
                             {workoutRoutine[0].workouts.map((routine, index) => {
                                 return (
-                                    <StyledTableRow onClick={() => { handleCellChange(index+1) }} key={index}>
+                                    <StyledTableRow onClick={() => { handleCellChange(index + 1) }} key={index}>
                                         <StyledTableCell className={classes.tableitem} component="th" scope="row">{routine.workout.name}</StyledTableCell>
                                         <StyledTableCell className={classes.tableitem} align="right">{routine.sets}</StyledTableCell>
                                         <StyledTableCell className={classes.tableitem} align="right">{routine.reps}</StyledTableCell>
