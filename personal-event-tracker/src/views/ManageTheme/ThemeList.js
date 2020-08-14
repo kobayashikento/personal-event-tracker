@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import styles from '../../assets/styles/components/theme/themelistStyle.js';
+import styles from '../../assets/styles/views/theme/themelistStyle.js';
 import themes from '../../assets/data/themes.json';
 
 const useStyles = makeStyles(styles);

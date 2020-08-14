@@ -1,6 +1,7 @@
 const dashcontainerStyle = theme => ({
     paper: {
-        marginTop: "5rem",
+        marginTop: "6.5rem",
+        marginLeft: "1rem",
         paddingTop: "2rem",
     },
 });

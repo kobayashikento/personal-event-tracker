@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { makeStyles, withStyles } from '@material-ui/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { TimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -31,7 +31,7 @@ export default function CountDownTimer(props) {
                 setTimer((timer) => timer - 1000);
             }, 1000);
             return () => clear()
-        }       
+        }
     }, [didStart]);
 
     React.useEffect(() => {
@@ -40,7 +40,7 @@ export default function CountDownTimer(props) {
         }
     }, [timer]);
 
-    const StyledTimePicker = withStyles(theme => ({
+    const StyledTimePicker = withStyles(({
         root: {
             verticalAlign: "middle",
             textAlignLast: "center",
@@ -61,6 +61,7 @@ export default function CountDownTimer(props) {
                     onChange={setTimer}
                     variant="dialog"
                     inputVariant="outlined"
+                    InputProps={{ className: classes.timepicker }}
                 />
 
             </MuiPickersUtilsProvider>

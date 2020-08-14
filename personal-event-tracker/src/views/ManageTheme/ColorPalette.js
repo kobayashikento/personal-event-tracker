@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { BlockPicker } from 'react-color';
 import { SliderPicker } from 'react-color';
 
-import styles from '../../assets/styles/components/theme/themepaletteStyle.js';
+import styles from '../../assets/styles/views/theme/themepaletteStyle.js';
 
 const useStyles = makeStyles(styles);
 

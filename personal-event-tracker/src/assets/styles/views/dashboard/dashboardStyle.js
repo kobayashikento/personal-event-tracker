@@ -1,6 +1,6 @@
 import {
     appbarHeight
-} from '../masterStyle.js';
+} from '../../masterStyle.js';
 
 const goldenRatio = 1.61803398875;
 
@@ -26,7 +26,7 @@ const dashboardStyle = theme => ({
     },
     square: {
         [theme.breakpoints.up("sm")]: {
-            flex: goldenRatio
+            flex: goldenRatio,
         }
     }
 });

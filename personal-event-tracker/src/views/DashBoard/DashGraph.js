@@ -9,7 +9,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-import styles from '../../assets/styles/components/dashgraphStyle.js';
+import styles from '../../assets/styles/views/dashboard/dashgraphStyle.js';
 
 const useStyles = makeStyles(styles);
 

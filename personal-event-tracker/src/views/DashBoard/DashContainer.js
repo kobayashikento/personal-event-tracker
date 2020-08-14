@@ -1,7 +1,7 @@
 import React from 'react';
 
 // import material ui cores
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -17,6 +17,7 @@ import Divider from '@material-ui/core/Divider';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 // import material ui icons 
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -25,22 +26,22 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import workoutRoutine from '../../assets/data/workoutRoutine.json';
 
 import CountDownTimer from '../../components/CountDownTimer.js';
-import styles from '../../assets/styles/components/container/dashcontainerStyle.js';
+import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 
 const useStyle = makeStyles(styles);
 
 export default function DashContainer(props) {
+    // variables
+    const theme = useTheme(styles);
+    const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
+
     // states 
     const [expanded, setExpanded] = React.useState(false);
-    const [selectedCell, setSelectedCell] = React.useState(1);
 
     const handleChange = (panel, index) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
         props.handleIndexChange(index);
-    }
-
-    const handleCellChange = (cell) => {
-        setSelectedCell(cell);
     }
 
     // styles 
@@ -59,7 +60,7 @@ export default function DashContainer(props) {
     }))(TableCell)
     const StyledTableRow = withStyles({
         root: {
-            [`&:nth-of-type(${selectedCell})`]: {
+            [`&:nth-of-type(${props.selectedCell})`]: {
                 backgroundColor: props.theme.colors.tertiary,
             },
         },
@@ -73,11 +74,11 @@ export default function DashContainer(props) {
                     <FormControlLabel
                         className={classes.typo}
                         control={<Switch color="primary" checked={props.state.checkedSwitch} onChange={props.handleSwitchChange} name="checkedSwitch" />}
-                        label={<Typography className={classes.switchTypo} variant="h4">Timer</Typography>}
+                        label={<Typography className={classes.switchTypo} variant="h4">In the gym</Typography>}
                     />
                 </FormGroup>
             </div>
-            {props.state.checkedSwitch ? <CountDownTimer /> : null}
+            {props.state.checkedSwitch && !matches? <CountDownTimer /> : null}
             <Accordion
                 expanded={expanded === 'panel1'}
                 onChange={handleChange('panel1', 1)}
@@ -108,7 +109,7 @@ export default function DashContainer(props) {
                         <TableBody>
                             {workoutRoutine[0].workouts.map((routine, index) => {
                                 return (
-                                    <StyledTableRow onClick={() => { handleCellChange(index + 1) }} key={index}>
+                                    <StyledTableRow onClick={() => { props.handleCellChange(index + 1) }} key={index}>
                                         <StyledTableCell className={classes.tableitem} component="th" scope="row">{routine.workout.name}</StyledTableCell>
                                         <StyledTableCell className={classes.tableitem} align="right">{routine.sets}</StyledTableCell>
                                         <StyledTableCell className={classes.tableitem} align="right">{routine.reps}</StyledTableCell>

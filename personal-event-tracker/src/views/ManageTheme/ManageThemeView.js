@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import '../../assets/styles/goldenRatioGrid.scss';
 
 // import all local files 
-import styles from '../../assets/styles/components/theme/themeStyle.js';
+import styles from '../../assets/styles/views/theme/themeStyle.js';
 
 import Themelist from './ThemeList.js';
 import ColorPalette from './ColorPalette.js';
@@ -74,7 +74,7 @@ export default function ManageThemeView(props) {
         <div className={classes.container}>
             <Typography className={classes.pagename} variant="h5">Themes</Typography>
             <Divider />
-            <section>
+            <section className={"section", classes.section}>
                 <div className="flex-col-2">
                     <div className="tall-rect">
                         <Themelist
@@ -92,7 +92,7 @@ export default function ManageThemeView(props) {
                         />
                     </div>
                 </div>
-                <div className="square">
+                <div className={"square", classes.square}>
                     <ThemePreview />
                 </div>
             </section>
