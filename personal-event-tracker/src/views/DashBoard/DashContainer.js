@@ -24,7 +24,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import workoutRoutine from '../../assets/data/workoutRoutine.json';
 
-import Timer from '../../components/CountDownTimer.js';
+import CountDownTimer from '../../components/CountDownTimer.js';
 import styles from '../../assets/styles/components/container/dashcontainerStyle.js';
 
 const useStyle = makeStyles(styles);
@@ -33,7 +33,6 @@ export default function DashContainer(props) {
     // states 
     const [expanded, setExpanded] = React.useState(false);
     const [selectedCell, setSelectedCell] = React.useState(1);
-    const [state, setState] = React.useState({ checkedSwitch: false });
 
     const handleChange = (panel, index) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -43,10 +42,6 @@ export default function DashContainer(props) {
     const handleCellChange = (cell) => {
         setSelectedCell(cell);
     }
-
-    const handleSwitchChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
 
     // styles 
     const classes = useStyle();
@@ -69,7 +64,7 @@ export default function DashContainer(props) {
             },
         },
     })(TableRow)
-ß
+
     return (
         <div className={classes.container}>
             <div className={classes.toggleText}>
@@ -77,12 +72,12 @@ export default function DashContainer(props) {
                 <FormGroup row>
                     <FormControlLabel
                         className={classes.typo}
-                        control={<Switch color="primary" checked={state.checkedSwitch} onChange={handleSwitchChange} name="checkedSwitch" />}
+                        control={<Switch color="primary" checked={props.state.checkedSwitch} onChange={props.handleSwitchChange} name="checkedSwitch" />}
                         label={<Typography className={classes.switchTypo} variant="h4">Timer</Typography>}
                     />
                 </FormGroup>
             </div>
-            <>
+            {props.state.checkedSwitch ? <CountDownTimer /> : null}
             <Accordion
                 expanded={expanded === 'panel1'}
                 onChange={handleChange('panel1', 1)}
@@ -136,7 +131,7 @@ export default function DashContainer(props) {
                     id="panel1c-header"
                 >
                     <div className={classes.column}>
-                        <ScheduleIcon  className={classes.icon} />
+                        <ScheduleIcon className={classes.icon} />
                         <Typography className={classes.heading}>Progress History</Typography>
                     </div>
                     <div className={classes.column}>

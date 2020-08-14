@@ -89,7 +89,17 @@ export default function MainMenu() {
                     },
                 }
             },
-        },
+            MuiInputBase: {
+                root: {
+                    fontSize: "2rem"
+                }
+            },
+            MuiInputLabel: {
+                outlined: {
+                    fontSize: "1.5rem"
+                }
+            }
+        }
     })
 
     muiTheme = responsiveFontSizes(muiTheme)

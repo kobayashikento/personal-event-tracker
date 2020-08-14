@@ -18,11 +18,14 @@ const useStyles = makeStyles(styles);
 export default function DashBoardView(props) {
     const classes = useStyles();
 
-    const [calendarIndex, setCalendarIndex] = React.useState(gymData[0]);
-
     // set states
     const [currWorkout, setWorkout] = React.useState();
     const [activeIndex, setActiveIndex] = React.useState(0);
+    const [state, setState] = React.useState({ checkedSwitch: false });
+
+    const handleSwitchChange = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    };
 
     const handleIndexChange = (index) => {
         if (activeIndex === index) {
@@ -39,6 +42,8 @@ export default function DashBoardView(props) {
                     <DashContainer
                         theme={props.theme}
                         handleIndexChange={(index) => handleIndexChange(index)}
+                        handleSwitchChange={(event) => handleSwitchChange(event)}
+                        state={state}
                     />
                 </div>
                 <div className="flex-col-2">
