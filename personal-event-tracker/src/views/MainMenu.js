@@ -77,6 +77,9 @@ export default function MainMenu() {
             primary: {
                 main: activeTheme.colors.primary
             },
+            secondary: {
+                main: activeTheme.colors.secondary
+            }
         },
         overrides: {
             MuiListItem: {

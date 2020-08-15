@@ -6,7 +6,6 @@ const gyminputformStyle = theme => ({
         justifyContent: "flex-start",
         [theme.breakpoints.up("sm")]: {
             marginLeft: "1rem",
-            minHeight: "100%"
         }
     },
     formcontrol: {
@@ -25,6 +24,10 @@ const gyminputformStyle = theme => ({
         marginLeft: "1rem",
         marginRight: "1rem",
         marginTop: "0rem !important"
+    },
+    table: {
+        marginLeft: "1rem",
+        marginRight: "1rem",
     }
 });
 

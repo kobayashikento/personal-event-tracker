@@ -1,4 +1,5 @@
 import React from 'react';
+import { forwardRef } from 'react';
 
 import { makeStyles, withStyles } from '@material-ui/styles';
 
@@ -11,6 +12,13 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+
+// material ui icons 
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import Check from '@material-ui/icons/Check';
+import Clear from '@material-ui/icons/Clear';
+import MaterialTable from 'material-table'
 
 import styles from '../../assets/styles/components/forms/gyminputformStyle.js';
 
@@ -26,32 +34,46 @@ export default function GymInputForm(props) {
     // states 
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [state, setState] = React.useState({
-        workout: props.workout.workout.name,
+        workouts: props.workouts,
         routine: props.routine.routineName
     });
     const handleChange = (event) => {
         const name = event.target.name;
-        setState({
-            ...state,
-            [name]: event.target.value,
-        });
+        setState({ ...state, [name]: event.target.value });
     };
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
 
+    // styles
     const StyleInputLabel = withStyles({
         root: {
             fontSize: "1rem"
         },
     })(InputLabel)
-
     const StyledSelect = withStyles({
         root: {
             textTransform: "capitalize"
         }
     })(Select)
 
+    // settings for the material table
+    const tableIcons = {
+        Delete: forwardRef((props, ref) => <DeleteForeverIcon {...props} ref={ref} />),
+        Add: forwardRef((props, ref) => <AddBoxIcon {...props} ref={ref} />),
+        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    };
+    const tableColumns = [
+        { title: 'Set', field: 'set', editable: 'never' },
+        { title: 'Reps', field: 'reps', type: 'numeric' },
+        { title: 'Weight', field: 'weight', type: 'numeric' }
+    ];
+    const tableData = []
+    for (var i = 1; i <= state.workouts.sets; i++) {
+        tableData.push({ set: i, reps: 0, weight: 0 })
+    }
+    const [data, setData] = React.useState(tableData)
 
     return (
         <Paper className={classes.paper}>
@@ -61,14 +83,14 @@ export default function GymInputForm(props) {
                         <StyleInputLabel >Workout</StyleInputLabel>
                         <StyledSelect
                             native
-                            value={state.workout}
+                            value={state.workouts.workout.name}
                             onChange={handleChange}
                             label="Workout"
                             name="workout"
                         >
-                            <option >{state.workout}</option>
+                            <option >{state.workouts.workout.name}</option>
                             {workouts.map((workout, index) => {
-                                if (workout.name !== state.workout) {
+                                if (workout.name !== state.workouts.workout.name) {
                                     return (
                                         <option key={index}>{workout.name}</option>
                                     )
@@ -111,6 +133,46 @@ export default function GymInputForm(props) {
                     />
                 </MuiPickersUtilsProvider>
             </div>
+            <MaterialTable
+                icons={tableIcons}
+                columns={tableColumns}
+                data={data}
+                options={{
+                    search: false,
+                    showTitle: false,
+                    filtering: false,
+                    sorting: false
+                }}
+                editable={{
+                    onRowAdd: newData => {
+                        new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                setData([...data, newData]);
+                                resolve();
+                            }, 1000)
+                        })
+                    },
+                    onRowDelete: oldData => {
+                        new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                const dataDelete = [...data];
+                                const index = oldData.tableData.id;
+                                dataDelete.splice(index, 1);
+                                setData([...dataDelete]);
+                                resolve()
+                            }, 1000)
+                        })
+                    },
+                }}
+                cellEditable={{
+                    onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
+                        return new Promise((resolve, reject) => {
+                            console.log('newValue: ' + newValue);
+                            setTimeout(resolve, 1000);
+                        });
+                    }
+                }}
+            />
         </Paper>
     );
 }

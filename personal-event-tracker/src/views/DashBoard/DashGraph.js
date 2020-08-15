@@ -8,6 +8,7 @@ import {
 // import material ui core 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 import styles from '../../assets/styles/views/dashboard/dashgraphStyle.js';
 
@@ -28,7 +29,7 @@ export default function DashGraph(props) {
     return (
         <Paper className={classes.paper}>
             <LineChart width={500} height={400} data={props.gymData.data}
-                margin={{ top: 30, right: 50, left: 20, bottom: 20 }}>
+                margin={{ top: 30, right: 50, left: 20, bottom: 5 }}>
                 <XAxis dataKey="date" />
                 <YAxis dataKey="weight" domain={['auto', 'auto']} />
                 <CartesianGrid strokeDasharray="3 3" />
@@ -36,6 +37,7 @@ export default function DashGraph(props) {
                 <Legend height={36} wrapperStyle={{ top: 0, left: 25 }} />
                 <Line name={titleCase(props.gymData.workout.name)} type="monotone" dataKey="weight" stroke="#8884d8" />
             </LineChart>
+            <Button color="secondary" variant="outlined" className={classes.button}>More Details</Button>
         </Paper>
     );
 }

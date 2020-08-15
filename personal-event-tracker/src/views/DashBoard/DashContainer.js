@@ -22,6 +22,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 // import material ui icons 
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
 
 import workoutRoutine from '../../assets/data/workoutRoutine.json';
 
@@ -34,8 +35,6 @@ export default function DashContainer(props) {
     // variables
     const theme = useTheme(styles);
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
-
-
     // states 
     const [expanded, setExpanded] = React.useState(false);
 
@@ -43,6 +42,13 @@ export default function DashContainer(props) {
         setExpanded(isExpanded ? panel : false);
         props.handleIndexChange(index);
     }
+    React.useEffect(() => {
+        if (props.checkedSwitch && expanded !== 'panel1') {
+            setExpanded('panel1');
+        } else if (!props.checkedSwitch & expanded === false){         
+            props.handleIndexChange(0)
+        }
+    }, [props.checkedSwitch])
 
     // styles 
     const classes = useStyle();
@@ -78,7 +84,7 @@ export default function DashContainer(props) {
                     />
                 </FormGroup>
             </div>
-            {props.state.checkedSwitch && !matches? <CountDownTimer /> : null}
+            {props.state.checkedSwitch && !matches ? <CountDownTimer /> : null}
             <Accordion
                 expanded={expanded === 'panel1'}
                 onChange={handleChange('panel1', 1)}
@@ -122,50 +128,7 @@ export default function DashContainer(props) {
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
-                    <Button size="large">More Details</Button>
-                </AccordionActions>
-            </Accordion>
-            <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2', 2)} className={classes.accordion}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1c-content"
-                    id="panel1c-header"
-                >
-                    <div className={classes.column}>
-                        <ScheduleIcon className={classes.icon} />
-                        <Typography className={classes.heading}>Progress History</Typography>
-                    </div>
-                    <div className={classes.column}>
-                        <Typography className={classes.secondaryHeading}>Muscle Group : {workoutRoutine[0].routineName}</Typography>
-                    </div>
-                </AccordionSummary>
-                <AccordionDetails className={classes.details}>
-                    <Table className={classes.table} aria-label="customized table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Exercise</StyledTableCell>
-                                <StyledTableCell align="right">Sets</StyledTableCell>
-                                <StyledTableCell align="right">Reps</StyledTableCell>
-                                <StyledTableCell align="right">Rest</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {workoutRoutine[0].workouts.map((routine, index) => {
-                                return (
-                                    <StyledTableRow key={index}>
-                                        <StyledTableCell className={classes.tableitem} component="th" scope="row">{routine.workout.name}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.sets}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.reps}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.rest}</StyledTableCell>
-                                    </StyledTableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </AccordionDetails>
-                <Divider />
-                <AccordionActions>
-                    <Button size="large">More Details</Button>
+                    <Button color="secondary" size="large">More Details</Button>
                 </AccordionActions>
             </Accordion>
             <Typography className={classes.typo} variant="h5">Piano</Typography>
@@ -176,7 +139,7 @@ export default function DashContainer(props) {
                     id="panel1c-header"
                 >
                     <div className={classes.column}>
-                        <ScheduleIcon className={classes.icon} />
+                        <LibraryMusicIcon className={classes.icon} />
                         <Typography className={classes.heading}>Pieces</Typography>
                     </div>
                     <div className={classes.column}>

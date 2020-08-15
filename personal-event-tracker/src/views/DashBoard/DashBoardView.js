@@ -25,8 +25,13 @@ export default function DashBoardView(props) {
     // need to have a json file that keeps tracks of current workout day probably a user setting file
     const [activeAccordIndex, setActiveAccordIndex] = React.useState(0);
     const [selectedCell, setSelectedCell] = React.useState(1);
-    const [state, setState] = React.useState({ checkedSwitch: false, currGymData: gymData[0], currWorkout: workRoutine[0].workouts[0],
-    routine: workRoutine[0] });
+    const [state, setState] = React.useState(
+        {
+            checkedSwitch: false,
+            currGymData: gymData[0],
+            currWorkout: workRoutine[0].workouts[0],
+            routine: workRoutine[0]
+        });
 
     const handleSwitchChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
@@ -34,6 +39,7 @@ export default function DashBoardView(props) {
     const handleCellChange = (cell) => {
         setSelectedCell(cell);
     }
+
     const handleIndexChange = (index) => {
         if (activeAccordIndex === index) {
             setActiveAccordIndex(0);
@@ -41,6 +47,7 @@ export default function DashBoardView(props) {
             setActiveAccordIndex(index);
         }
     }
+
     React.useEffect(() => {
         var gymdata = state.currGymData;
         gymData.map((data) => {
@@ -48,9 +55,9 @@ export default function DashBoardView(props) {
                 gymdata = data;
             }
         })
-        setState({ ...state, currWorkout: state.routine.workouts[selectedCell - 1] });
-        setState({ ...state, currGymData: gymdata });
-    }, [selectedCell]);
+        setState({ ...state, currGymData: gymdata, currWorkout: state.routine.workouts[selectedCell - 1] });
+    }, [selectedCell])
+
 
     return (
         <div className={classes.container}>
@@ -63,6 +70,7 @@ export default function DashBoardView(props) {
                         state={state}
                         selectedCell={selectedCell}
                         handleCellChange={(cell) => handleCellChange(cell)}
+                        checkedSwitch={state.checkedSwitch}
                     />
                 </div>
                 <div className="flex-col-2">
@@ -76,7 +84,7 @@ export default function DashBoardView(props) {
                             <Fragment>
                                 <CountDownTimer />
                                 <InputForm
-                                    workout={state.currWorkout}
+                                    workouts={state.currWorkout}
                                     routine={state.routine}
                                 />
                             </Fragment>
