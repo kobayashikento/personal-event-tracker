@@ -77,7 +77,9 @@ export default function DashBoardView(props) {
                     <div className="tall-rect">
                         {(activeAccordIndex === 1) && !state.checkedSwitch && matches &&
                             <DashGraph
+                                handleListItemClick={(index) => props.handleListItemClick(index)}
                                 gymData={state.currGymData}
+                                routes={props.routes}
                             />
                         }
                         {state.checkedSwitch && matches &&

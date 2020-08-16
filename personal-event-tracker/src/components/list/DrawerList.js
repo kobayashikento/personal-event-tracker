@@ -18,12 +18,9 @@ const useStyles = makeStyles(styles);
 export default function DrawerList(props) {
     const classes = useStyles();
 
-    const [selectedIndex, setSelectedIndex] = React.useState(0);
-
-    // handle onclick 
+    // states 
     const handleListItemClick = (event, index) => {
-        setSelectedIndex(index);
-        props.handleSideBarClick();
+        props.handleListItemClick(index);
     };
 
     //reccusively create the list items for the drawer
@@ -39,7 +36,7 @@ export default function DrawerList(props) {
                     >
                         <ListItem
                             button
-                            selected={selectedIndex === index}
+                            selected={props.selectedIndex === index}
                             className={
                                 classNames(classes.drawerButton)
                             }

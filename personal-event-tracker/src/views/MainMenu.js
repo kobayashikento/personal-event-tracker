@@ -34,6 +34,12 @@ export default function MainMenu() {
     // states 
     const [activeTheme, setTheme] = useState(theme);
     const [didChange, setChange] = useState(false);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+    // handle onclick 
+    const handleListItemClick = (index) => {
+        setSelectedIndex(index);
+    };
 
     // theme is an object that follows the themes.json scheme
     const handleChange = (newtheme) => {
@@ -48,13 +54,6 @@ export default function MainMenu() {
         return false;
     }
 
-    const handleSideBarClick = () => {
-        console.log(checknotChanged());
-        if (didChange) {
-
-        }
-    }
-
     // set it to defualt until a file manager is code
 
     const switchRoutes = (
@@ -64,7 +63,8 @@ export default function MainMenu() {
                     <Route
                         key={index}
                         path={prop.path}
-                        render={(props) => <prop.component {...props} theme={activeTheme} handleChange={(theme) => handleChange(theme)} />}
+                        render={(props) => <prop.component {...props} theme={activeTheme} 
+                        handleListItemClick={(index) => handleListItemClick(index)} handleChange={(theme) => handleChange(theme)} />}
                     >
                     </Route>
                 );
@@ -109,7 +109,8 @@ export default function MainMenu() {
                 <Sidebar
                     routes={routes}
                     theme={activeTheme}
-                    handleSideBarClick={() => handleSideBarClick()}
+                    handleListItemClick={(index) => handleListItemClick(index)}
+                    selectedIndex={selectedIndex}
                 />
                 <div className={classes.contentsWrapper}>
                     {switchRoutes}

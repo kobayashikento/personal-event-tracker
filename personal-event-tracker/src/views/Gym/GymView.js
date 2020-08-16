@@ -14,7 +14,7 @@ import LineGraph from '../../components/LineGraph.js';
 // generate random events for the calendar 
 import data from '../../assets/data/dashEvents.json';
 
-import styles from '../../assets/styles/views/gymStyle.js';
+import styles from '../../assets/styles/views/gym/gymStyle.js';
 
 const useStyles = makeStyles(styles);
 
@@ -23,36 +23,19 @@ export default function GymView() {
 
     return (
         <div className={classes.container}>
-            <Grid
-                container
-                justify="space-evenly"
-                alignItems="center"
-                className={classes.grid}
-                spacing={4}
-            >
-                <Grid item xs={12} >
-                    <Paper className={classes.paperProgressCalendar} elevation={3}>
-                        <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
-                        <ProgressCalendar 
-                            data={data}
-                            translateY={-40}
-                            margin={{ top:40, right: 40, bottom: 40, left: 40 }}
-                            align="top"
-                            colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
-                        />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={8}>
-                    <Paper className={classes.paperLineGraph} elevation={3}>
-                        <LineGraph />
-                    </Paper>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                    <Paper className={classes.paperNormalCalendar} elevation={3}>
-                        <NormalCalendar />
-                    </Paper>
-                </Grid>
-            </Grid>
+            <section className={"section", classes.section}>
+                <div className={"square", classes.square}>
+                  
+                </div>
+                <div className="flex-col-2">
+                    <div className="tall-rect">
+                      
+                    </div>
+                    <div className="wide-rect">
+
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

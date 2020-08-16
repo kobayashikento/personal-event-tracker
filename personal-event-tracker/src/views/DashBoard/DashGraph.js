@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // import recharts
 import {
@@ -37,7 +38,12 @@ export default function DashGraph(props) {
                 <Legend height={36} wrapperStyle={{ top: 0, left: 25 }} />
                 <Line name={titleCase(props.gymData.workout.name)} type="monotone" dataKey="weight" stroke="#8884d8" />
             </LineChart>
-            <Button color="secondary" variant="outlined" className={classes.button}>More Details</Button>
+            <Link
+                to={"/main-menu/gym"}
+                style={{ textDecoration: 'none' }} 
+            >
+                <Button onClick={() => {props.handleListItemClick(1)}} color="secondary" variant="outlined" className={classes.button}>More Details</Button>
+            </Link>
         </Paper>
     );
 }
