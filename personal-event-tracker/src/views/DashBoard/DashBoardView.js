@@ -80,6 +80,7 @@ export default function DashBoardView(props) {
                                 handleListItemClick={(index) => props.handleListItemClick(index)}
                                 gymData={state.currGymData}
                                 routes={props.routes}
+                                theme={props.theme}
                             />
                         }
                         {state.checkedSwitch && matches &&

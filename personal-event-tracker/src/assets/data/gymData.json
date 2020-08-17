@@ -48,5 +48,55 @@
                 "weight": 65
             }
         ]
+    },
+    {
+        "workout": {
+            "name": "standing overhead press",
+            "musclegroup": "shoulder",
+            "movement": "push"
+        },
+        "data": [
+            {
+                "date": "2020-01-05",
+                "weight": 45
+            },
+            {
+                "date": "2020-01-08",
+                "weight": 47.5
+            },
+            {
+                "date": "2020-01-11",
+                "weight": 47.5
+            },
+            {
+                "date": "2020-01-14",
+                "weight": 50
+            }
+        ]
+    },
+    {
+        "workout": {
+            "name": "lat pulldown",
+            "musclegroup": "back",
+            "movement": "pull"
+        },
+        "data": [
+            {
+                "date": "2020-01-05",
+                "weight": 35
+            },
+            {
+                "date": "2020-01-08",
+                "weight": 35
+            },
+            {
+                "date": "2020-01-11",
+                "weight": 40        
+            },
+            {
+                "date": "2020-01-14",
+                "weight": 45
+            }
+        ]
     }
 ]

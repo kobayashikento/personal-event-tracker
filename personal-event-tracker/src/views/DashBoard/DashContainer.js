@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { forwardRef } from 'react';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -23,6 +24,15 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
+import Search from '@material-ui/icons/Search';
+import Clear from '@material-ui/icons/Clear';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+
+import MaterialTable from 'material-table';
 
 import workoutRoutine from '../../assets/data/workoutRoutine.json';
 
@@ -45,7 +55,8 @@ export default function DashContainer(props) {
     React.useEffect(() => {
         if (props.checkedSwitch && expanded !== 'panel1') {
             setExpanded('panel1');
-        } else if (!props.checkedSwitch & expanded === false){         
+        } else if (!props.checkedSwitch & expanded !== false) {
+            setExpanded(false)
             props.handleIndexChange(0)
         }
     }, [props.checkedSwitch])
@@ -146,29 +157,48 @@ export default function DashContainer(props) {
                         <Typography className={classes.secondaryHeading}>In Progress</Typography>
                     </div>
                 </AccordionSummary>
-                <AccordionDetails className={classes.details}>
-                    <Table className={classes.table} aria-label="customized table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Exercise</StyledTableCell>
-                                <StyledTableCell align="right">Sets</StyledTableCell>
-                                <StyledTableCell align="right">Reps</StyledTableCell>
-                                <StyledTableCell align="right">Rest</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {workoutRoutine[0].workouts.map((routine, index) => {
-                                return (
-                                    <StyledTableRow key={index}>
-                                        <StyledTableCell className={classes.tableitem} component="th" scope="row">{routine.workout.name}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.sets}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.reps}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.rest}</StyledTableCell>
-                                    </StyledTableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                <AccordionDetails >
+                    <MaterialTable
+                        style={{ width: "100%" }}
+                        columns={[
+                            { title: 'Piece Name', field: 'name', },
+                            { title: 'Composer', field: 'composer' },
+                            { title: 'Date Added', field: 'date', type: 'numeric' },
+                        ]}
+                        data={[
+                            { name: 'Waltz in C Sharp Minor (Op. 64 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/SUT_0c2QVzo' },
+                            { name: 'Howls Moving Castle', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/5u5oCjrIu60' },
+                            { name: 'Chopin - Nocturne in E Flat Major (Op. 9 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/p29JUpsOSTE'},
+                            { name: 'Joe Hisaishi - One Summers Day', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/TK1Ij_-mank'},
+                            { name: 'Kioku', composer: 'Unknown', url: 'https://www.youtube.com/embed/nj93DxZdwUs'}
+                        ]}
+                        options={{
+                            showTitle: false,
+                        }}
+                        icons={{
+                            Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+                            ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+                            DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+                            SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+                            FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+                            LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+                            NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+                            PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+                        }}
+                        detailPanel={rowData => {
+                            return (
+                                <iframe
+                                    width="100%"
+                                    height="400"
+                                    src={rowData.url}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            )
+                        }}
+                        onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                    />
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>

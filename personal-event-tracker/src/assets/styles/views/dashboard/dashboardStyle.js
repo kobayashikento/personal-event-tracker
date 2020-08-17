@@ -27,6 +27,7 @@ const dashboardStyle = theme => ({
     square: {
         [theme.breakpoints.up("sm")]: {
             flex: goldenRatio,
+            marginBottom: "3rem"
         }
     }
 });
