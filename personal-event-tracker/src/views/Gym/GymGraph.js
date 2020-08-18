@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 // import recharts
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
 // import material ui core 
@@ -27,23 +26,44 @@ export default function DashGraph(props) {
         return splitStr.join(' ');
     }
 
+    const getData = () => {
+        if (props.data.length === 0) {
+            return ([
+                {
+                    "date": "2020-01-11",
+                    "weight": 0
+                },
+                {
+                    "date": "2020-01-12",
+                    "weight": 0
+                },
+                {
+                    "date": "2020-01-13",
+                    "weight": 0
+                },
+            ]);
+        } else { return "passed" }
+    }
+
+    const getLabel = () => {
+        if (props.data.length === 0) {
+            return ("");
+        } else { return "passed" }
+    }
+
     return (
         <Paper className={classes.paper}>
-            <LineChart width={500} height={400} data={props.gymData.data}
-                margin={{ top: 30, right: 50, left: 20, bottom: 5 }}>
-                <XAxis dataKey="date" />
-                <YAxis dataKey="weight" domain={['auto', 'auto']} />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Legend height={36} wrapperStyle={{ top: 0, left: 25 }} />
-                <Line name={titleCase(props.gymData.workout.name)} type="monotone" dataKey="weight" stroke={props.theme.colors.primary} />
-            </LineChart>
-            <Link
-                to={"/main-menu/gym"}
-                style={{ textDecoration: 'none' }} 
-            >
-                <Button onClick={() => {props.handleListItemClick(1)}} color="secondary" variant="outlined" className={classes.button}>More Details</Button>
-            </Link>
+            <ResponsiveContainer >
+                <LineChart data={getData()}
+                    margin={{ top: 30, right: 50, left: 20, bottom: 5 }}>
+                    <XAxis dataKey="date" />
+                    <YAxis dataKey="weight" domain={['auto', 'auto']} />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip />
+                    <Legend height={36} wrapperStyle={{ top: 0, left: 25 }} />
+                    <Line name={getLabel()} type="monotone" dataKey="weight" />
+                </LineChart>
+            </ResponsiveContainer>
         </Paper>
     );
 }

@@ -14,17 +14,7 @@ section {
         &:before {
             content: "";
             display: block;
-            padding-top: 100%;
-        }
-    }
-    .squarenomargin {
-        flex: $golden-ratio;
-        display: flex;
-        flex-wrap: wrap;
-        &:before {
-            content: "";
-            display: block;
-            padding-top: 100%;
+            padding-top: 85%;
         }
     }
 

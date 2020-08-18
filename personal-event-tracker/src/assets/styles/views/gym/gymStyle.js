@@ -5,7 +5,7 @@ import {
 const goldenRatio = 1.61803398875;
 
 const gymStyle = theme => ({
-      container: {
+    container: {
         height: "100%",
         marginTop: "2rem",
         [theme.breakpoints.up('sm')]: {
@@ -21,12 +21,13 @@ const gymStyle = theme => ({
         [theme.breakpoints.up("sm")]: {
             marginLeft: "auto",
             marginRight: "auto",
-            width: "85%"
+            width: "85%",
+            height: "75vh"
         }
     },
     square: {
         [theme.breakpoints.up("sm")]: {
-            flex: goldenRatio,
+            flex: goldenRatio
         }
     }
 });

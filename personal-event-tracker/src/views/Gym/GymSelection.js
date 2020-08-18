@@ -1,7 +1,7 @@
 import React from 'react';
 
 // import material ui 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -31,19 +31,26 @@ export default function GymSelection(props) {
         };
     });
 
+    const handleAutoComplete = (event, values) => {
+        props.handleDataSelection(values)
+    }
+
+    // styles
+
     return (
         <Paper className={classes.paper}>
             <Autocomplete
                 className={classes.autocomplete}
                 multiple
                 limitTags={6}
-                options={options.sort((a,b)=> -b.group.localeCompare(a.group))}
+                options={options.sort((a, b) => -b.group.localeCompare(a.group))}
                 id="multiple-limit-tags"
                 groupBy={(option) => option.group}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                     <TextField {...params} variant="outlined" label="Workouts" placeholder="Workout" />
                 )}
+                onChange={handleAutoComplete}
             />
         </Paper>
     );
