@@ -6,11 +6,6 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-// import components
-import NormalCalendar from '../../components/StandardCalendar.js';
-import ProgressCalendar from '../../components/ProgressCalendar.js';
-import LineGraph from '../../components/LineGraph.js';
-
 // generate random events for the calendar 
 import data from '../../assets/data/dashEvents.json';
 

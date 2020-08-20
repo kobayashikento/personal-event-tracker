@@ -74,8 +74,7 @@ export default function DashGraph(props) {
             })
         }
     }
-    // style 
-    console.log(getData())
+    // style
 
     const data = [
         {
