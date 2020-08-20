@@ -35,7 +35,6 @@ export default function GymView(props) {
         setState({ ...state, tabIndex: newValue });
     };
     const handleDataSelection = (data) => {
-        console.log(data)
         setState({ ...state, selectedData: data })
     };
 

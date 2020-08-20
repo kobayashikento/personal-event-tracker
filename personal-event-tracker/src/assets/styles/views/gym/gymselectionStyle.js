@@ -1,6 +1,5 @@
 const gymStyle = theme => ({
     paper: {
-        
         marginLeft: "1rem",
         paddingTop: "2rem",
         display: "flex",

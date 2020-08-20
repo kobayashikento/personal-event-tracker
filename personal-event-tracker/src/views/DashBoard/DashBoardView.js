@@ -47,7 +47,6 @@ export default function DashBoardView(props) {
             setActiveAccordIndex(index);
         }
     }
-
     React.useEffect(() => {
         var gymdata = state.currGymData;
         gymData.map((data) => {

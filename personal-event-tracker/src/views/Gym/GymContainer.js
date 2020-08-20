@@ -27,7 +27,7 @@ function TabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box>
+                <Box style={{ height: "100%" }}>
                     {children}
                 </Box>
             )}
@@ -73,7 +73,7 @@ export default function GymContainer(props) {
                     <Tab className={classes.tab} label="Manage Routines" {...a11yProps(3)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={props.value} index={0}>
+            <TabPanel className={classes.tabpanel} value={props.value} index={0}>
                 <GymGraph
                     data={props.selectedData}
                 />
