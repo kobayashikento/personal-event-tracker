@@ -10,8 +10,18 @@ const gymStyle = theme => ({
             marginTop: "4rem",
         }
     },
+    paperHidden: {
+        display: "none"
+    },
     autocomplete:{
         width: "85%"
+    },
+    datepicker: {
+        width: "85%",
+        height: "3rem",
+        marginTop: "2rem",
+        fontSize: "1rem",
+        textAlign: "center"
     }
 });
 

@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-import { forwardRef } from 'react';
+import React from 'react';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -24,13 +23,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
-import Search from '@material-ui/icons/Search';
-import Clear from '@material-ui/icons/Clear';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
 
 import MaterialTable from 'material-table';
 
@@ -38,6 +30,8 @@ import workoutRoutine from '../../assets/data/workoutRoutine.json';
 
 import CountDownTimer from '../../components/CountDownTimer.js';
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
+
+import {icons} from '../../assets/styles/masterStyle.js';
 
 const useStyle = makeStyles(styles);
 
@@ -175,16 +169,7 @@ export default function DashContainer(props) {
                         options={{
                             showTitle: false,
                         }}
-                        icons={{
-                            Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-                            ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-                            DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-                            SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-                            FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-                            LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-                            NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-                            PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />)
-                        }}
+                        icons={icons}
                         detailPanel={rowData => {
                             return (
                                 <iframe

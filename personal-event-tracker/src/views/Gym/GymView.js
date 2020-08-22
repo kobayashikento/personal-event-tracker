@@ -11,6 +11,8 @@ import data from '../../assets/data/dashEvents.json';
 
 import styles from '../../assets/styles/views/gym/gymStyle.js';
 
+import moment from 'moment';
+
 import GymSelection from './GymSelection.js';
 import GymContainer from './GymContainer.js';
 
@@ -22,7 +24,10 @@ export default function GymView(props) {
     //states 
     const [state, setState] = React.useState({
         selectedData: [],
-        tabIndex: 0
+        selectedStartDate: moment().subtract(29, 'days'),
+        selectedEndDate: moment(),
+        tabIndex: 0,
+        fullView: true
     })
 
     // react state for tabs 
@@ -32,6 +37,16 @@ export default function GymView(props) {
     const handleDataSelection = (data) => {
         setState({ ...state, selectedData: data })
     };
+    const handleDateChange = (start, end) => {
+        setState({ ...state, selectedStartDate: start, selectedEndDate: end })
+    };
+    React.useEffect(() => {
+        if (state.tabIndex === 1){
+            setState({...state, fullView: false})
+        } else {
+            setState({...state, fullView: true})
+        }
+    }, [state.tabIndex]);
 
     return (
         <div className={classes.container}>
@@ -41,6 +56,10 @@ export default function GymView(props) {
                         value={state.tabIndex}
                         handleChange={(value) => handleChange(value)}
                         selectedData={state.selectedData}
+                        start={state.selectedStartDate}
+                        end={state.selectedEndDate}
+                        theme={props.theme}
+                        fullView={state.fullView}
                     />
                 </div>
                 <div className="flex-col-2">
@@ -48,6 +67,10 @@ export default function GymView(props) {
                         <GymSelection
                             handleDataSelection={(data) => handleDataSelection(data)}
                             theme={props.theme}
+                            start={state.selectedStartDate}
+                            end={state.selectedEndDate}
+                            handleDateChange={(start, end) => handleDateChange(start, end)}
+                            fullView={state.fullView}
                         />
                     </div>
                     <div className="wide-rect">

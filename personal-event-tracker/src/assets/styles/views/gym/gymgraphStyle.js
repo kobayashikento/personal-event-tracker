@@ -2,9 +2,14 @@ const gymgraphStyle = theme => ({
     paper: {
         height: "inherit",
     },
-    container:{
+    chart: {
         paddingTop: "3rem"
-    }
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 })
 
 export default gymgraphStyle;

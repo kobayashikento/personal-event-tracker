@@ -92,11 +92,6 @@ export default function MainMenu() {
                     },
                 }
             },
-            MuiInputLabel: {
-                outlined: {
-                    fontSize: "1.5rem"
-                }
-            }
         }
     })
 
