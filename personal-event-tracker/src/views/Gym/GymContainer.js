@@ -15,7 +15,9 @@ import styles from '../../assets/styles/views/gym/gymcontainerStyle.js';
 import { icons } from '../../assets/styles/masterStyle.js';
 import GymGraph from './GymGraph.js';
 
+// data
 import workoutData from '../../assets/data/gymData.json';
+import workoutJson from '../../assets/data/workouts.json';
 
 const useStyles = makeStyles(styles);
 
@@ -51,14 +53,94 @@ function a11yProps(index) {
     };
 }
 
+// Functions 
+const titleCase = (str) => {
+    let splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+};
+
+const getManageData = () => {
+    let temp = [];
+    workoutData.map(workout => {
+        workout.data.map(prop => {
+            temp.push({
+                date: prop.date,
+                workout: titleCase(workout.workout.name),
+                group: titleCase(workout.workout.musclegroup),
+                movement: titleCase(workout.workout.movement),
+                rep: prop.rep,
+                weight: prop.weight
+            })
+        })
+    })
+    return temp;
+};
+
+const getWorkoutData = () => {
+    let temp = [];
+    workoutJson.map(prop => {
+        temp.push({
+            name: titleCase(prop.name),
+            group: titleCase(prop.musclegroup),
+            movement: titleCase(prop.movement) 
+        })
+    })
+    return temp;
+};
+
+const getWorkoutInfo = () => {
+    let temp = {
+        workouts: [],
+        movement: [],
+        musclegroup: []
+    };
+    workoutJson.map((prop, index) => {
+        if (!temp.workouts.includes(prop.name)) {
+            temp.workouts.push(
+                {
+                    "something": prop.name
+                });
+        }
+        if (!temp.movement.includes(prop.movement)) {
+            temp.movement.push(prop.movement);
+        }
+        if (!temp.musclegroup.includes(prop.musclegroup)) {
+            temp.musclegroup.push(prop.musclegroup);
+        }
+    })
+    return temp;
+};
+
 export default function GymContainer(props) {
     const classes = useStyles();
     const targetRef = useRef();
 
     // states 
-    const [state, setState] = React.useState({ width: 0, height: 0, })
+    const [state, setState] = React.useState({
+        width: 0, height: 0,
+        dataColumn: [
+            { title: 'Date', field: 'date', type: 'date' },
+            {
+                title: 'Workout', field: 'workout',
+                lookup: getWorkoutInfo.workouts
+            },
+            { title: 'Muscle Group', field: 'group' },
+            { title: 'Movement', field: 'movement' },
+            { title: 'Reps', field: 'rep', type: 'numeric' },
+            { title: 'Weight', field: 'weight', type: 'numeric', grouping: false }],
+        data: getManageData(),
+        workoutColumn: [
+            { title: 'Name', field: 'name', grouping: false },
+            { title: 'Muscle Group', field: 'group' },
+            { title: 'Movement', field: 'movement' },
+        ], 
+        workoutData: getWorkoutData()
+    });
+
     const handleChange = (event, newValue) => {
-        console.log(event);
         props.handleChange(newValue);
     };
 
@@ -71,32 +153,6 @@ export default function GymContainer(props) {
             });
         }
     }, []);
-
-    // Functions 
-    const titleCase = (str) => {
-        var splitStr = str.toLowerCase().split(' ');
-        for (var i = 0; i < splitStr.length; i++) {
-            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-        }
-        return splitStr.join(' ');
-    };
-
-
-    const getManageData = () => {
-        var temp = [];
-        workoutData.map(workout => {
-            workout.data.map(prop => {
-                temp.push({
-                    date: prop.date,
-                    workout: titleCase(workout.workout.name),
-                    group: titleCase(workout.workout.musclegroup),
-                    movement: titleCase(workout.workout.movement),
-                    weight: prop.weight
-                })
-            })
-        })
-        return temp;
-    }
 
     return (
         <Paper elevation={3} className={props.fullView ? classes.paper : classes.paperHidden} ref={targetRef}>
@@ -128,25 +184,92 @@ export default function GymContainer(props) {
             <TabPanel value={props.value} index={1} >
                 <MaterialTable
                     className={classes.manageDataTable}
-                    title="Basic Grouping Preview"
-                    columns={[
-                        { title: 'Date', field: 'date', type: 'date' },
-                        { title: 'Workout', field: 'workout' },
-                        { title: 'Muscle Group', field: 'group' },
-                        { title: 'Movement', field: 'movement' },
-                        { title: 'Weight', field: 'weight', type: 'numeric' },
-                    ]}
-                    data={getManageData()}
+                    columns={state.dataColumn}
+                    data={state.data}
                     options={{
                         grouping: true,
                         showTitle: false,
                         pageSize: 8
                     }}
                     icons={icons}
+                    editable={{
+                        onRowAdd: newData =>
+                            new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    setState({ ...state, data: newData });
+
+                                    resolve();
+                                }, 1000)
+                            }),
+                        onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    const dataUpdate = [...state.data];
+                                    const index = oldData.tableData.id;
+                                    dataUpdate[index] = newData;
+                                    setState({ ...state, data: dataUpdate });
+
+                                    resolve();
+                                }, 1000)
+                            }),
+                        onRowDelete: oldData =>
+                            new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    const dataDelete = [...state.data];
+                                    const index = oldData.tableData.id;
+                                    dataDelete.splice(index, 1);
+                                    setState({ ...state, data: dataDelete });
+
+                                    resolve()
+                                }, 1000)
+                            }),
+                    }}
                 />
             </TabPanel>
             <TabPanel value={props.value} index={2}>
-                Item Three
+                <MaterialTable
+                    className={classes.manageDataTable}
+                    columns={state.workoutColumn}
+                    data={state.workoutData}
+                    options={{
+                        grouping: true,
+                        showTitle: false,
+                        pageSize: 8
+                    }}
+                    icons={icons}
+                    editable={{
+                        onRowAdd: newData =>
+                            new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    setState({ ...state, workoutData: newData });
+
+                                    resolve();
+                                }, 1000)
+                            }),
+                        onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    const dataUpdate = [...state.workoutData];
+                                    const index = oldData.tableData.id;
+                                    dataUpdate[index] = newData;
+                                    setState({ ...state, workoutData: dataUpdate });
+
+                                    resolve();
+                                }, 1000)
+                            }),
+                        onRowDelete: oldData =>
+                            new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    const dataDelete = [...state.workoutData];
+                                    const index = oldData.tableData.id;
+                                    dataDelete.splice(index, 1);
+                                    setState({ ...state, workoutData: dataDelete });
+
+                                    resolve()
+                                }, 1000)
+                            }),
+                    }}
+                />
             </TabPanel>
             <TabPanel value={props.value} index={3}>
                 Item Three
