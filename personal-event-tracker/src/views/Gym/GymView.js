@@ -6,53 +6,78 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-// import components
-import NormalCalendar from '../../components/StandardCalendar.js';
-import ProgressCalendar from '../../components/ProgressCalendar.js';
-import LineGraph from '../../components/LineGraph.js';
-
 // generate random events for the calendar 
 import data from '../../assets/data/dashEvents.json';
 
-import styles from '../../assets/styles/views/gymStyle.js';
+import styles from '../../assets/styles/views/gym/gymStyle.js';
+
+import moment from 'moment';
+
+import GymSelection from './GymSelection.js';
+import GymContainer from './GymContainer.js';
 
 const useStyles = makeStyles(styles);
 
-export default function GymView() {
+export default function GymView(props) {
     const classes = useStyles();
+
+    //states 
+    const [state, setState] = React.useState({
+        selectedData: [],
+        selectedStartDate: moment().subtract(29, 'days'),
+        selectedEndDate: moment(),
+        tabIndex: 0,
+        fullView: true
+    })
+
+    // react state for tabs 
+    const handleChange = (newValue) => {
+        setState({ ...state, tabIndex: newValue });
+    };
+    const handleDataSelection = (data) => {
+        setState({ ...state, selectedData: data })
+    };
+    const handleDateChange = (start, end) => {
+        setState({ ...state, selectedStartDate: start, selectedEndDate: end })
+    };
+    React.useEffect(() => {
+        if (state.tabIndex === 0){
+            setState({...state, fullView: true})
+        } else {
+            setState({...state, fullView: false})
+        }
+    }, [state.tabIndex]);
 
     return (
         <div className={classes.container}>
-            <Grid
-                container
-                justify="space-evenly"
-                alignItems="center"
-                className={classes.grid}
-                spacing={4}
-            >
-                <Grid item xs={12} >
-                    <Paper className={classes.paperProgressCalendar} elevation={3}>
-                        <Typography className={classes.calTitle} variant="h6">Daily Activity</Typography>
-                        <ProgressCalendar 
-                            data={data}
-                            translateY={-40}
-                            margin={{ top:40, right: 40, bottom: 40, left: 40 }}
-                            align="top"
-                            colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
+            <section className={"section", classes.section}>
+                <div className={"square", classes.square}>
+                    <GymContainer
+                        value={state.tabIndex}
+                        handleChange={(value) => handleChange(value)}
+                        selectedData={state.selectedData}
+                        start={state.selectedStartDate}
+                        end={state.selectedEndDate}
+                        theme={props.theme}
+                        fullView={state.fullView}
+                    />
+                </div>
+                <div className="flex-col-2">
+                    <div className="tall-rect">
+                        <GymSelection
+                            handleDataSelection={(data) => handleDataSelection(data)}
+                            theme={props.theme}
+                            start={state.selectedStartDate}
+                            end={state.selectedEndDate}
+                            handleDateChange={(start, end) => handleDateChange(start, end)}
+                            fullView={state.fullView}
                         />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={8}>
-                    <Paper className={classes.paperLineGraph} elevation={3}>
-                        <LineGraph />
-                    </Paper>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                    <Paper className={classes.paperNormalCalendar} elevation={3}>
-                        <NormalCalendar />
-                    </Paper>
-                </Grid>
-            </Grid>
+                    </div>
+                    <div className="wide-rect">
+
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

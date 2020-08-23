@@ -1,6 +1,5 @@
 import {
     drawerWidth,
-    appbarHeight,
 } from '../masterStyle.js'
 
 const mainMenuStyle = theme => ({

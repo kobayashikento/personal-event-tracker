@@ -4,7 +4,7 @@ import {
 
 const goldenRatio = 1.61803398875;
 
-const dashboardStyle = theme => ({
+const gymStyle = theme => ({
     container: {
         height: "100%",
         marginTop: "2rem",
@@ -21,15 +21,15 @@ const dashboardStyle = theme => ({
         [theme.breakpoints.up("sm")]: {
             marginLeft: "auto",
             marginRight: "auto",
-            width: "85%"
+            width: "85%",
+            height: "75vh"
         }
     },
     square: {
         [theme.breakpoints.up("sm")]: {
-            flex: goldenRatio,
-            marginBottom: "3rem"
+            flex: goldenRatio
         }
     }
 });
 
-export default dashboardStyle;
+export default gymStyle;

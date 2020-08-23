@@ -14,7 +14,7 @@ const dashcontainerStyle = theme => ({
         alignItems: "center"
     },
     accordion: {
-        width: "100%"
+        width: "100%",
     },
     typo: {
         fontSize: "1rem",
@@ -60,7 +60,7 @@ const dashcontainerStyle = theme => ({
     tableitem: {
         textTransform: "capitalize",
         fontSize: "1rem"
-    }
+    },
 })
 
 export default dashcontainerStyle;

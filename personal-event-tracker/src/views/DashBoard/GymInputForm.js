@@ -141,7 +141,8 @@ export default function GymInputForm(props) {
                     search: false,
                     showTitle: false,
                     filtering: false,
-                    sorting: false
+                    sorting: false,
+                    paging: false
                 }}
                 editable={{
                     onRowAdd: newData => {

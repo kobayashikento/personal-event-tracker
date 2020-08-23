@@ -54,16 +54,6 @@
             },
             {
                 "workout": {
-                    "name": "high to low cable flies",
-                    "musclegroup": "chest",
-                    "movement": "pull"
-                },
-                "sets": "3",
-                "reps": "12-15",
-                "rest": "1.5-2"
-            },
-            {
-                "workout": {
                     "name": "lying face pulls",
                     "musclegroup": "back",
                     "movement": "pull"

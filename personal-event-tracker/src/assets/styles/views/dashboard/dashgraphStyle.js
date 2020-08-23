@@ -1,4 +1,4 @@
-const dashcontainerStyle = theme => ({
+const dashgraphStyle = theme => ({
     paper: {
         marginTop: "6.5rem",
         marginLeft: "1rem",
@@ -13,4 +13,4 @@ const dashcontainerStyle = theme => ({
     }
 });
 
-export default dashcontainerStyle;
+export default dashgraphStyle;

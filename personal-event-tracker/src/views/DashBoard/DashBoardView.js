@@ -47,7 +47,6 @@ export default function DashBoardView(props) {
             setActiveAccordIndex(index);
         }
     }
-
     React.useEffect(() => {
         var gymdata = state.currGymData;
         gymData.map((data) => {
@@ -77,7 +76,10 @@ export default function DashBoardView(props) {
                     <div className="tall-rect">
                         {(activeAccordIndex === 1) && !state.checkedSwitch && matches &&
                             <DashGraph
+                                handleListItemClick={(index) => props.handleListItemClick(index)}
                                 gymData={state.currGymData}
+                                routes={props.routes}
+                                theme={props.theme}
                             />
                         }
                         {state.checkedSwitch && matches &&
