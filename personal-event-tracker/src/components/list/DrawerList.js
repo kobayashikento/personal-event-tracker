@@ -36,6 +36,7 @@ export default function DrawerList(props) {
                         to={prop.path}
                         className={classes.item}
                         key={index}
+                        style={{ textDecoration: 'none' }}
                     >
                         <ListItem
                             button

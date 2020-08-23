@@ -40,7 +40,7 @@ export default function ThemeList(props) {
     }
 
     return (
-        <form className={classes.container}>
+        <Paper className={classes.container} elevation={3}>
             <Button className={classes.select} aria-controls="simple-menu" aria-haspopup="true" variant="outlined" onClick={handleMenuClick}>
                 {props.theme.themeName}
             </Button>
@@ -100,6 +100,6 @@ export default function ThemeList(props) {
             </Paper>
             <Button className={classes.inputButton} variant="outlined">Save</Button>
             <Button className={classes.inputButton} variant="outlined">Reset</Button>
-        </form >
+        </Paper >
     );
 }

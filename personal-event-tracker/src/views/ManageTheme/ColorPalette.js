@@ -3,6 +3,7 @@ import React from 'react';
 // import material ui
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
 import { BlockPicker } from 'react-color';
 import { SliderPicker } from 'react-color';
@@ -14,22 +15,22 @@ const useStyles = makeStyles(styles);
 export default function ColorPalette(props) {
     // props: handleColorChange(color,index), color, index
     const classes = useStyles();
-    
+
     // states
     const handleChangeComplete = (color) => {
         try {
             props.handleColorChange(color.hex);
-        } catch(e) { }
+        } catch (e) { }
     }
 
     const handleChange = (color) => {
         try {
             props.handleColorChange(color.hex);
-        } catch(e) { }
+        } catch (e) { }
     }
 
     return (
-        <div className={classes.container}>
+        <Paper className={classes.container} elevation={3}>
             <BlockPicker
                 width="60%"
                 className={classes.blockpicker}
@@ -46,7 +47,7 @@ export default function ColorPalette(props) {
                 onChangeComplete={handleChangeComplete}
                 onChange={handleChange}
             />
-        </div>
+        </Paper>
     );
 }
 

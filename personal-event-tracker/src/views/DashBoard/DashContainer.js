@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -29,6 +30,11 @@ import workoutRoutine from '../../assets/data/workoutRoutine.json';
 import CountDownTimer from '../../components/CountDownTimer.js';
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 
+<<<<<<< Updated upstream
+=======
+import { icons } from '../../assets/styles/masterStyle.js';
+
+>>>>>>> Stashed changes
 const useStyle = makeStyles(styles);
 
 export default function DashContainer(props) {
@@ -128,7 +134,12 @@ export default function DashContainer(props) {
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
-                    <Button color="secondary" size="large">More Details</Button>
+                    <Link
+                        to={"/main-menu/gym"}
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <Button color="secondary" size="large">More Details</Button>
+                    </Link>
                 </AccordionActions>
             </Accordion>
             <Typography className={classes.typo} variant="h5">Piano</Typography>
@@ -146,6 +157,7 @@ export default function DashContainer(props) {
                         <Typography className={classes.secondaryHeading}>In Progress</Typography>
                     </div>
                 </AccordionSummary>
+<<<<<<< Updated upstream
                 <AccordionDetails className={classes.details}>
                     <Table className={classes.table} aria-label="customized table">
                         <TableHead>
@@ -169,6 +181,41 @@ export default function DashContainer(props) {
                             })}
                         </TableBody>
                     </Table>
+=======
+                <AccordionDetails >
+                    <MaterialTable
+                        style={{ width: "100%" }}
+                        columns={[
+                            { title: 'Piece Name', field: 'name', },
+                            { title: 'Composer', field: 'composer' },
+                            { title: 'Date Added', field: 'date', type: 'numeric' },
+                        ]}
+                        data={[
+                            { name: 'Waltz in C Sharp Minor (Op. 64 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/SUT_0c2QVzo' },
+                            { name: 'Howls Moving Castle', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/5u5oCjrIu60' },
+                            { name: 'Chopin - Nocturne in E Flat Major (Op. 9 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/p29JUpsOSTE' },
+                            { name: 'Joe Hisaishi - One Summers Day', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/TK1Ij_-mank' },
+                            { name: 'Kioku', composer: 'Unknown', url: 'https://www.youtube.com/embed/nj93DxZdwUs' }
+                        ]}
+                        options={{
+                            showTitle: false,
+                        }}
+                        icons={icons}
+                        detailPanel={rowData => {
+                            return (
+                                <iframe
+                                    width="100%"
+                                    height="400"
+                                    src={rowData.url}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            )
+                        }}
+                        onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                    />
+>>>>>>> Stashed changes
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
