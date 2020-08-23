@@ -17,7 +17,6 @@ const useStyles = makeStyles(styles);
 export default function DashGraph(props) {
     const classes = useStyles();
 
-    const targetRef = useRef();
     // function that selects data based on the selected workout and date range 
     const filteredByDate = props.data.map(workout => {
         return {

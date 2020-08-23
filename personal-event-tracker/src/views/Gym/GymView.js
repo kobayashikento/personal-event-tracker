@@ -41,10 +41,10 @@ export default function GymView(props) {
         setState({ ...state, selectedStartDate: start, selectedEndDate: end })
     };
     React.useEffect(() => {
-        if (state.tabIndex === 1){
-            setState({...state, fullView: false})
-        } else {
+        if (state.tabIndex === 0){
             setState({...state, fullView: true})
+        } else {
+            setState({...state, fullView: false})
         }
     }, [state.tabIndex]);
 
