@@ -3,7 +3,7 @@ const themelistStyle = theme => ({
         display: "flex",
         flexWrap: "wrap",
         flexDirection: "row",
-        justifyContent: "space-evenly",
+        justifyContent: "space-evenly" 
     },
     select: {
         marginTop: "2rem",
@@ -64,8 +64,7 @@ const themelistStyle = theme => ({
         fontSize: "1rem"
     },
     inputButton:{
-        marginTop: "1rem",
-        marginBottom: "2rem",
+        marginTop: "2rem",
         width: "35%",
         height: "20%"
     }
