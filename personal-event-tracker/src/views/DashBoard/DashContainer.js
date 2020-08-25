@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -6,11 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails'
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import AccordionActions from '@material-ui/core/AccordionActions';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -31,17 +27,28 @@ import workoutRoutine from '../../assets/data/workoutRoutine.json';
 import CountDownTimer from '../../components/CountDownTimer.js';
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 
-import {icons} from '../../assets/styles/masterStyle.js';
+import { icons } from '../../assets/styles/masterStyle.js';
 
 const useStyle = makeStyles(styles);
 
 export default function DashContainer(props) {
+    // styles 
+    const classes = useStyle();
     // variables
     const theme = useTheme(styles);
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
     // states 
+    const [state, setState] = React.useState(
+        {
+            currentRow: {},
+            selected: true,
+            selectedRowId: 0,
+            pianoCurrentRow: {},
+            pianoSelected: false,
+            pianoSelectedRowId: null
+        }
+    );
     const [expanded, setExpanded] = React.useState(false);
-
     const handleChange = (panel, index) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
         props.handleIndexChange(index);
@@ -55,27 +62,14 @@ export default function DashContainer(props) {
         }
     }, [props.checkedSwitch])
 
-    // styles 
-    const classes = useStyle();
-    const StyledTableCell = withStyles(theme => ({
-        head: {
-            backgroundColor: props.theme.colors.secondary,
-            color: props.theme.colors.primarytext
-        },
-        body: {
-            fontSize: "0.8rem",
-            [theme.breakpoints.up("sm")]: {
-                fontSize: "1.2rem",
-            }
-        },
-    }))(TableCell)
-    const StyledTableRow = withStyles({
-        root: {
-            [`&:nth-of-type(${props.selectedCell})`]: {
-                backgroundColor: props.theme.colors.tertiary,
-            },
-        },
-    })(TableRow)
+    // functions 
+    const titleCase = (str) => {
+        var splitStr = str.toLowerCase().split(' ');
+        for (var i = 0; i < splitStr.length; i++) {
+            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+        }
+        return splitStr.join(' ');
+    }
 
     return (
         <div className={classes.container}>
@@ -95,6 +89,7 @@ export default function DashContainer(props) {
                 onChange={handleChange('panel1', 1)}
                 className={classes.accordion}>
                 <AccordionSummary
+                    className={classes.accordionSummary}
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1c-content"
                     id="panel1c-header"
@@ -108,44 +103,69 @@ export default function DashContainer(props) {
                     </div>
                 </AccordionSummary>
                 <AccordionDetails className={classes.details}>
-                    <Table className={classes.table} aria-label="customized table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Exercise</StyledTableCell>
-                                <StyledTableCell align="right">Sets</StyledTableCell>
-                                <StyledTableCell align="right">Reps</StyledTableCell>
-                                <StyledTableCell align="right">Rest</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {workoutRoutine[0].workouts.map((routine, index) => {
-                                return (
-                                    <StyledTableRow onClick={() => { props.handleCellChange(index + 1) }} key={index}>
-                                        <StyledTableCell className={classes.tableitem} component="th" scope="row">{routine.workout.name}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.sets}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.reps}</StyledTableCell>
-                                        <StyledTableCell className={classes.tableitem} align="right">{routine.rest}</StyledTableCell>
-                                    </StyledTableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    <MaterialTable
+                        style={{ width: "100%" }}
+                        columns={[
+                            { title: 'Exercise', field: 'exercise', },
+                            { title: 'Sets', field: 'sets' },
+                            { title: 'Reps', field: 'reps' },
+                            { title: 'Rest', field: 'rest' },
+                        ]}
+                        data={
+                            (workoutRoutine[0].workouts.map((routine, index) => {
+                                return {
+                                    exercise: titleCase(routine.workout.name),
+                                    sets: titleCase(routine.sets),
+                                    reps: titleCase(routine.reps),
+                                    rest: titleCase(routine.rest)
+                                };
+                            }))
+                        }
+                        options={{
+                            showTitle: false,
+                            search: false,
+                            toolbar: false,
+                            rowStyle: rowData => ({
+                                backgroundColor:
+                                    state.selected &&
+                                        rowData.tableData.id === state.selectedRowId ? props.theme.colors.primary : "#fff"
+                            })
+                        }}
+                        icons={icons}
+                        onRowClick={(event, rowData) => {
+                            setState({ ...state, currentRow: rowData });
+                            if (rowData.tableData.id === state.selectedRowId) {
+                                setState({ ...state, selected: false });
+                                setState({ ...state, selectedRowId: null });
+                            } else {
+                                setState({ ...state, selected: true });
+                                setState({ ...state, selectedRowId: rowData.tableData.id });
+                                props.handleCellChange(rowData.tableData.id + 1)
+                            }
+                        }}
+                    />
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
-                    <Button color="secondary" size="large">More Details</Button>
+                    <Link
+                        to={"/main-menu/gym-routine"}
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <Button color="secondary" size="large">More Details</Button>
+                    </Link>
                 </AccordionActions>
             </Accordion>
-            <Typography className={classes.typo} variant="h5">Piano</Typography>
+            <Typography className={classes.typo} variant="h5">Music</Typography>
             <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3', 3)} className={classes.accordion}>
                 <AccordionSummary
+                    className={classes.accordionSummary}
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1c-content"
                     id="panel1c-header"
                 >
                     <div className={classes.column}>
                         <LibraryMusicIcon className={classes.icon} />
-                        <Typography className={classes.heading}>Pieces</Typography>
+                        <Typography className={classes.heading}>Piano Pieces</Typography>
                     </div>
                     <div className={classes.column}>
                         <Typography className={classes.secondaryHeading}>In Progress</Typography>
@@ -162,12 +182,17 @@ export default function DashContainer(props) {
                         data={[
                             { name: 'Waltz in C Sharp Minor (Op. 64 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/SUT_0c2QVzo' },
                             { name: 'Howls Moving Castle', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/5u5oCjrIu60' },
-                            { name: 'Chopin - Nocturne in E Flat Major (Op. 9 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/p29JUpsOSTE'},
-                            { name: 'Joe Hisaishi - One Summers Day', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/TK1Ij_-mank'},
-                            { name: 'Kioku', composer: 'Unknown', url: 'https://www.youtube.com/embed/nj93DxZdwUs'}
+                            { name: 'Chopin - Nocturne in E Flat Major (Op. 9 No. 2)', composer: 'Chopin', url: 'https://www.youtube.com/embed/p29JUpsOSTE' },
+                            { name: 'Joe Hisaishi - One Summers Day', composer: 'Joe Hisaishi', url: 'https://www.youtube.com/embed/TK1Ij_-mank' },
+                            { name: 'Kioku', composer: 'Unknown', url: 'https://www.youtube.com/embed/nj93DxZdwUs' }
                         ]}
                         options={{
                             showTitle: false,
+                            rowStyle: rowData => ({
+                                backgroundColor:
+                                    state.pianoSelected &&
+                                        rowData.tableData.id === state.pianoSelectedRowId ? props.theme.colors.primary : "#fff"
+                            })
                         }}
                         icons={icons}
                         detailPanel={rowData => {
@@ -182,12 +207,22 @@ export default function DashContainer(props) {
                                 />
                             )
                         }}
-                        onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                        onRowClick={(event, rowData) => {
+                            setState({ ...state, pianoCurrentRow: rowData });
+                            if (rowData.tableData.id === state.selectedRowId) {
+                                setState({ ...state, pianoSelected: false });
+                                setState({ ...state, pianoSelectedRowId: null });
+
+                            } else {
+                                setState({ ...state, pianoSelected: true });
+                                setState({ ...state, pianoSelectedRowId: rowData.tableData.id });
+                            }
+                        }}
                     />
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
-                    <Button size="large">More Details</Button>
+                    <Button color="secondary" size="large">More Details</Button>
                 </AccordionActions>
             </Accordion>
         </div>

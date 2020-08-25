@@ -26,14 +26,10 @@ export default function GymView(props) {
         selectedData: [],
         selectedStartDate: moment().subtract(29, 'days'),
         selectedEndDate: moment(),
-        tabIndex: 0,
         fullView: true
     })
 
     // react state for tabs 
-    const handleChange = (newValue) => {
-        setState({ ...state, tabIndex: newValue });
-    };
     const handleDataSelection = (data) => {
         setState({ ...state, selectedData: data })
     };
@@ -54,7 +50,7 @@ export default function GymView(props) {
                 <div className={"square", classes.square}>
                     <GymContainer
                         value={state.tabIndex}
-                        handleChange={(value) => handleChange(value)}
+                        handleChange={(value) => props.handleChange(value)}
                         selectedData={state.selectedData}
                         start={state.selectedStartDate}
                         end={state.selectedEndDate}

@@ -168,7 +168,6 @@ export default function GymInputForm(props) {
                 cellEditable={{
                     onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
                         return new Promise((resolve, reject) => {
-                            console.log('newValue: ' + newValue);
                             setTimeout(resolve, 1000);
                         });
                     }

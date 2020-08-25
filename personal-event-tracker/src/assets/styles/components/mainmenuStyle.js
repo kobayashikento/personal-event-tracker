@@ -1,5 +1,5 @@
 import {
-    drawerWidth,
+    drawerWidthPC,
 } from '../masterStyle.js'
 
 const mainMenuStyle = theme => ({
@@ -9,10 +9,8 @@ const mainMenuStyle = theme => ({
     },
     contentsWrapper: {       
         [theme.breakpoints.up('sm')]: {
-            marginLeft: drawerWidth,
+            marginLeft: drawerWidthPC,
         }
-        // margin when appbar is present 
-        // marginTop: appbarHeight,
     },
 });
 

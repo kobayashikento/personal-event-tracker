@@ -46,11 +46,10 @@ export default function SideBar(props) {
                 >
                     <Typography
                         className={classes.sidebarTitle}
-                        variant="h6"
+                        variant="h5"
                     >
                         Record Keeper
                 </Typography>
-                    <Divider variant="middle" />
                     {drawerItems(props)}
                 </Drawer>
             </Hidden>
@@ -70,7 +69,6 @@ export default function SideBar(props) {
                     >
                         Record Keeper
                 </Typography>
-                    <Divider variant="middle" />
                     {drawerItems(props)}
                 </Drawer>
             </Hidden>

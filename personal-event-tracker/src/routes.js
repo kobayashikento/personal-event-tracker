@@ -1,7 +1,7 @@
 // import material-ui/icons
 import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
 //import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
-import StraightenIcon from '@material-ui/icons/Straighten';
+import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import TuneIcon from '@material-ui/icons/Tune';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 
@@ -21,14 +21,14 @@ const mainmenuRoutes = [
     {
         path: "/main-menu/gym",
         name: "Gym",
-        component: GymView, 
+        component: GymView,
         icon: FitnessCenterIcon,
-    }, 
+    },
     {
-        path: "/main-menu/piano",
-        name: "Piano",
+        path: "/main-menu/music",
+        name: "Music",
         component: PianoView,
-        icon: StraightenIcon,
+        icon: MusicNoteIcon,
     },
     {
         path: "/main-menu/theme",
@@ -38,4 +38,26 @@ const mainmenuRoutes = [
     },
 ]
 
-export default mainmenuRoutes;
+const gymRoutes = [
+    {
+        path: "/main-menu/gym/statistics",
+        name: "Statistics"
+    },
+    {
+        path: "/main-menu/gym/manage-workout-data",
+        name: "Manage Data"
+    },
+    {
+        path: "/main-menu/gym/manage-workouts",
+        name: "Manage Workout"
+    }, 
+    {
+        path: "/main-menu/gym/manage-routines",
+        name: "Manage Routines"
+    }, 
+]
+
+export {
+    mainmenuRoutes,
+    gymRoutes
+};

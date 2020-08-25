@@ -14,7 +14,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
-import routes from '../routes.js';
+import { mainmenuRoutes } from '../routes.js';
 
 import themes from '../assets/data/themes.json';
 const useStyles = makeStyles(styles);
@@ -32,15 +32,28 @@ export default function MainMenu() {
     })
 
     // states 
+    const [state, setState] = useState({
+        // 0 = statistics, 1 = manage data, 2 = workout, 3 = routine
+        gymView: 0,
+        gymSelectedIndex: null
+    });
     const [activeTheme, setTheme] = useState(theme);
     const [didChange, setChange] = useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
+    const handleTabChange = (index) => {
+        setState({ ...state, gymView: index })
+    };
+    const setGymSelectedIndex = (index) => {
+        setState({ ...state, gymSelectedIndex: index })
+    };
     // handle onclick 
     const handleListItemClick = (index) => {
+        if (index != 1) {
+            setState({ ...state, gymSelectedIndex: null })
+        }
         setSelectedIndex(index);
     };
-
     // theme is an object that follows the themes.json scheme
     const handleChange = (newtheme) => {
         setTheme(newtheme);
@@ -58,13 +71,18 @@ export default function MainMenu() {
 
     const switchRoutes = (
         <Switch>
-            {routes.map((prop, index) => {
+            {mainmenuRoutes.map((prop, index) => {
                 return (
                     <Route
                         key={index}
                         path={prop.path}
-                        render={(props) => <prop.component {...props} theme={activeTheme} 
-                        handleListItemClick={(index) => handleListItemClick(index)} handleChange={(theme) => handleChange(theme)} />}
+                        render={(props) =>
+                            <prop.component
+                                {...props} theme={activeTheme}
+                                handleListItemClick={(index) => handleListItemClick(index)}
+                                handleChange={(theme) => handleChange(theme)}
+                                handleTabChange={(index) => handleTabChange(index)}
+                            />}
                     >
                     </Route>
                 );
@@ -102,10 +120,13 @@ export default function MainMenu() {
             <CssBaseline />
             <div className={classes.wrapper}>
                 <Sidebar
-                    routes={routes}
+                    routes={mainmenuRoutes}
+                    gymView={state.gymView}
                     theme={activeTheme}
                     handleListItemClick={(index) => handleListItemClick(index)}
+                    setGymSelectedIndex={(index) => setGymSelectedIndex(index)}
                     selectedIndex={selectedIndex}
+                    gymSelectedIndex={state.gymSelectedIndex}
                 />
                 <div className={classes.contentsWrapper}>
                     {switchRoutes}

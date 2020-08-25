@@ -14,17 +14,28 @@ const dashcontainerStyle = theme => ({
         alignItems: "center"
     },
     accordion: {
-        width: "100%",
+        width: "360px",
+        borderRadius: "5px",
+        marginTop: theme.spacing(3),
+        [theme.breakpoints.up("sm")]: {
+            width: "inherit"
+        }
+    },
+    accordionSummary: {
+        padding: "0 0px !important",
+        height: "54px",
+        [theme.breakpoints.up("sm")]: {
+            height: "52px",
+        }
     },
     typo: {
         fontSize: "1rem",
         [theme.breakpoints.up("sm")]: {
-            paddingLeft: "2rem",
+            paddingLeft: theme.spacing(5),
             fontSize: "2rem"
         },
         width: "inherit",
-        paddingTop: "1.8rem",
-        paddingBottom: "1rem"
+        paddingTop: theme.spacing(5),
     },
     switchTypo:{
         fontSize: "0.8rem",
@@ -35,8 +46,9 @@ const dashcontainerStyle = theme => ({
     column: {
         display: "flex",
         justifyContent: "flex-start",
+        paddingLeft: "16px",
         [theme.breakpoints.up("sm")]: {
-            paddingLeft: "1rem",
+            
         }
     },
     heading: {
@@ -55,7 +67,10 @@ const dashcontainerStyle = theme => ({
         }
     },
     icon: {
-        marginRight: "0.5rem",
+        marginRight: "16px",
+        [theme.breakpoints.up("sm")]: {
+            marginRight: "24px",
+        }
     },
     tableitem: {
         textTransform: "capitalize",

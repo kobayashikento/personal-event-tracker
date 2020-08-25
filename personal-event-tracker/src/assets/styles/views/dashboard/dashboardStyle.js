@@ -7,29 +7,13 @@ const goldenRatio = 1.61803398875;
 const dashboardStyle = theme => ({
     container: {
         height: "100%",
-        marginTop: "2rem",
         [theme.breakpoints.up('sm')]: {
-            marginTop: appbarHeight,
+            marginTop: theme.spacing(5),
+            marginLeft: theme.spacing(5),
+            marginRight: theme.spacing(5),
+            width: "inherit"
         }
     },
-    title: {
-        padding: "1.5rem"
-    },
-    section: {
-        marginLeft: "1rem",
-        marginRight: "1rem",
-        [theme.breakpoints.up("sm")]: {
-            marginLeft: "auto",
-            marginRight: "auto",
-            width: "85%"
-        }
-    },
-    square: {
-        [theme.breakpoints.up("sm")]: {
-            flex: goldenRatio,
-            marginBottom: "3rem"
-        }
-    }
 });
 
 export default dashboardStyle;

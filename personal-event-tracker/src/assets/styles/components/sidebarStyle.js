@@ -1,5 +1,5 @@
 import {
-    drawerWidth,
+    drawerWidthPC,
     primaryColor,
 } from '../masterStyle.js';
 
@@ -8,21 +8,15 @@ const responsivedrawerStyle = theme => ({
         display: "flex",
     },
     sidebarTitle: {
-        display: "block",
-        padding: "30px",
-        textAlign: "center",
+        paddingTop: "22px",
+        marginLeft: "28px",
         color: primaryColor,
-        height: "80px",
-        fontSize: "1rem",
-        [theme.breakpoints.up('sm')]: {
-            fontSize: "1.5rem",
-        }
-        
+        height: "64px",
     },
     drawerPaper: props => ({
-        width: "60%",
+        width: "calc(100% - 64px)",
         [theme.breakpoints.up('sm')]: {
-            width: drawerWidth,
+            width: drawerWidthPC,
         },
         borderRightWidth: "0px",
         right: "0px",

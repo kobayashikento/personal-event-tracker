@@ -99,7 +99,6 @@ export default function DashGraph(props) {
 
     return (
         <Paper className={classes.paper}>
-            {console.log(props.width, props.height)}
             <ScatterChart
                 className={classes.chart}
                 width={props.width} height={props.height}

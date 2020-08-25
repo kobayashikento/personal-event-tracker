@@ -1,8 +1,6 @@
 const dashgraphStyle = theme => ({
     paper: {
         marginTop: "6.5rem",
-        marginLeft: "1rem",
-        paddingTop: "2rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center"

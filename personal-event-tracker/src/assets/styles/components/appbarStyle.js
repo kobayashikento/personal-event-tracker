@@ -1,31 +1,31 @@
 import {
-    drawerWidth,
+    drawerWidthPC,
     appbarHeight,
 } from '../masterStyle.js';
 
 const appbarStyle = theme => ({
     appBar: {
-        height: "3rem",
+        height: "56px",
+        width: "100%",
         [theme.breakpoints.up('sm')]: {
-            width: `calc(100% - ${drawerWidth})`,
-            marginLeft: drawerWidth,
+            width: `calc(100% - ${drawerWidthPC})`,
+            marginLeft: drawerWidthPC,
             height: appbarHeight,
         }
     },
     appText: {
-        fontSize: "1rem",
+        color: "white",
         [theme.breakpoints.up('sm')]: {
-        fontSize: "1.5rem",
         marginLeft: "20px",
-        marginTop: "20px",
+        marginTop: "8px",
         }
     },
     iconButton: {
-        paddingTop: "0.5rem",
-        marginRight: theme.spacing(2),
+        paddingTop: "16px",
+        paddingBottom: "16px",
+        marginRight: "32px",
         [theme.breakpoints.up('sm')]: {
             display: 'none',
-            paddingTop: "2rem",
         }
     }
 });

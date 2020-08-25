@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 // import material ui cores 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Grid from '@material-ui/core/Grid';
 
 import styles from '../../assets/styles/views/dashboard/dashboardStyle.js';
 import DashContainer from './DashContainer.js';
@@ -59,44 +60,41 @@ export default function DashBoardView(props) {
 
 
     return (
-        <div className={classes.container}>
-            <section className={"section", classes.section}>
-                <div className={"square", classes.square}>
-                    <DashContainer
+        <Grid
+            container
+            className={classes.container}
+            spacing={6}
+        >
+            <Grid item xs={7} >
+                <DashContainer
+                    theme={props.theme}
+                    handleIndexChange={(index) => handleIndexChange(index)}
+                    handleSwitchChange={(event) => handleSwitchChange(event)}
+                    state={state}
+                    selectedCell={selectedCell}
+                    handleCellChange={(cell) => handleCellChange(cell)}
+                    checkedSwitch={state.checkedSwitch}
+                />
+            </Grid>
+            <Grid item xs={5}>
+                {(activeAccordIndex === 1) && !state.checkedSwitch && matches &&
+                    <DashGraph
+                        handleListItemClick={(index) => props.handleListItemClick(index)}
+                        gymData={state.currGymData}
+                        routes={props.routes}
                         theme={props.theme}
-                        handleIndexChange={(index) => handleIndexChange(index)}
-                        handleSwitchChange={(event) => handleSwitchChange(event)}
-                        state={state}
-                        selectedCell={selectedCell}
-                        handleCellChange={(cell) => handleCellChange(cell)}
-                        checkedSwitch={state.checkedSwitch}
                     />
-                </div>
-                <div className="flex-col-2">
-                    <div className="tall-rect">
-                        {(activeAccordIndex === 1) && !state.checkedSwitch && matches &&
-                            <DashGraph
-                                handleListItemClick={(index) => props.handleListItemClick(index)}
-                                gymData={state.currGymData}
-                                routes={props.routes}
-                                theme={props.theme}
-                            />
-                        }
-                        {state.checkedSwitch && matches &&
-                            <Fragment>
-                                <CountDownTimer />
-                                <InputForm
-                                    workouts={state.currWorkout}
-                                    routine={state.routine}
-                                />
-                            </Fragment>
-                        }
-                    </div>
-                    <div className="wide-rect">
-
-                    </div>
-                </div>
-            </section>
-        </div>
+                }
+                {state.checkedSwitch && matches &&
+                    <Fragment>
+                        <CountDownTimer />
+                        <InputForm
+                            workouts={state.currWorkout}
+                            routine={state.routine}
+                        />
+                    </Fragment>
+                }
+            </Grid>
+        </Grid>
     );
 }

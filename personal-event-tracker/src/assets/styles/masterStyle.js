@@ -26,8 +26,8 @@ import Check from '@material-ui/icons/Check';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import Edit from '@material-ui/icons/Edit';
 
-const drawerWidth = "15vw";
-const appbarHeight = "80px";
+const drawerWidthPC = "256px";
+const appbarHeight = "64px";
 const primaryColor = "rgba(16,88,88,1)";
 const activities = [
     {
@@ -116,7 +116,7 @@ const icons = {
 }
 
 export {
-    drawerWidth,
+    drawerWidthPC,
     bg1,
     bg,
     primaryColor,

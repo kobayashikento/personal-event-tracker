@@ -46,7 +46,7 @@ export default function Appbar(props) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" className={classes.appText}>
+                <Typography variant="h5" className={classes.appText}>
                     {currPathName()}
                 </Typography>
             </Toolbar>
