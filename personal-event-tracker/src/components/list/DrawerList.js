@@ -31,7 +31,6 @@ export default function DrawerList(props) {
     };
     const handleGymIndexChanege = (event, index) => {
         props.setGymSelectedIndex(index);
-        props.handleListItemClick(1);
     }
     const handleClick = () => {
         setOpen(!open);

@@ -19,7 +19,7 @@ const mainmenuRoutes = [
         icon: DashboardRoundedIcon,
     },
     {
-        path: "/main-menu/gym",
+        path: "/main-menu/gym/",
         name: "Gym",
         component: GymView,
         icon: FitnessCenterIcon,

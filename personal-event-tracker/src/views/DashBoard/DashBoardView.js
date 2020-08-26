@@ -65,7 +65,7 @@ export default function DashBoardView(props) {
             className={classes.container}
             spacing={6}
         >
-            <Grid item xs={7} >
+            <Grid item xs={(activeAccordIndex === 1) ? 7 : 12} >
                 <DashContainer
                     theme={props.theme}
                     handleIndexChange={(index) => handleIndexChange(index)}

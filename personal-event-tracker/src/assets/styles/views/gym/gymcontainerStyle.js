@@ -2,13 +2,11 @@ const gymcontainerStyle = theme => ({
     paper: {
         height: "calc(100% - 2rem)", 
         [theme.breakpoints.up("sm")]: {
-            marginTop: "3rem"
         }
     },
     paperHidden: {
-        width: "72vw",
         [theme.breakpoints.up("sm")]: {
-            marginTop: "4rem"
+            marginTop: theme.spacing(6)
         }
     },
     tab:{
@@ -17,9 +15,6 @@ const gymcontainerStyle = theme => ({
     tabpanel: {
         height: "inherit"
     },
-    manageDataTable:{
-        height: "70vh"
-    }
 });
 
 

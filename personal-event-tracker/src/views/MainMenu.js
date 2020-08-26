@@ -34,35 +34,37 @@ export default function MainMenu() {
     // states 
     const [state, setState] = useState({
         // 0 = statistics, 1 = manage data, 2 = workout, 3 = routine
-        gymView: 0,
-        gymSelectedIndex: null
+        gymSelectedTab: 0,
+        gymSelectedIndex: null,
+        activeTheme: theme,
+        selectedIndex: 0
     });
-    const [activeTheme, setTheme] = useState(theme);
-    const [didChange, setChange] = useState(false);
-    const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     const handleTabChange = (index) => {
-        setState({ ...state, gymView: index })
+        setState({ ...state, gymSelectedTab: index, gymSelectedIndex: index })
+    };
+
+    // handle index change for the list on the sidebar 
+    const handleListItemClick = (index) => {
+        if (index !== 1) {
+            setState({ ...state, gymSelectedIndex: null, selectedIndex: index })
+        } else {
+            setState({ ...state, selectedIndex: index });
+        }
     };
     const setGymSelectedIndex = (index) => {
-        setState({ ...state, gymSelectedIndex: index })
+        setState({ ...state, gymSelectedIndex: index, selectedIndex: 1, gymSelectedTab: index })
     };
-    // handle onclick 
-    const handleListItemClick = (index) => {
-        if (index != 1) {
-            setState({ ...state, gymSelectedIndex: null })
-        }
-        setSelectedIndex(index);
-    };
-    // theme is an object that follows the themes.json scheme
-    const handleChange = (newtheme) => {
-        setTheme(newtheme);
+
+    // change the theme of the website according to what is seleceted on manage theme menu
+    const changeActiveTheme = (newtheme) => {
+        setState({ ...state, activeTheme: newtheme });
     }
 
     // check if the theme exists 
     const checknotChanged = () => {
         themes.map(theme => {
-            return (Object.keys(theme) === Object.keys(activeTheme));
+            return (Object.keys(theme) === Object.keys(state.activeTheme));
         })
         return false;
     }
@@ -78,9 +80,11 @@ export default function MainMenu() {
                         path={prop.path}
                         render={(props) =>
                             <prop.component
-                                {...props} theme={activeTheme}
+                                {...props} 
+                                tabIndex={state.gymSelectedTab}
+                                theme={state.activeTheme}
                                 handleListItemClick={(index) => handleListItemClick(index)}
-                                handleChange={(theme) => handleChange(theme)}
+                                handleChange={(theme) => changeActiveTheme(theme)}
                                 handleTabChange={(index) => handleTabChange(index)}
                             />}
                     >
@@ -93,20 +97,20 @@ export default function MainMenu() {
     let muiTheme = createMuiTheme({
         palette: {
             primary: {
-                main: activeTheme.colors.primary
+                main: state.activeTheme.colors.primary
             },
             secondary: {
-                main: activeTheme.colors.secondary
+                main: state.activeTheme.colors.secondary
             }
         },
         overrides: {
             MuiListItem: {
                 root: {
                     "&$selected": {
-                        backgroundColor: activeTheme.colors.secondary,
+                        backgroundColor: state.activeTheme.colors.secondary,
                     },
                     "&:hover": {
-                        backgroundColor: activeTheme.colors.tertiary + "!important",
+                        backgroundColor: state.activeTheme.colors.tertiary + "!important",
                     },
                 }
             },
@@ -122,10 +126,10 @@ export default function MainMenu() {
                 <Sidebar
                     routes={mainmenuRoutes}
                     gymView={state.gymView}
-                    theme={activeTheme}
+                    theme={state.activeTheme}
                     handleListItemClick={(index) => handleListItemClick(index)}
                     setGymSelectedIndex={(index) => setGymSelectedIndex(index)}
-                    selectedIndex={selectedIndex}
+                    selectedIndex={state.selectedIndex}
                     gymSelectedIndex={state.gymSelectedIndex}
                 />
                 <div className={classes.contentsWrapper}>

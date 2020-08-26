@@ -1,10 +1,9 @@
 import React from 'react';
+import { useRef, useLayoutEffect } from 'react'
 
 // import material ui cores 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 
 // generate random events for the calendar 
 import data from '../../assets/data/dashEvents.json';
@@ -20,13 +19,13 @@ const useStyles = makeStyles(styles);
 
 export default function GymView(props) {
     const classes = useStyles();
-
+    const targetRef = useRef();
     //states 
     const [state, setState] = React.useState({
         selectedData: [],
         selectedStartDate: moment().subtract(29, 'days'),
         selectedEndDate: moment(),
-        fullView: true
+        width: 0, height: 0
     })
 
     // react state for tabs 
@@ -36,44 +35,46 @@ export default function GymView(props) {
     const handleDateChange = (start, end) => {
         setState({ ...state, selectedStartDate: start, selectedEndDate: end })
     };
-    React.useEffect(() => {
-        if (state.tabIndex === 0){
-            setState({...state, fullView: true})
-        } else {
-            setState({...state, fullView: false})
+
+    useLayoutEffect(() => {
+        if (targetRef.current) {
+            setState({
+                ...state,
+                width: targetRef.current.offsetWidth,
+                height: targetRef.current.offsetHeight
+            });
         }
-    }, [state.tabIndex]);
+        console.log(state.width, state.height)
+    }, [])
 
     return (
-        <div className={classes.container}>
-            <section className={"section", classes.section}>
-                <div className={"square", classes.square}>
-                    <GymContainer
-                        value={state.tabIndex}
-                        handleChange={(value) => props.handleChange(value)}
-                        selectedData={state.selectedData}
-                        start={state.selectedStartDate}
-                        end={state.selectedEndDate}
-                        theme={props.theme}
-                        fullView={state.fullView}
-                    />
-                </div>
-                <div className="flex-col-2">
-                    <div className="tall-rect">
-                        <GymSelection
-                            handleDataSelection={(data) => handleDataSelection(data)}
-                            theme={props.theme}
-                            start={state.selectedStartDate}
-                            end={state.selectedEndDate}
-                            handleDateChange={(start, end) => handleDateChange(start, end)}
-                            fullView={state.fullView}
-                        />
-                    </div>
-                    <div className="wide-rect">
-
-                    </div>
-                </div>
-            </section>
-        </div>
+        <Grid
+            container
+            className={classes.container}
+            spacing={6}
+        >
+            <Grid ref={targetRef} className={classes.gymContainer} item xs={(props.tabIndex === 0) ? 8 : 12} >
+                <GymContainer
+                    tabIndex={props.tabIndex}
+                    handleTabChange={(value) => props.handleTabChange(value)}
+                    selectedData={state.selectedData}
+                    start={state.selectedStartDate}
+                    end={state.selectedEndDate}
+                    theme={props.theme}
+                    height={state.height}
+                    width={state.height}
+                />
+            </Grid>
+            <Grid className={classes.gymSelection} item xs={4}>
+                <GymSelection
+                    handleDataSelection={(data) => handleDataSelection(data)}
+                    theme={props.theme}
+                    start={state.selectedStartDate}
+                    end={state.selectedEndDate}
+                    handleDateChange={(start, end) => handleDateChange(start, end)}
+                    tabIndex={props.tabIndex}
+                />
+            </Grid>
+        </Grid>
     );
 }

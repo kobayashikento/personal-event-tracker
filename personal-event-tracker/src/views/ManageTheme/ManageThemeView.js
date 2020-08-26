@@ -73,7 +73,6 @@ export default function ManageThemeView(props) {
     return (
         <div className={classes.container}>
             <Typography className={classes.pagename} variant="h5">Themes</Typography>
-            <Divider />
             <section className={"section", classes.section}>
                 <div className="flex-col-2">
                     <div className="tall-rect">

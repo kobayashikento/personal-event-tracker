@@ -48,7 +48,7 @@ export default function GymSelection(props) {
     // styles
 
     return (
-        <Paper className={props.fullView ? classes.paper : classes.paperHidden}>
+        <Paper className={classes.paper} style={{ display: (props.tabIndex === 0) ? "" : "none" }}>
             <Autocomplete
                 className={classes.autocomplete}
                 multiple

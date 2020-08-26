@@ -99,10 +99,11 @@ export default function DashGraph(props) {
 
     return (
         <Paper className={classes.paper}>
+            {console.log(props.width, props.height)}
             <ScatterChart
                 className={classes.chart}
                 width={props.width} height={props.height}
-                margin={{ top: 30, right: 50, left: 20, bottom: 0 }}>
+                margin={{ top: 30, right: 20, left: 20, bottom: 30 }}>
                 <XAxis dataKey='time'
                     domain={['auto', 'auto']}
                     name='Time'
