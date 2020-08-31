@@ -74,6 +74,7 @@ export default function DashBoardView(props) {
                     selectedCell={selectedCell}
                     handleCellChange={(cell) => handleCellChange(cell)}
                     checkedSwitch={state.checkedSwitch}
+                    {...props}
                 />
             </Grid>
             <Grid item xs={5}>

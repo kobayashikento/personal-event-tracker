@@ -17,9 +17,6 @@ const dashcontainerStyle = theme => ({
         width: "360px",
         borderRadius: "5px",
         marginTop: theme.spacing(3),
-        [theme.breakpoints.up("sm")]: {
-            width: "inherit"
-        }
     },
     accordionSummary: {
         padding: "0 0px !important",
@@ -35,21 +32,78 @@ const dashcontainerStyle = theme => ({
             fontSize: "2rem"
         },
         width: "inherit",
-        paddingTop: theme.spacing(5),
+        paddingTop: theme.spacing(6),
     },
-    switchTypo:{
+    switchTypo: {
         fontSize: "0.8rem",
         [theme.breakpoints.up("sm")]: {
             fontSize: "1.5rem"
         },
     },
     column: {
+        paddingLeft: "16px",
+        display: "flex",
+        [theme.breakpoints.up("sm")]: {
+            width: "100%",
+            paddingTop: "22px",
+            height: "72px"
+        }
+    },
+    content: {
+        paddingTop: theme.spacing(5),
+        paddingLeft: theme.spacing(5),
+        paddingBottom: "0px"
+    },
+    sheetlibrary: {
         display: "flex",
         justifyContent: "flex-start",
+        alignItems: "center"
+    },
+    subSheetLibrary: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around"
+    },
+    controls: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingTop: theme.spacing(2),
+        paddingLeft: theme.spacing(4),
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
+    },
+    sheetCardActionContainer: {
+        marginTop: "auto",
+        marginBottom: "auto",
+        display: "flex",
+        marginRight: "auto",
+        marginLeft: "auto"
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    playIcon: {
+        height: 38,
+        width: 38,
+    },
+    cardColumn: {
+        display: "flex",
         paddingLeft: "16px",
         [theme.breakpoints.up("sm")]: {
-            
+            width: "100%",
+            paddingTop: "12px",
+            height: "40px"
         }
+    },
+    subTypo: {
+        paddingLeft: "32px",
+        paddingTop: "8px"
     },
     heading: {
         fontSize: "0.8rem",

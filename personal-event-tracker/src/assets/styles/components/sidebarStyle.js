@@ -62,5 +62,11 @@ const responsivedrawerStyle = theme => ({
             fontSize: "2rem",
         }
     },
+    controls: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingTop: theme.spacing(2),
+        paddingLeft: theme.spacing(4),
+    },
 });
 export default responsivedrawerStyle;

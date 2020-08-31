@@ -1,0 +1,51 @@
+[
+    {
+        "name": "Blues in Velvet Room",
+        "subtitle": "Persona 3 OST",
+        "src": "PzsWfWkaF_w",
+        "fullUrl": "https://www.youtube.com/watch?v=PzsWfWkaF_w",
+        "group": "Youtube"
+    }, 
+    {
+        "name": "Battle - Torna Ver",
+        "subtitle": "Xenoblade Chronicles 2",
+        "src": "1weNnjzaXbY",
+        "fullUrl": "https://www.youtube.com/watch?v=1weNnjzaXbY",
+        "group": "Youtube"
+    },
+    {
+        "name": "Waltz in C Sharp Minor (Op. 64 No. 2)", 
+        "subtitle": "Chopin", 
+        "src": "SUT_0c2QVzo",
+        "fullUrl": "https://www.youtube.com/watch?v=SUT_0c2QVzo",
+        "group": "Piano"
+    },
+    {
+        "name": "Howls Moving Castle", 
+        "subtitle": "Joe Hisaishi", 
+        "src": "5u5oCjrIu60",
+        "fullUrl": "https://www.youtube.com/watch?v=5u5oCjrIu60",
+        "group": "Piano"
+    },
+    {
+        "name": "Chopin - Nocturne in E Flat Major (Op. 9 No. 2)", 
+        "subtitle": "Chopin", 
+        "src": "p29JUpsOSTE",
+        "fullUrl": "https://www.youtube.com/watch?v=p29JUpsOSTE",
+        "group": "Piano"
+    },
+    {
+        "name": "One Summers Day", 
+        "subtitle": "Joe Hisaishi", 
+        "src": "TK1Ij_-mank",
+        "fullUrl": "https://www.youtube.com/watch?v=TK1Ij_-mank",
+        "group": "Piano"
+    },
+    {
+        "name": "Kioku", 
+        "subtitle": "Unknown", 
+        "src": "nj93DxZdwUs",
+        "fullUrl": "https://www.youtube.com/watch?v=nj93DxZdwUs",
+        "group": "Piano"
+    }
+]

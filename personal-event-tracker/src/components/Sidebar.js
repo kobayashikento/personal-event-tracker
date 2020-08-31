@@ -2,17 +2,24 @@ import React from 'react';
 
 // import material-ui/cores from MUI 
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import { Hidden, Drawer } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton'
+import Snackbar from '@material-ui/core/Snackbar';
 
 // import styles from MUI
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import LoopIcon from '@material-ui/icons/Loop';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 
 // import files 
 import styles from '../assets/styles/components/sidebarStyle.js';
 import drawerItems from './list/DrawerList.js';
 import Appbar from '../components/Appbar.js';
 
+import musicData from '../assets/data/musicLibrary.json';
 
 const useStyles = makeStyles(styles);
 
@@ -21,11 +28,43 @@ export default function SideBar(props) {
         color: props.theme.colors.primary
     }
     const classes = useStyles(styleProps);
+    const theme = useTheme(styles);
 
+    const [state, setState] = React.useState({ snackbarOpen: false });
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
+    }
+    const handleLoop = () => {
+        setState({ ...state, snackbarOpen: true });
+        props.handleLoop();
+    }
+    const mediaPlayer = () => {
+        return (
+            <div style={{ marginTop: "auto", marginBottom: "22px" }}>
+                <Typography gutterBottom variant="h5" component="h3" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].name} </Typography>
+                <Typography variant="subtitle1" color="textSecondary" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].subtitle}</Typography>
+                <div className={classes.controls}>
+                    <IconButton aria-label="previous" onClick={() => props.handleChangeMusic("prev")}>
+                        {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+                    </IconButton>
+                    <IconButton aria-label="play/pause" onClick={() => props.handlePlayPause()}>
+                        {props.playing ? <PauseIcon className={classes.playIcon} /> : <PlayArrowIcon className={classes.playIcon} />}
+                    </IconButton>
+                    <IconButton aria-label="next" onClick={() => props.handleChangeMusic("next")}>
+                        {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+                    </IconButton>
+                    <IconButton onClick={() => handleLoop()}>
+                        <LoopIcon style={{ color: props.loop ? props.theme.colors.primary : "" }} />
+                    </IconButton>
+                    <Snackbar
+                        open={state.snackbarOpen} autoHideDuration={5000} onClose={() => setState({ ...state, snackbarOpen: false })}
+                        message={props.loop ? "Loop Enabled" : "Loop Disabled"}
+                    />
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -49,8 +88,9 @@ export default function SideBar(props) {
                         variant="h5"
                     >
                         Record Keeper
-                </Typography>
+                    </Typography>
                     {drawerItems(props)}
+                    {window.location.pathname === "/main-menu/dashboard" ? null : mediaPlayer()}
                 </Drawer>
             </Hidden>
             <Hidden smUp implementation="css">
@@ -68,7 +108,7 @@ export default function SideBar(props) {
                         variant="h6"
                     >
                         Record Keeper
-                </Typography>
+                    </Typography>
                     {drawerItems(props)}
                 </Drawer>
             </Hidden>

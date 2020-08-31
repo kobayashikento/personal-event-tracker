@@ -44,7 +44,6 @@ export default function GymView(props) {
                 height: targetRef.current.offsetHeight
             });
         }
-        console.log(state.width, state.height)
     }, [])
 
     return (

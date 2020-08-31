@@ -47,14 +47,6 @@ const gymRoutes = [
         path: "/main-menu/gym/manage-workout-data",
         name: "Manage Data"
     },
-    {
-        path: "/main-menu/gym/manage-workouts",
-        name: "Manage Workout"
-    }, 
-    {
-        path: "/main-menu/gym/manage-routines",
-        name: "Manage Routines"
-    }, 
 ]
 
 export {
