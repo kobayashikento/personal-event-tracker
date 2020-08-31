@@ -28,6 +28,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Collapse from '@material-ui/core/Collapse';
 import Snackbar from '@material-ui/core/Snackbar';
+import Slider from '@material-ui/core/Slider';
 
 // import material ui icons 
 import PauseIcon from '@material-ui/icons/Pause';
@@ -127,7 +128,15 @@ export default function DashContainer(props) {
         setState({ ...state, snackbarOpen: true });
         props.handleLoop();
     }
-
+    const handleSeekMouseDown = e => {
+        props.handleSeekMouseDown(e);
+    }
+    const handleSeekChange = e => {
+        props.handleSeekChange(e);
+    }
+    const handleSeekMouseUp = e => {
+        props.handleSeekMouseUp(e);
+    }
     // const handleChange = (panel, index) => (event, isExpanded) => {
     //     setExpanded(isExpanded ? panel : false);
     //     props.handleIndexChange(index);
@@ -292,8 +301,17 @@ export default function DashContainer(props) {
                             <CardContent className={classes.content}>
                                 <Typography gutterBottom variant="h5" component="h2"> {musicData[props.currMusicIndex].name} </Typography>
                                 <Typography variant="subtitle1" color="textSecondary"> {musicData[props.currMusicIndex].subtitle}</Typography>
+                                <input
+                                    type='range' min={0} max={0.999999} step='any'
+                                    value={props.played}
+                                    onChange={handleSeekChange}
+                                    onMouseUp={handleSeekMouseUp}
+                                    onMouseDown={handleSeekMouseDown}
+                                    style={{ marginTop: "16px", width: "200px"}}
+                                />
                             </CardContent>
                             <div className={classes.controls}>
+
                                 <IconButton aria-label="previous" onClick={() => props.handleChangeMusic("prev")}>
                                     {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
                                 </IconButton>
@@ -304,7 +322,7 @@ export default function DashContainer(props) {
                                     {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
                                 </IconButton>
                                 <IconButton style={{ marginLeft: "16px" }} onClick={() => handleLoop()}>
-                                    <LoopIcon style={{ color: props.loop ? "white" : "" }} />
+                                    <LoopIcon style={{ color: props.loop ? props.theme.colors.primary : "" }} />
                                 </IconButton>
                                 <Snackbar
                                     open={state.snackbarOpen} autoHideDuration={5000} onClose={() => setState({ ...state, snackbarOpen: false })}

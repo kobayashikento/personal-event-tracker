@@ -40,11 +40,28 @@ export default function SideBar(props) {
         setState({ ...state, snackbarOpen: true });
         props.handleLoop();
     }
+    const handleSeekMouseDown = e => {
+        props.handleSeekMouseDown(e);
+    }
+    const handleSeekChange = e => {
+        props.handleSeekChange(e);
+    }
+    const handleSeekMouseUp = e => {
+        props.handleSeekMouseUp(e);
+    }
     const mediaPlayer = () => {
         return (
             <div style={{ marginTop: "auto", marginBottom: "22px" }}>
                 <Typography gutterBottom variant="h5" component="h3" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].name} </Typography>
                 <Typography variant="subtitle1" color="textSecondary" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].subtitle}</Typography>
+                <input
+                    type='range' min={0} max={0.999999} step='any'
+                    value={props.played}
+                    onChange={handleSeekChange}
+                    onMouseUp={handleSeekMouseUp}
+                    onMouseDown={handleSeekMouseDown}
+                    style={{ marginTop: "16px", width: "180px", marginLeft: "36px" }}
+                />
                 <div className={classes.controls}>
                     <IconButton aria-label="previous" onClick={() => props.handleChangeMusic("prev")}>
                         {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
@@ -56,7 +73,7 @@ export default function SideBar(props) {
                         {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
                     </IconButton>
                     <IconButton onClick={() => handleLoop()}>
-                        <LoopIcon style={{ color: props.loop ? props.theme.colors.primary : "" }} />
+                        <LoopIcon style={{ color: props.loop ? "#FFFFFF" : "" }} />
                     </IconButton>
                     <Snackbar
                         open={state.snackbarOpen} autoHideDuration={5000} onClose={() => setState({ ...state, snackbarOpen: false })}
