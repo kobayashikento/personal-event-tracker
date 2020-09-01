@@ -11,7 +11,7 @@ import './assets/css/index.css';
 ReactDOM.render(
   <Router>
     <Route path="/main-menu" component={MainMenu} />
-    <Redirect from="/" to="/main-menu/dashboard" />
+    <Redirect from="/" to="/main-menu/gym/statistics" />
   </Router>,
   document.getElementById('root')
 );

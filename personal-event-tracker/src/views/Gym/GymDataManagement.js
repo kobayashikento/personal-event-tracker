@@ -12,7 +12,7 @@ import MaterialTable from 'material-table';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import styles from '../../assets/styles/views/gym/gymcontainerStyle.js';
+import styles from '../../assets/styles/views/gym/gymstatisticsStyle.js';
 
 import { icons } from '../../assets/styles/masterStyle.js';
 import GymGraph from './GymGraph.js';

@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+    titleCase
+} from '../../assets/styles/masterStyle.js';
 
 // import files for the date range picker 
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -11,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 import workoutData from '../../assets/data/gymData.json'
 
@@ -21,14 +24,6 @@ const useStyles = makeStyles(styles);
 
 export default function GymSelection(props) {
     const classes = useStyles();
-
-    const titleCase = (str) => {
-        var splitStr = str.toLowerCase().split(' ');
-        for (var i = 0; i < splitStr.length; i++) {
-            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-        }
-        return splitStr.join(' ');
-    }
 
     const options = workoutData.map((option) => {
         return {
@@ -48,47 +43,39 @@ export default function GymSelection(props) {
     // styles
 
     return (
-        <Paper className={classes.paper} style={{ display: (props.tabIndex === 0) ? "" : "none" }}>
-            <Autocomplete
-                className={classes.autocomplete}
-                multiple
-                limitTags={6}
-                options={options.sort((a, b) => -b.group.localeCompare(a.group))}
-                id="multiple-limit-tags"
-                groupBy={(option) => option.group}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField {...params} variant="outlined" label="Workouts" placeholder="Workout" />
-                )}
-                onChange={handleAutoComplete}
-            />
-            <DateRangePicker initialSettings={{
-                showDropdowns: true,
-                startDate: props.start.toDate(),
-                endDate: props.end.toDate(),
-                ranges: {
-                    'Last 7 Days': [
-                        moment().subtract(6, 'days').toDate(),
-                        moment().toDate(),
-                    ],
-                    'Last 30 Days': [
-                        moment().subtract(29, 'days').toDate(),
-                        moment().toDate(),
-                    ],
-                    'This Month': [
-                        moment().startOf('month').toDate(),
-                        moment().endOf('month').toDate(),
-                    ],
-                    'Last Month': [
-                        moment().subtract(1, 'month').startOf('month').toDate(),
-                        moment().subtract(1, 'month').endOf('month').toDate(),
-                    ],
-                },
-            }}
-                onCallback={handleCallback}
-            >
-                <input type="text" className={"form-control" && classes.datepicker} />
-            </DateRangePicker>
-        </Paper>
+        <Grid container className={classes.container} spacing={5}>
+            <Grid item xs={8} className={classes.autocomplete}>
+               
+            </Grid>
+            <Grid item xs={4} className={classes.daterangecontainer}>
+                <DateRangePicker initialSettings={{
+                    showDropdowns: true,
+                    startDate: props.start.toDate(),
+                    endDate: props.end.toDate(),
+                    ranges: {
+                        'Last 7 Days': [
+                            moment().subtract(6, 'days').toDate(),
+                            moment().toDate(),
+                        ],
+                        'Last 30 Days': [
+                            moment().subtract(29, 'days').toDate(),
+                            moment().toDate(),
+                        ],
+                        'This Month': [
+                            moment().startOf('month').toDate(),
+                            moment().endOf('month').toDate(),
+                        ],
+                        'Last Month': [
+                            moment().subtract(1, 'month').startOf('month').toDate(),
+                            moment().subtract(1, 'month').endOf('month').toDate(),
+                        ],
+                    },
+                }}
+                    onCallback={handleCallback}
+                >
+                    <input style={{ height: "100%", width: "100%" }} type="text" className={"form-control"} />
+                </DateRangePicker>
+            </Grid>
+        </Grid>
     );
 }

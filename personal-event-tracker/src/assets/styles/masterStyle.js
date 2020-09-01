@@ -115,6 +115,14 @@ const icons = {
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />)
 }
 
+const titleCase = (str) => {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+}
+
 export {
     drawerWidthPC,
     bg1,
@@ -126,5 +134,6 @@ export {
     pianobg,
     allactbg,
     noactbg,
-    icons
+    icons,
+    titleCase
 }

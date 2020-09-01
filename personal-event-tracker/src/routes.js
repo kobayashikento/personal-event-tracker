@@ -10,6 +10,7 @@ import DashBoardView from './views/DashBoard/DashBoardView.js';
 import PianoView from './views/Piano/PianoView.js';
 import GymView from './views/Gym/GymView.js';
 import ManageThemeView from './views/ManageTheme/ManageThemeView.js';
+import GymStatistics from './views/Gym/GymStatistics.js';
 
 const mainmenuRoutes = [
     {
@@ -19,7 +20,13 @@ const mainmenuRoutes = [
         icon: DashboardRoundedIcon,
     },
     {
-        path: "/main-menu/gym/",
+        path: "/main-menu/gym/statistics",
+        name: "Statistics",
+        component: GymStatistics,
+        icon: FitnessCenterIcon,
+    },
+    {
+        path: "/main-menu/gym",
         name: "Gym",
         component: GymView,
         icon: FitnessCenterIcon,
@@ -34,8 +41,8 @@ const mainmenuRoutes = [
         path: "/main-menu/theme",
         name: "Manage Theme",
         component: ManageThemeView,
-        icon: TuneIcon
-    },
+        icon: TuneIcon,
+    }
 ]
 
 const gymRoutes = [
@@ -44,7 +51,7 @@ const gymRoutes = [
         name: "Statistics"
     },
     {
-        path: "/main-menu/gym/manage-workout-data",
+        path: "/main-menu/gym/manage-data",
         name: "Manage Data"
     },
 ]

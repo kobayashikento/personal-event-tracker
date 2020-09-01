@@ -1,29 +1,59 @@
 import React from 'react';
+import {
+    titleCase
+} from '../../assets/styles/masterStyle.js';
 
 // import recharts
 import {
-    ScatterChart, XAxis, YAxis, Scatter, Tooltip, Legend,
+    ScatterChart, XAxis, YAxis, Scatter, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
 // import material ui core 
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import moment from 'moment';
 
+// import material ui icons 
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
 import styles from '../../assets/styles/views/gym/gymgraphStyle.js';
+
+import dog from '../../assets/images/15224-cute-doggie.gif';
 
 const useStyles = makeStyles(styles);
 
 export default function DashGraph(props) {
     const classes = useStyles();
+    let numEntries = 0;
+    //states
+    const [state, setState] = React.useState(
+        {
+            selectedStart: props.start,
+            selectedEnd: props.end,
+        }
+    )
+    const handleWeekChange = (direction) => {
+        if (direction === 'right' && !state.selectedEnd.isSame(moment())) {
+            setState({ ...state, selectedEnd: state.selectedEnd.add(props.amount, props.type) });
+            setState({ ...state, selectedStart: state.selectedStart.add(props.amount, props.type) });
+        } else if (direction === 'left') {
+            setState({ ...state, selectedEnd: state.selectedEnd.subtract(props.amount, props.type) });
+            setState({ ...state, selectedStart: state.selectedStart.subtract(props.amount, props.type) });
+        }
+    }
 
     // function that selects data based on the selected workout and date range 
-    const filteredByDate = props.data.map(workout => {
+    const filteredByDate = props.selectedData.map((workout, index) => {
         return {
             name: workout.name,
+            index: index,
             workoutdata:
                 workout.data.map(data => {
-                    if (moment(data.date).isBetween(props.start, props.end)) {
+                    if (moment(data.date).isBetween(state.selectedStart, state.selectedEnd)) {
                         return {
                             data
                         };
@@ -32,35 +62,23 @@ export default function DashGraph(props) {
         };
     })
 
-    const getData = () => {
+    const getScatterData = () => {
+        numEntries = 0;
         if (filteredByDate.length === 0) {
             return (
                 <Scatter
-                    data={[
-                        {
-                            "time": moment().subtract(2, 'days').valueOf(),
-                            "value": 0
-                        },
-                        {
-                            "time": moment().subtract(1, 'days').valueOf(),
-                            "value": 0
-                        },
-                        {
-                            "time": moment().valueOf(),
-                            "value": 0
-                        },
-                    ]}
+                    data={[]}
                     line={{ stroke: props.theme.colors.primary }}
                     lineJointType='monotoneX'
                     lineType='joint'
                     legendType="line"
-                    name={"No Data"}
                 />
             );
         } else {
             return (
                 filteredByDate.map((prop, key) => {
                     if (!prop.workoutdata.includes(undefined)) {
+                        numEntries = numEntries + 1;
                         return (
                             <Scatter
                                 key={key}
@@ -87,7 +105,6 @@ export default function DashGraph(props) {
                                 lineJointType='monotoneX'
                                 lineType='joint'
                                 legendType="line"
-                                name={"Not Enough Data for " + prop.name}
                             />
                         );
                     }
@@ -95,28 +112,48 @@ export default function DashGraph(props) {
             );
         }
     }
-    // style
 
     return (
-        <Paper className={classes.paper}>
-            {console.log(props.width, props.height)}
-            <ScatterChart
-                className={classes.chart}
-                width={props.width} height={props.height}
-                margin={{ top: 30, right: 20, left: 20, bottom: 30 }}>
-                <XAxis dataKey='time'
-                    domain={['auto', 'auto']}
-                    name='Time'
-                    tickFormatter={(unixTime) => moment(unixTime).format('MM-DD-YYYY')}
-                    type='number'
-                />
-                <YAxis dataKey='value' name='Weight' domain={['auto', 'auto']} unit="lbs"/>
-                {getData()}
-                <Tooltip />
-                <Legend height={36} wrapperStyle={{ top: 30, left: 25 }} />
-            </ScatterChart>
-        </Paper>
-
-
+        <div style={{ display: "flex", flexDirection: "column", height: "76vh" }}>
+            <div style={{ display: "flex", marginTop: "32px", marginLeft: "auto", marginRight: "auto" }}>
+                <IconButton style={{ marginLeft: "16px" }} onClick={() => handleWeekChange('left')}>
+                    <ChevronLeftIcon />
+                </IconButton>
+                <div style={{ marginRight: "5vw", marginLeft: "5vw" }}>
+                    <Typography variant="h5" component="h1" style={{ textAlign: "center" }}>
+                        {state.selectedStart.format('MMMM D')} - {state.selectedEnd.format('MMMM D')}
+                    </Typography>
+                    <Typography style={{ textAlign: "center", padding: "8px" }} variant="subtitle1" color="textSecondary">
+                        {numEntries} - Total Entries
+                    </Typography>
+                </div>
+                <IconButton style={{ marginRight: "16px" }} onClick={() => handleWeekChange('right')}>
+                    <ChevronRightIcon />
+                </IconButton>
+            </div>
+            {filteredByDate.length === 0 ?
+                <div>
+                    <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
+                        No Data Available
+                    </Typography>
+                    <img className={classes.run} src={dog} />
+                </div>
+                : null}
+            <ResponsiveContainer minHeight={100} width="100%" height="100%">
+                <ScatterChart
+                    className={classes.chart}
+                    margin={{ top: 0, right: 24, left: 12, bottom: 30 }}>
+                    <XAxis dataKey='time'
+                        domain={['auto', 'auto']}
+                        name='Time'
+                        tickFormatter={(unixTime) => moment(unixTime).format('MM-DD-YYYY')}
+                        type='number'
+                    />
+                    {getScatterData()}
+                    <Tooltip />
+                    <Legend height={36} wrapperStyle={{ top: 30, left: 25 }} />
+                </ScatterChart>
+            </ResponsiveContainer>
+        </div>
     );
 }

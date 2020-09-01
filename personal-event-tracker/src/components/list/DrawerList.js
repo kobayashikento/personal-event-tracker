@@ -26,7 +26,7 @@ export default function DrawerList(props) {
 
     // states
     const [open, setOpen] = React.useState(true);
-    const handleListItemClick = (event, index) => {       
+    const handleListItemClick = (event, index) => {
         props.handleListItemClick(index);
     };
     const handleGymIndexChanege = (event, index) => {
@@ -42,7 +42,7 @@ export default function DrawerList(props) {
                 <Link
                     to={prop.path}
                     className={classes.item}
-                    key={prop.name}
+                    key={prop.name + index}
                     style={{ textDecoration: "none" }}
                 >
                     <ListItem
@@ -91,6 +91,7 @@ export default function DrawerList(props) {
                     </Collapse>
                 </React.Fragment>
             );
+        } else if (name === "Statistics") {
         } else {
             return (
                 <Link
