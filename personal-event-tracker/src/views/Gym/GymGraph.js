@@ -47,24 +47,41 @@ export default function DashGraph(props) {
     }
 
     // function that selects data based on the selected workout and date range 
-    const filteredByDate = props.selectedData.map((workout, index) => {
-        return {
-            name: workout.name,
-            index: index,
-            workoutdata:
-                workout.data.map(data => {
-                    if (moment(data.date).isBetween(state.selectedStart, state.selectedEnd)) {
-                        return {
-                            data
-                        };
-                    }
+    const filteredByDate = () => {
+        if (props.selectedData === null) {
+            return []
+        } else {
+            return {
+                name: props.selectedData.name,
+                workoutdata:
+                    props.selectedData.data.map(data => {
+                        if (moment(data.date).isBetween(state.selectedStart, state.selectedEnd)) {
+                            return {
+                                data
+                            };
+                        }
+                    })
+            };
+        }
+    }
+
+    const createData = (array) => {
+        let temp = [];
+        array.workoutdata.map(workout => {
+            if (workout !== undefined) {
+                numEntries = numEntries + 1;
+                temp.push({
+                    "time": moment(workout.data.date).valueOf(),
+                    "value": workout.data.weight
                 })
-        };
-    })
+            }
+        })
+        return temp;
+    }
 
     const getScatterData = () => {
         numEntries = 0;
-        if (filteredByDate.length === 0) {
+        if (filteredByDate().length === 0) {
             return (
                 <Scatter
                     data={[]}
@@ -76,39 +93,17 @@ export default function DashGraph(props) {
             );
         } else {
             return (
-                filteredByDate.map((prop, key) => {
-                    if (!prop.workoutdata.includes(undefined)) {
-                        numEntries = numEntries + 1;
-                        return (
-                            <Scatter
-                                key={key}
-                                data={
-                                    prop.workoutdata.map(workout => {
-                                        return {
-                                            "time": moment(workout.data.date).valueOf(),
-                                            "value": workout.data.weight
-                                        }
-                                    })
-                                }
-                                line={{ stroke: props.theme.colors.primary }}
-                                lineJointType='monotoneX'
-                                lineType='joint'
-                                legendType="circle"
-                                name={prop.name}
-                            />
-                        );
-                    } else {
-                        return (
-                            <Scatter
-                                data={[]}
-                                line={{ stroke: props.theme.colors.primary }}
-                                lineJointType='monotoneX'
-                                lineType='joint'
-                                legendType="line"
-                            />
-                        );
+                <Scatter
+                    data={
+                        createData(filteredByDate())
                     }
-                })
+                    line={{ stroke: props.theme.colors.primary }}
+                    lineJointType='monotoneX'
+                    lineType='joint'
+                    legendType="circle"
+                    fill={props.theme.colors.secondary}
+                    name={" " + filteredByDate().name}
+                />
             );
         }
     }
@@ -124,34 +119,43 @@ export default function DashGraph(props) {
                         {state.selectedStart.format('MMMM D')} - {state.selectedEnd.format('MMMM D')}
                     </Typography>
                     <Typography style={{ textAlign: "center", padding: "8px" }} variant="subtitle1" color="textSecondary">
-                        {numEntries} - Total Entries
+                        {getScatterData().props.data.length} - Total Entries
                     </Typography>
                 </div>
                 <IconButton style={{ marginRight: "16px" }} onClick={() => handleWeekChange('right')}>
                     <ChevronRightIcon />
                 </IconButton>
             </div>
-            {filteredByDate.length === 0 ?
+            {getScatterData().props.data.length === 0 ?
                 <div>
                     <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
                         No Data Available
-                    </Typography>
+                        </Typography>
+                    <img className={classes.run} src={dog} />
+                </div>
+                : null}
+            {getScatterData().props.data.length === 1 ?
+                <div>
+                    <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
+                        No Enough Data Points
+                        </Typography>
                     <img className={classes.run} src={dog} />
                 </div>
                 : null}
             <ResponsiveContainer minHeight={100} width="100%" height="100%">
                 <ScatterChart
                     className={classes.chart}
-                    margin={{ top: 0, right: 24, left: 12, bottom: 30 }}>
+                    margin={{ top: 0, right: 45, left: 24, bottom: 54 }}>
                     <XAxis dataKey='time'
                         domain={['auto', 'auto']}
                         name='Time'
                         tickFormatter={(unixTime) => moment(unixTime).format('MM-DD-YYYY')}
                         type='number'
                     />
+                    <YAxis dataKey='value' name='Weight' domain={['auto', 'auto']} unit="lbs" />
                     {getScatterData()}
                     <Tooltip />
-                    <Legend height={36} wrapperStyle={{ top: 30, left: 25 }} />
+                    <Legend height={36} wrapperStyle={{ top: 10, left: 25 }} />
                 </ScatterChart>
             </ResponsiveContainer>
         </div>

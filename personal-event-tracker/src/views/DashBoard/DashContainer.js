@@ -199,7 +199,6 @@ export default function DashContainer(props) {
             <Grid container direction="column">
                 <Grid item>
                     <MaterialTable
-                        style={{ width: "100%" }}
                         columns={state.musicColumns}
                         data={
                             musicData.map((music) => {
@@ -289,7 +288,7 @@ export default function DashContainer(props) {
     return (
         <Grid
             container
-            spacing={5}
+            spacing={6}
         >
             <Typography className={classes.typo} variant="h5">Music</Typography>
             <Grid item xs={7} ref={targetRef}

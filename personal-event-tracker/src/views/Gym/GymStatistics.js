@@ -67,6 +67,7 @@ function a11yProps(index) {
     };
 }
 
+// Functions for display 
 const countGymDays = () => {
     let days = [];
     workoutData.map(workout => {
@@ -94,7 +95,8 @@ export default function GymStatistics(props) {
     const [state, setState] = React.useState({
         tabIndex: 0,
         cardIndex: 0,
-        selectedData: []
+        selectedData: null,
+        personalbest: []
     })
     const handleAutoComplete = (event, values) => {
         setState({ ...state, selectedData: values });
@@ -113,6 +115,25 @@ export default function GymStatistics(props) {
             });
         }
     }, [])
+
+    React.useEffect(() => {
+        if (state.selectedData !== null) {
+            let pb;
+            let maxWeight = 0;
+            state.selectedData.data.map(workout => {
+                if (workout.weight > maxWeight) {
+                    pb = workout;
+                } else if (workout.weight === maxWeight) {
+                    if (moment(workout.date).isBefore(moment(pb.date))) {
+                        pb = workout;
+                    }
+                }
+            })
+            setState({ ...state, personalbest: pb })
+        } else {
+            setState({ ...state, personalbest: [] })
+        }
+    }, [state.selectedData])
 
     return (
         <Grid
@@ -186,7 +207,6 @@ export default function GymStatistics(props) {
                 >
                     <Grid item xs={12}>
                         <Autocomplete
-                            multiple
                             limitTags={1}
                             options={options.sort((a, b) => -b.group.localeCompare(a.group))}
                             id="multiple-limit-tags"
@@ -201,7 +221,7 @@ export default function GymStatistics(props) {
                     <Grid item xs={12}>
                         <Card style={{ height: "20vh" }}>
                             <CardContent>
-                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary">Days in the Gym </Typography>
+                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> One Rep Max </Typography>
                                 <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1"> {countGymDays()} </Typography>
                             </CardContent>
                         </Card>
@@ -209,8 +229,18 @@ export default function GymStatistics(props) {
                     <Grid item xs={12}>
                         <Card style={{ height: "20vh" }}>
                             <CardContent>
-                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary">Days in the Gym </Typography>
-                                <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1"> {countGymDays()} </Typography>
+                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> Personal Best </Typography>
+                                {state.personalbest.length === 0 ?
+                                    <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1"> No Workout Selected </Typography> :
+                                    <div>
+                                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                            <Typography display="inline" className={classes.daysTypo} gutterBottom variant="h5" component="h1"> {state.personalbest.weight} lbs </Typography>
+                                            <Typography display="inline" className={classes.typo} variant="subtitle1" color="textSecondary"> / {state.personalbest.rep} reps </Typography>
+                                        </div>
+                                        <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> Set on - {state.personalbest.date} </Typography>
+                                    </div>
+
+                                }
                             </CardContent>
                         </Card>
                     </Grid>

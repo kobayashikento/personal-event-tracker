@@ -63,7 +63,7 @@ export default function DashBoardView(props) {
         <Grid
             container
             className={classes.container}
-            spacing={6}
+            spacing={5}
         >
             <Grid item xs={(activeAccordIndex === 1) ? 7 : 12} >
                 <DashContainer
