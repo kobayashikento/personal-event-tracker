@@ -63,9 +63,8 @@ export default function DashBoardView(props) {
         <Grid
             container
             className={classes.container}
-            spacing={5}
         >
-            <Grid item xs={(activeAccordIndex === 1) ? 7 : 12} >
+            <Grid item xs={12} style={{ padding: "20px" }}>
                 <DashContainer
                     theme={props.theme}
                     handleIndexChange={(index) => handleIndexChange(index)}
@@ -76,25 +75,6 @@ export default function DashBoardView(props) {
                     checkedSwitch={state.checkedSwitch}
                     {...props}
                 />
-            </Grid>
-            <Grid item xs={5}>
-                {(activeAccordIndex === 1) && !state.checkedSwitch && matches &&
-                    <DashGraph
-                        handleListItemClick={(index) => props.handleListItemClick(index)}
-                        gymData={state.currGymData}
-                        routes={props.routes}
-                        theme={props.theme}
-                    />
-                }
-                {state.checkedSwitch && matches &&
-                    <Fragment>
-                        <CountDownTimer />
-                        <InputForm
-                            workouts={state.currWorkout}
-                            routine={state.routine}
-                        />
-                    </Fragment>
-                }
             </Grid>
         </Grid>
     );

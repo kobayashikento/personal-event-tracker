@@ -26,13 +26,12 @@ const dashcontainerStyle = theme => ({
         }
     },
     typo: {
-        fontSize: "1rem",
         [theme.breakpoints.up("sm")]: {
             paddingLeft: theme.spacing(5),
             fontSize: "2rem"
         },
         width: "inherit",
-        paddingTop: theme.spacing(6),
+        paddingTop: theme.spacing(2),
     },
     switchTypo: {
         fontSize: "0.8rem",

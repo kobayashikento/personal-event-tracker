@@ -1,8 +1,12 @@
 import React from 'react'
 import { useRef, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types';
+import {
+    titleCase
+} from '../../assets/styles/masterStyle.js';
 
-import Paper from '@material-ui/core/Paper';
+// import material ui core
+import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,7 +16,7 @@ import MaterialTable from 'material-table';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import styles from '../../assets/styles/views/gym/gymstatisticsStyle.js';
+import styles from '../../assets/styles/views/gym/gymdatamanagementStyle.js';
 
 import { icons } from '../../assets/styles/masterStyle.js';
 import GymGraph from './GymGraph.js';
@@ -24,6 +28,7 @@ import workoutJson from '../../assets/data/workouts.json';
 
 const useStyles = makeStyles(styles);
 
+// tabpanel setting 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -42,13 +47,11 @@ function TabPanel(props) {
         </div>
     );
 }
-
 TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
 };
-
 function a11yProps(index) {
     return {
         id: `scrollable-auto-tab-${index}`,
@@ -57,14 +60,6 @@ function a11yProps(index) {
 }
 
 // Functions 
-const titleCase = (str) => {
-    let splitStr = str.toLowerCase().split(' ');
-    for (var i = 0; i < splitStr.length; i++) {
-        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-    }
-    return splitStr.join(' ');
-};
-
 const getManageData = () => {
     let temp = [];
     workoutData.map(workout => {
@@ -115,7 +110,7 @@ const getWorkoutInfo = () => {
     let temp = {
         workouts: [],
         movement: [],
-        musclegroup: []
+        musclegroup: [],
     };
     workoutJson.map((prop, index) => {
         if (!temp.workouts.includes(prop.name)) {
@@ -139,7 +134,6 @@ export default function GymContainer(props) {
 
     // states 
     const [state, setState] = React.useState({
-        width: 0, height: 0,
         dataColumn: [
             { title: 'Date', field: 'date', type: 'date' },
             {
@@ -166,11 +160,12 @@ export default function GymContainer(props) {
             { title: 'Rest', field: 'rest', type: 'numeric' }
         ],
         routineData: getRoutineData(),
-        pageSize: 9
+        pageSize: 9,
+        tabIndex: 0
     });
 
     const handleChange = (event, newValue) => {
-        props.handleTabChange(newValue);
+        setState({ ...state, tabIndex: newValue });
     };
 
     // styles 
@@ -190,33 +185,27 @@ export default function GymContainer(props) {
     const matchesXLUp = useMediaQuery(theme.breakpoints.up('xl'));
 
     return (
-        <Paper elevation={0} className={classes.paperHidden} >
+        <Grid
+            container
+            className={classes.container}
+            spacing={5}
+        >
             <AppBar position="static" color="default">
                 <Tabs
-                    value={props.tabIndex}
+                    value={state.tabIndex}
                     onChange={handleChange}
                     indicatorColor="primary"
                     textColor="primary"
-                    variant="scrollable"
+                    variant="fullWidth"
                     scrollButtons="auto"
                 >
-                    <Tab className={classes.tab} label="Statistics" {...a11yProps(0)} />
-                    <Tab className={classes.tab} label="Manage Data" {...a11yProps(1)} />
+                    <Tab className={classes.tab} label="Manage Entries" {...a11yProps(0)} />
+                    <Tab className={classes.tab} label="Manage One Time Max" {...a11yProps(1)} />
                     <Tab className={classes.tab} label="Manage Workouts" {...a11yProps(2)} />
                     <Tab className={classes.tab} label="Manage Routines" {...a11yProps(3)} />
                 </Tabs>
             </AppBar>
-            <TabPanel className={classes.tabpanel} value={props.tabIndex} index={0} >
-                <GymGraph
-                    data={props.selectedData}
-                    start={props.start}
-                    end={props.end}
-                    theme={props.theme}
-                    width={props.width}
-                    height={props.height}
-                />
-            </TabPanel>
-            <TabPanel value={props.tabIndex} index={1} >
+            <TabPanel className={classes.tabpanel} value={state.tabIndex} index={0} >
                 <MaterialTable
                     className={classes.manageDataTable}
                     columns={state.dataColumn}
@@ -261,7 +250,9 @@ export default function GymContainer(props) {
                     }}
                 />
             </TabPanel>
-            <TabPanel value={props.tabIndex} index={2}>
+            <TabPanel className={classes.tabpanel} value={state.tabIndex} index={1} >
+            </TabPanel>
+            <TabPanel className={classes.tabpanel} value={state.tabIndex} index={2}>
                 <MaterialTable
                     className={classes.manageDataTable}
                     columns={state.workoutColumn}
@@ -306,7 +297,7 @@ export default function GymContainer(props) {
                     }}
                 />
             </TabPanel>
-            <TabPanel value={props.tabIndex} index={3}>
+            <TabPanel className={classes.tabpanel} value={state.tabIndex} index={3}>
                 <MaterialTable
                     className={classes.manageDataTable}
                     columns={state.routineColumn}
@@ -351,6 +342,5 @@ export default function GymContainer(props) {
                     }}
                 />
             </TabPanel>
-        </Paper>
-    );
+        </Grid>);
 }

@@ -305,7 +305,7 @@ export default function DashContainer(props) {
                                     onChange={handleSeekChange}
                                     onMouseUp={handleSeekMouseUp}
                                     onMouseDown={handleSeekMouseDown}
-                                    style={{ marginTop: "16px", width: "200px"}}
+                                    style={{ marginTop: "16px", width: "200px" }}
                                 />
                             </CardContent>
                             <div className={classes.controls}>
@@ -392,6 +392,41 @@ export default function DashContainer(props) {
                 </Card>
             </Grid>
             <Typography className={classes.typo} variant="h5" style={{ display: (expanded || sheetExpanded) ? "none" : "", paddingTop: "16px" }}>Gym</Typography>
+            <Grid item xs={[3].includes(state.cardIndex) ? 8 : 4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
+                <Card style={{ height: "100%" }}>
+                    <CardContent>
+                        <div className={classes.cardColumn}>
+                            <InsertInvitationIcon style={{ marginRight: "32px", marginTop: "4px" }} />
+                            <Typography gutterBottom variant="h5" component="h2"> Next Workout </Typography>
+                        </div>
+                        <Typography variant="body1" color="textSecondary" component="h1"
+                            style={{ paddingTop: "24px" }} className={classes.subTypo} >
+                            Next workout day is : {titleCase(workoutRoutine[0].routineName)}
+                        </Typography>
+                        {workoutRoutine[0].workouts.map((routine, index) => {
+                            return (
+                                <Typography key={routine.workout.name + index} variant="body1" color="textSecondary" componenet="h1" className={classes.subTypo}>
+                                    {(index + 1)} : {titleCase(routine.workout.name)}
+                                </Typography>
+                            );
+                        })}
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
+                <Grid item xs={6} >
+                    <Card>
+                        <CardActionArea onClick={() => handleCardClick(2)} style={{ height: "15vh" }}>
+                            <CardContent>
+                                <div className={classes.cardColumn}>
+                                    <AddToPhotosIcon style={{ marginRight: "32px", marginTop: "4px" }} />
+                                    <Typography gutterBottom variant="h5" component="h2"> Days into the Routine</Typography>
+                                </div>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Grid>
+            </Grid>
             <Grid item xs={[2].includes(state.cardIndex) ? 8 : 4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
                 <div>
                     <Card>
@@ -415,81 +450,6 @@ export default function DashContainer(props) {
                         </CardActionArea>
                     </Card>
                 </div>
-            </Grid>
-            <Grid item xs={[3].includes(state.cardIndex) ? 8 : 4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
-                <Card>
-                    <CardActionArea>
-                        <CardContent>
-                            <div className={classes.cardColumn}>
-                                <InsertInvitationIcon style={{ marginRight: "32px", marginTop: "4px" }} />
-                                <Typography gutterBottom variant="h5" component="h2"> Next Workout </Typography>
-                            </div>
-                            <Typography variant="body2" color="textSecondary" component="p"
-                                style={{ paddingTop: "16px" }} className={classes.subTypo} >
-                                Next workout day is : {titleCase(workoutRoutine[0].routineName)}
-                            </Typography>
-                            {workoutRoutine[0].workouts.map((routine, index) => {
-                                return (
-                                    <Typography key={routine.workout.name + index} variant="body2" color="textSecondary" component="p" className={classes.subTypo}>
-                                        {(index + 1)} : {titleCase(routine.workout.name)}
-                                    </Typography>
-                                );
-                            })}
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            </Grid>
-            <Grid item xs={4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
-                <Grid container spacing={5}>
-                    <Grid item xs={6} >
-                        <Card>
-                            <CardActionArea onClick={() => handleCardClick(2)} style={{ height: "15vh" }}>
-                                <CardContent>
-                                    <div className={classes.cardColumn}>
-                                        <AddToPhotosIcon style={{ marginRight: "32px", marginTop: "4px" }} />
-                                        <Typography gutterBottom variant="h5" component="h2"> Days into the Routine</Typography>
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Card>
-                            <CardActionArea onClick={() => handleCardClick(2)} style={{ height: "15vh" }}>
-                                <CardContent>
-                                    <div className={classes.cardColumn}>
-                                        <AddToPhotosIcon size="large" style={{ marginRight: "32px", marginTop: "4px" }} />
-                                        <Typography gutterBottom variant="h5" component="h2"> Days until next One Rep max</Typography>
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Card>
-                            <CardActionArea onClick={() => handleCardClick(2)} style={{ height: "15vh" }}>
-                                <CardContent>
-                                    <div className={classes.cardColumn}>
-                                        <AddToPhotosIcon size="large" style={{ marginRight: "32px", marginTop: "4px" }} />
-                                        <Typography gutterBottom variant="h5" component="h2"> Rotations of {titleCase(workoutRoutine[0].routineName)}</Typography>
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Card>
-                            <CardActionArea onClick={() => handleCardClick(2)} style={{ height: "15vh" }}>
-                                <CardContent>
-                                    <div className={classes.cardColumn}>
-                                        <AddToPhotosIcon size="large" style={{ marginRight: "32px", marginTop: "4px" }} />
-                                        <Typography gutterBottom variant="h5" component="h2"> Quick Progress Check</Typography>
-                                    </div>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                </Grid>
             </Grid>
         </Grid >
 

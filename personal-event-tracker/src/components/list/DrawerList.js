@@ -91,7 +91,7 @@ export default function DrawerList(props) {
                     </Collapse>
                 </React.Fragment>
             );
-        } else if (name === "Statistics") {
+        } else if (name === "Statistics" || name === "GymManage") {
         } else {
             return (
                 <Link

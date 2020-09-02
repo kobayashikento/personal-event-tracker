@@ -2,7 +2,7 @@ import {
     appbarHeight
 } from '../../masterStyle.js'
 
-const gymcontainerStyle = theme => ({
+const gymstatisticsStyle = theme => ({
     paper: {
         height: "calc(100% - 2rem)",
         [theme.breakpoints.up("sm")]: {
@@ -44,4 +44,4 @@ const gymcontainerStyle = theme => ({
 
 
 
-export default gymcontainerStyle;
+export default gymstatisticsStyle;

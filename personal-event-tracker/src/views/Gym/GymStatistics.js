@@ -106,16 +106,6 @@ export default function GymStatistics(props) {
         setState({ ...state, tabIndex: index })
     ];
 
-    useLayoutEffect(() => {
-        if (targetRef.current) {
-            setState({
-                ...state,
-                width: targetRef.current.offsetWidth,
-                height: targetRef.current.offsetHeight
-            });
-        }
-    }, [])
-
     React.useEffect(() => {
         if (state.selectedData !== null) {
             let pb;
@@ -234,10 +224,16 @@ export default function GymStatistics(props) {
                                     <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1"> No Workout Selected </Typography> :
                                     <div>
                                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                            <Typography display="inline" className={classes.daysTypo} gutterBottom variant="h5" component="h1"> {state.personalbest.weight} lbs </Typography>
-                                            <Typography display="inline" className={classes.typo} variant="subtitle1" color="textSecondary"> / {state.personalbest.rep} reps </Typography>
+                                            <Typography display="inline" className={classes.daysTypo} gutterBottom variant="h5" component="h1">
+                                                {state.personalbest.weight} lbs
+                                             </Typography>
+                                            <Typography display="inline" className={classes.typo} variant="subtitle1" color="textSecondary">
+                                                / {state.personalbest.rep} reps
+                                                </Typography>
                                         </div>
-                                        <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> Set on - {state.personalbest.date} </Typography>
+                                        <Typography className={classes.typo} variant="subtitle1" color="textSecondary">
+                                            Set on - {state.personalbest.date}
+                                        </Typography>
                                     </div>
 
                                 }

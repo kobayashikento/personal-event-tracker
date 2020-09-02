@@ -8,7 +8,7 @@ import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 // import views 
 import DashBoardView from './views/DashBoard/DashBoardView.js';
 import PianoView from './views/Piano/PianoView.js';
-import GymView from './views/Gym/GymView.js';
+import GymManagement from './views/Gym/GymDataManagement.js';
 import ManageThemeView from './views/ManageTheme/ManageThemeView.js';
 import GymStatistics from './views/Gym/GymStatistics.js';
 
@@ -23,6 +23,12 @@ const mainmenuRoutes = [
         path: "/main-menu/gym/statistics",
         name: "Statistics",
         component: GymStatistics,
+        icon: FitnessCenterIcon,
+    },
+    {
+        path: "/main-menu/gym/manage",
+        name: "GymManage",
+        component: GymManagement,
         icon: FitnessCenterIcon,
     },
     {
@@ -51,7 +57,7 @@ const gymRoutes = [
         name: "Statistics"
     },
     {
-        path: "/main-menu/gym/manage-data",
+        path: "/main-menu/gym/manage",
         name: "Manage Data"
     },
 ]
