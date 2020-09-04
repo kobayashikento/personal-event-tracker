@@ -52,15 +52,15 @@ export default function SideBar(props) {
     const mediaPlayer = () => {
         return (
             <div style={{ marginTop: "auto", marginBottom: "22px" }}>
-                <Typography gutterBottom variant="h5" component="h3" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].name} </Typography>
-                <Typography variant="subtitle1" color="textSecondary" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].subtitle}</Typography>
+                <Typography variant="body1" component="h2" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].name} </Typography>
+                <Typography variant="subtitle2" color="textSecondary" style={{ paddingLeft: "32px" }}> {musicData[props.currMusicIndex].subtitle}</Typography>
                 <input
                     type='range' min={0} max={0.999999} step='any'
                     value={props.played}
                     onChange={handleSeekChange}
                     onMouseUp={handleSeekMouseUp}
                     onMouseDown={handleSeekMouseDown}
-                    style={{ marginTop: "16px", width: "180px", marginLeft: "36px" }}
+                    style={{ marginTop: "8px", width: "160px", marginLeft: "32px" }}
                 />
                 <div className={classes.controls}>
                     <IconButton aria-label="previous" onClick={() => props.handleChangeMusic("prev")}>
@@ -99,11 +99,9 @@ export default function SideBar(props) {
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
+                    style={{ zoom: "0.9" }}
                 >
-                    <Typography
-                        className={classes.sidebarTitle}
-                        variant="h5"
-                    >
+                    <Typography variant="h6" component="h1" style={{ color: props.theme.colors.secondary }} className={classes.sidebarTitle}>
                         Record Keeper
                     </Typography>
                     {drawerItems(props)}

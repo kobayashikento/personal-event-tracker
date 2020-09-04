@@ -47,13 +47,13 @@ export default function DrawerList(props) {
                 >
                     <ListItem
                         button
+                        style={{ color: props.theme.colors.primarytext }}
                         className={classNames(classes.drawerButtonNested)}
                         onClick={(event) => handleGymIndexChanege(event, index)}
                         selected={props.gymSelectedIndex === index}
                     >
                         <ListItemText
                             primary={prop.name}
-                            disableTypography
                             className={classes.buttonText}
                         />
                     </ListItem>
@@ -71,6 +71,7 @@ export default function DrawerList(props) {
                         selected={props.selectedIndex === index}
                         className={classNames(classes.drawerButtonItem)}
                         key={name}
+                        style={{ color: props.theme.colors.primarytext }}
                         onClick={handleClick}
                     >
                         <Icon
@@ -78,7 +79,6 @@ export default function DrawerList(props) {
                             fontSize="default"
                         />
                         <ListItemText
-                            disableTypography
                             className={classes.buttonText}
                             primary={name}
                         />
@@ -103,9 +103,8 @@ export default function DrawerList(props) {
                     <ListItem
                         button
                         selected={props.selectedIndex === index}
-                        className={
-                            classNames(classes.drawerButton)
-                        }
+                        className={classNames(classes.drawerButton)}
+                        style={{ color: props.theme.colors.primarytext }}
                         key={name}
                         onClick={(event) => handleListItemClick(event, index)}
                     >
@@ -114,7 +113,6 @@ export default function DrawerList(props) {
                             fontSize="default"
                         />
                         <ListItemText
-                            disableTypography
                             className={classes.buttonText}
                             primary={name}
                         />

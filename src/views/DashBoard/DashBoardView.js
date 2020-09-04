@@ -64,7 +64,7 @@ export default function DashBoardView(props) {
             container
             className={classes.container}
         >
-            <Grid item xs={12} style={{ padding: "20px" }}>
+            <Grid item xs={12} style={{ padding: "24px", zoom: "0.9" }}>
                 <DashContainer
                     theme={props.theme}
                     handleIndexChange={(index) => handleIndexChange(index)}

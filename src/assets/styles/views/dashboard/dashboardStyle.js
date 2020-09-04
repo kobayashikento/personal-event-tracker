@@ -9,8 +9,8 @@ const dashboardStyle = theme => ({
         height: "100%",
         [theme.breakpoints.up('sm')]: {
             marginTop: `calc( ${appbarHeight} + ${theme.spacing(5)}px )`,
-            marginLeft: theme.spacing(5),
-            marginRight: theme.spacing(5),
+            marginLeft: theme.spacing(4),
+            marginRight: theme.spacing(4),
             width: "inherit"
         }
     },

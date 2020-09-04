@@ -15,7 +15,6 @@ const drawerlistStyle = theme => ({
         marginBottom: "18px",
     },
     drawerButton: {
-        color: "white",
         borderRadius: "5px",
         marginRight: "16px",
         marginLeft: "16px",
@@ -23,7 +22,6 @@ const drawerlistStyle = theme => ({
         width: "inherit",
     },
     drawerButtonItem: {
-        color: "white",
         borderRadius: "5px",
         marginRight: "16px",
         marginLeft: "16px",
@@ -32,7 +30,6 @@ const drawerlistStyle = theme => ({
         marginBottom: "18px",
     },
     drawerButtonNested: {
-        color: "white",
         borderRadius: "5px",
         marginRight: "16px",
         marginLeft: "60px",

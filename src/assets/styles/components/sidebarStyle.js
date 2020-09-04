@@ -1,6 +1,5 @@
 import {
     drawerWidthPC,
-    primaryColor,
 } from '../masterStyle.js';
 
 const responsivedrawerStyle = theme => ({
@@ -10,8 +9,6 @@ const responsivedrawerStyle = theme => ({
     sidebarTitle: {
         paddingTop: "22px",
         marginLeft: "28px",
-        color: primaryColor,
-        height: "64px",
     },
     drawerPaper: props => ({
         width: "calc(100% - 64px)",
@@ -65,8 +62,7 @@ const responsivedrawerStyle = theme => ({
     controls: {
         display: 'flex',
         alignItems: 'center',
-        paddingTop: theme.spacing(2),
-        paddingLeft: theme.spacing(4),
+        paddingLeft: theme.spacing(2),
     },
 });
 export default responsivedrawerStyle;

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import ReactPlayer from 'react-player'
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
+import moment from 'moment';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -28,10 +29,13 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Collapse from '@material-ui/core/Collapse';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slider from '@material-ui/core/Slider';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 // import material ui icons 
 import PauseIcon from '@material-ui/icons/Pause';
-import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
@@ -46,10 +50,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 import LoopIcon from '@material-ui/icons/Loop';
+import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
+import HistoryIcon from '@material-ui/icons/History';
 
 import MaterialTable from 'material-table';
 
 import workoutRoutine from '../../assets/data/workoutRoutine.json';
+import gymData from '../../assets/data/gymData.json';
 
 import CountDownTimer from '../../components/CountDownTimer.js';
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
@@ -58,6 +65,8 @@ import { icons } from '../../assets/styles/masterStyle.js';
 
 import musicData from '../../assets/data/musicLibrary.json';
 import sheetData from '../../assets/data/sheetmusic.json';
+
+import spider from '../../assets/images/13850-spider-web.gif';
 
 const useStyle = makeStyles(styles);
 
@@ -83,7 +92,6 @@ export default function DashContainer(props) {
 
     const [state, setState] = React.useState(
         {
-            pianoCurrentRow: {},
             pianoSelected: true,
             pianoSelectedRowId: null,
             sheetCurrentRow: {},
@@ -106,6 +114,9 @@ export default function DashContainer(props) {
             sheetSelected: true,
             sheetIndex: 0,
             snackbarOpen: false,
+            musicModalOpen: false,
+            sheetModalOpen: false,
+            liftsIndex: 0
         }
     );
 
@@ -122,7 +133,6 @@ export default function DashContainer(props) {
         setExpanded(false);
         props.handlePlayPause();
     }
-
     const handleLoop = () => {
         setState({ ...state, snackbarOpen: true });
         props.handleLoop();
@@ -136,10 +146,7 @@ export default function DashContainer(props) {
     const handleSeekMouseUp = e => {
         props.handleSeekMouseUp(e);
     }
-    // const handleChange = (panel, index) => (event, isExpanded) => {
-    //     setExpanded(isExpanded ? panel : false);
-    //     props.handleIndexChange(index);
-    // }
+
     const handleCardClick = (index) => {
         if (index === state.cardIndex) {
             setState({ ...state, cardIndex: null })
@@ -147,32 +154,30 @@ export default function DashContainer(props) {
             setState({ ...state, cardIndex: index })
         }
     }
-    // pdf states 
-    const [numPages, setNumPages] = React.useState(null);
-    const [pageNumber, setPageNumber] = React.useState(1);
-    function onDocumentLoadSuccess({ numPages }) {
-        setNumPages(numPages);
-        setPageNumber(1);
-    }
-    function changePage(offset) {
-        setPageNumber(prevPageNumber => prevPageNumber + offset);
-    }
-    function previousPage() {
-        changePage(-1);
-    }
-    function nextPage() {
-        changePage(1);
+
+    const handleModalOpen = (type) => {
+        if (type === "music") {
+            setState({ ...state, musicModalOpen: true });
+        } else if (type === "sheet") {
+            setState({ ...state, sheetModalOpen: true });
+        }
     }
 
-    // Getting ratio of divs 
-    // React.useEffect(() => {
-    //     if (props.checkedSwitch && expanded !== 'panel1') {
-    //         setExpanded('panel1');
-    //     } else if (!props.checkedSwitch & expanded !== false) {
-    //         setExpanded(false)
-    //         props.handleIndexChange(0)
-    //     }
-    // }, [props.checkedSwitch])
+    const handleModalClose = (type) => {
+        if (type === "music") {
+            setState({ ...state, musicModalOpen: false });
+        } else if (type === "sheet") {
+            setState({ ...state, sheetModalOpen: false });
+        }
+    }
+
+    const handleLiftClick = (direction) => {
+        if (direction === "left" && state.liftsIndex !== 0) {
+            setState({ ...state, liftsIndex: state.liftsIndex - 1 });
+        } else if (direction === "right" && state.liftsIndex !== getPrevLiftsData().length - 1) {
+            setState({ ...state, liftsIndex: state.liftsIndex + 1 });
+        }
+    }
 
     React.useLayoutEffect(() => {
         if (targetRef.current) {
@@ -218,16 +223,14 @@ export default function DashContainer(props) {
                             })
                         }}
                         icons={icons}
-                        onRowClick={(event, rowData) => {
-                            setState({ ...state, pianoCurrentRow: rowData });
-                            if (rowData.tableData.id === state.pianoSelectedRowId) {
-                                setState({ ...state, pianoSelected: false });
-                                setState({ ...state, pianoSelectedRowId: null });
-                            } else {
-                                setState({ ...state, pianoSelected: true });
-                                props.handleMusicIndexChange(rowData.tableData.id);
-                            }
-                        }}
+                    // onRowClick={(event, rowData) => {
+                    //     if (rowData.tableData.id === state.pianoSelectedRowId) {
+                    //         setState({ ...state, pianoSelected: false, pianoSelectedRowId: null });
+                    //     } else {
+                    //         props.handleMusicIndexChange(rowData.tableData.id);
+                    //         setState({ ...state, pianoSelected: true });
+                    //     }
+                    // }}
                     />
                 </Grid>
                 <Grid item style={{ display: "flex" }}>
@@ -237,7 +240,6 @@ export default function DashContainer(props) {
             </Grid>
         );
     };
-
     const displaySheetLibrary = () => {
         return (
             <Grid container direction="column">
@@ -282,22 +284,51 @@ export default function DashContainer(props) {
         );
     }
 
+    const getMostRecent = (props) => {
+        let recentDate = moment('2010-10-20');
+        let recentEntry = null;
+        props.data.map(data => {
+            if (recentDate.isBefore(data.date)) {
+                recentDate = moment(data.date);
+                recentEntry = data;
+            }
+        })
+        return recentEntry;
+    }
+
+    const getPrevLiftsData = () => {
+        let lifts = [];
+        workoutRoutine[0].workouts.map(workout => {
+            let temp = null;
+            gymData.map(props => {
+                if (workout.workout.name === props.workout.name) {
+                    temp = getMostRecent(props);
+                }
+            })
+            lifts.push({
+                name: workout.workout.name,
+                data: temp
+            })
+        })
+        return lifts;
+    }
+
     //style 
     const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
     return (
         <Grid
             container
-            spacing={6}
+            spacing={5}
         >
-            <Typography className={classes.typo} variant="h5">Music</Typography>
+            <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
             <Grid item xs={7} ref={targetRef}
             >
                 <Card style={{ height: expanded ? "" : state.width }}>
                     <Grid container >
                         <Grid item xs={7} style={{ display: "flex", flexDirection: "column" }}>
                             <CardContent className={classes.content}>
-                                <Typography gutterBottom variant="h5" component="h2"> {musicData[props.currMusicIndex].name} </Typography>
+                                <Typography gutterBottom variant="body1" component="h2"> {musicData[props.currMusicIndex].name} </Typography>
                                 <Typography variant="subtitle1" color="textSecondary"> {musicData[props.currMusicIndex].subtitle}</Typography>
                                 <input
                                     type='range' min={0} max={0.999999} step='any'
@@ -305,46 +336,48 @@ export default function DashContainer(props) {
                                     onChange={handleSeekChange}
                                     onMouseUp={handleSeekMouseUp}
                                     onMouseDown={handleSeekMouseDown}
-                                    style={{ marginTop: "16px", width: "200px" }}
+                                    style={{ marginTop: theme.spacing(2), width: "200px" }}
                                 />
                             </CardContent>
                             <div className={classes.controls}>
-
                                 <IconButton aria-label="previous" onClick={() => props.handleChangeMusic("prev")}>
-                                    {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+                                    {theme.direction === 'rtl' ? <SkipNextIcon fontSize="small" /> : <SkipPreviousIcon fontSize="small" />}
                                 </IconButton>
                                 <IconButton aria-label="play/pause" onClick={() => handlePlayPause()}>
-                                    {props.playing ? <PauseIcon className={classes.playIcon} /> : <PlayArrowIcon className={classes.playIcon} />}
+                                    {props.playing ? <PauseIcon fontSize="small" className={classes.playIcon} /> : <PlayArrowIcon fontSize="small" className={classes.playIcon} />}
                                 </IconButton>
                                 <IconButton aria-label="next" onClick={() => props.handleChangeMusic("next")}>
-                                    {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+                                    {theme.direction === 'rtl' ? <SkipPreviousIcon fontSize="small" /> : <SkipNextIcon fontSize="small" />}
                                 </IconButton>
-                                <IconButton style={{ marginLeft: "16px" }} onClick={() => handleLoop()}>
-                                    <LoopIcon style={{ color: props.loop ? props.theme.colors.primary : "" }} />
+                                <IconButton style={{ marginLeft: theme.spacing(2) }} onClick={() => handleLoop()}>
+                                    <LoopIcon fontSize="small" style={{ color: props.loop ? props.theme.colors.primary : "" }} />
                                 </IconButton>
                                 <Snackbar
                                     open={state.snackbarOpen} autoHideDuration={5000} onClose={() => setState({ ...state, snackbarOpen: false })}
                                     message={props.loop ? "Loop Enabled" : "Loop Disabled"}
                                 />
+                                <IconButton
+                                    style={{ width: "fit-content", marginLeft: theme.spacing(1) }}
+                                    onClick={() => handleModalOpen("music")}
+                                >
+                                    <PlaylistPlayIcon fontSize="small" />
+                                </IconButton>
                             </div>
-                            <IconButton
-                                className={clsx(classes.expand, {
-                                    [classes.expandOpen]: expanded,
-                                })}
-                                style={{ marginTop: "auto", marginRight: "0px", padding: "16px" }}
-                                onClick={handleExpandClick}
-                                aria-expanded={expanded}
-                                aria-label="show more"
+                            <Modal
+                                open={state.musicModalOpen}
+                                onClose={() => handleModalClose("music")}
+                                closeAfterTransition
+                                BackdropComponent={Backdrop}
+                                BackdropProps={{
+                                    timeout: 500,
+                                }}
                             >
-                                <ExpandMoreIcon />
-                            </IconButton>
-                            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                <CardContent>
+                                <Fade in={state.musicModalOpen}>
                                     {displayMusicLibrary()}
-                                </CardContent>
-                            </Collapse>
+                                </Fade>
+                            </Modal>
                         </Grid>
-                        <Grid item xs={5} style={{ marginTop: "auto", marginBottom: "auto" }}>
+                        <Grid item xs={5}>
                             <img
                                 style={{ height: state.width }}
                                 src={`https://img.youtube.com/vi/${musicData[props.currMusicIndex].src}/0.jpg`}
@@ -358,8 +391,8 @@ export default function DashContainer(props) {
                 <Card style={{ height: sheetExpanded ? "" : state.width, display: "flex", flexDirection: "column" }}>
                     <CardContent>
                         <div className={classes.cardColumn}>
-                            <FileCopyIcon size="large" style={{ marginRight: "32px", marginTop: "4px" }} />
-                            <Typography gutterBottom variant="h5" component="h2"> Piano Sheet Library </Typography>
+                            <FileCopyIcon style={{ marginRight: "16px" }} />
+                            <Typography gutterBottom variant="body1" component="h2"> Piano Sheet Library </Typography>
                         </div>
                     </CardContent>
                     <div className={classes.sheetCardActionContainer}>
@@ -368,8 +401,8 @@ export default function DashContainer(props) {
                         </IconButton>
                         <CardActionArea style={{ width: "fit-content", padding: "16px" }}>
                             <Grid>
-                                <Typography variant="h5" color="textSecondary" component="p"> {titleCase(sheetData[state.sheetIndex].name)} <AspectRatioIcon /></Typography>
-                                <Typography variant="body2" color="textSecondary" component="p"> {titleCase(sheetData[state.sheetIndex].composer)}</Typography>
+                                <Typography variant="body1" component="h3"> {titleCase(sheetData[state.sheetIndex].name)} <AspectRatioIcon /></Typography>
+                                <Typography variant="subtitle1" color="textSecondary" component="h4"> {titleCase(sheetData[state.sheetIndex].composer)}</Typography>
                             </Grid>
                         </CardActionArea>
                         <IconButton style={{ marginRight: "auto" }} onClick={() => handleSheetIndexChange("next")}>
@@ -378,56 +411,104 @@ export default function DashContainer(props) {
                     </div>
                     <IconButton
                         style={{ marginLeft: "auto", padding: "16px", right: "4px" }}
-                        onClick={handleSheetExpandClick}
-                        aria-expanded={sheetExpanded}
-                        aria-label="show more"
+                        onClick={() => handleModalOpen("sheet")}
                     >
-                        <ExpandMoreIcon />
+                        <PlaylistPlayIcon />
                     </IconButton>
-                    <Collapse in={sheetExpanded} timeout="auto" unmountOnExit>
-                        <CardContent>
+                    <Modal
+                        open={state.sheetModalOpen}
+                        onClose={() => handleModalClose("music")}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{
+                            timeout: 500,
+                        }}
+                    >
+                        <Fade in={state.sheetModalOpen}>
                             {displaySheetLibrary()}
-                        </CardContent>
-                    </Collapse>
+                        </Fade>
+                    </Modal>
                 </Card>
             </Grid>
-            <Typography className={classes.typo} variant="h5" style={{ display: (expanded || sheetExpanded) ? "none" : "", paddingTop: "16px" }}>Gym</Typography>
-            <Grid item xs={[3].includes(state.cardIndex) ? 8 : 4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
+            <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
+            <Grid item xs={5}>
                 <Card style={{ height: "100%" }}>
                     <CardContent>
                         <div className={classes.cardColumn}>
-                            <InsertInvitationIcon style={{ marginRight: "32px", marginTop: "4px" }} />
-                            <Typography gutterBottom variant="h5" component="h2"> Next Workout </Typography>
+                            <InsertInvitationIcon style={{ marginRight: "16px" }} />
+                            <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
                         </div>
-                        <Typography variant="body1" color="textSecondary" component="h1"
-                            style={{ paddingTop: "24px" }} className={classes.subTypo} >
+                        <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
                             Next workout day is : {titleCase(workoutRoutine[0].routineName)}
                         </Typography>
-                        {workoutRoutine[0].workouts.map((routine, index) => {
-                            return (
-                                <Typography key={routine.workout.name + index} variant="body1" color="textSecondary" componenet="h1" className={classes.subTypo}>
-                                    {(index + 1)} : {titleCase(routine.workout.name)}
-                                </Typography>
-                            );
-                        })}
+                        <Grid container>
+                            <Grid item xs={7}>
+                                {workoutRoutine[0].workouts.map((routine, index) => {
+                                    return (
+                                        <Typography key={routine.workout.name + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                            {(index + 1)} : {titleCase(routine.workout.name)}
+                                        </Typography>
+                                    );
+                                })}
+                            </Grid>
+                            <Grid item xs={5}>
+                                {workoutRoutine[0].workouts.map((routine, index) => {
+                                    return (
+                                        <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                            Sets: {routine.sets} / Reps: {routine.reps}
+                                        </Typography>
+                                    );
+                                })}
+                            </Grid>
+                        </Grid>
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
-                <Grid item xs={6} >
-                    <Card>
-                        <CardActionArea onClick={() => handleCardClick(2)} style={{ height: "15vh" }}>
-                            <CardContent>
-                                <div className={classes.cardColumn}>
-                                    <AddToPhotosIcon style={{ marginRight: "32px", marginTop: "4px" }} />
-                                    <Typography gutterBottom variant="h5" component="h2"> Days into the Routine</Typography>
+            <Grid item xs={4} >
+                <Card style={{ height: "100%" }}>
+                    <CardContent style={{ height: "100%" }}>
+                        <div className={classes.cardColumn}>
+                            <Grid container>
+                                <Grid item xs={12} style={{ display: "inline-flex" }}>
+                                    <HistoryIcon style={{ marginRight: "16px" }} />
+                                    <Typography gutterBottom variant="body1" component="h2"> Previous Lifts </Typography>
+                                </Grid>
+                                <Grid item xs={12} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                                    <IconButton onClick={() => handleLiftClick('left')}>
+                                        <ChevronLeftIcon fontSize="small" />
+                                    </IconButton>
+                                    <Typography variant="body1" component="h1" style={{ textAlign: "center", marginLeft: theme.spacing(2), marginRight: theme.spacing(2) }}>
+                                        {titleCase(getPrevLiftsData()[state.liftsIndex].name)}
+                                    </Typography>
+                                    <IconButton onClick={() => handleLiftClick('right')}>
+                                        <ChevronRightIcon fontSize="small" />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        </div>
+                        {getPrevLiftsData()[state.liftsIndex].data === null ?
+                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2rem" }}>
+                                <Typography display="inline" gutterBottom variant="h5" component="h1">
+                                    No Data
+                                 </Typography>
+                            </div> : <div>
+                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2rem" }}>
+                                    <Typography display="inline" gutterBottom variant="h5" component="h1">
+                                        {getPrevLiftsData()[state.liftsIndex].data.weight} lbs
+                                         </Typography>
+                                    <Typography display="inline" style={{ marginLeft: "8px" }} variant="subtitle1" color="textSecondary">
+                                        / {getPrevLiftsData()[state.liftsIndex].data.rep} reps
+                                            </Typography>
                                 </div>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
+                                <Typography style={{ textAlign: "center", marginTop: "2rem" }} variant="subtitle1" color="textSecondary">
+                                    Last Workout: {getPrevLiftsData()[state.liftsIndex].data.date}
+                                </Typography>
+                            </div>
+                        }
+                    </CardContent>
+                </Card>
             </Grid>
-            <Grid item xs={[2].includes(state.cardIndex) ? 8 : 4} style={{ display: (expanded || sheetExpanded) ? "none" : "" }}>
+            {/* <Grid item xs={3}>
                 <div>
                     <Card>
                         <CardActionArea onClick={() => handleCardClick(2)}>
@@ -450,7 +531,7 @@ export default function DashContainer(props) {
                         </CardActionArea>
                     </Card>
                 </div>
-            </Grid>
+            </Grid> */}
         </Grid >
 
         // <div className={classes.container}>

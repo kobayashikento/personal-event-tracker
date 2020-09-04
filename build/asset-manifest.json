@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2ccfc222.chunk.css",
+    "main.js": "/static/js/main.2d0a9d6a.chunk.js",
+    "main.js.map": "/static/js/main.2d0a9d6a.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.3914c359.js",
+    "runtime-main.js.map": "/static/js/runtime-main.3914c359.js.map",
+    "static/js/2.10fc5792.chunk.js": "/static/js/2.10fc5792.chunk.js",
+    "static/js/2.10fc5792.chunk.js.map": "/static/js/2.10fc5792.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.55aeb6f242cfeb1bfa42eb35012a415e.js": "/precache-manifest.55aeb6f242cfeb1bfa42eb35012a415e.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.2ccfc222.chunk.css.map": "/static/css/main.2ccfc222.chunk.css.map",
+    "static/js/2.10fc5792.chunk.js.LICENSE.txt": "/static/js/2.10fc5792.chunk.js.LICENSE.txt",
+    "static/media/13850-spider-web.gif": "/static/media/13850-spider-web.600779b7.gif",
+    "static/media/15224-cute-doggie.gif": "/static/media/15224-cute-doggie.4b54cf4a.gif",
+    "static/media/allactivity.jpg": "/static/media/allactivity.7e51e9db.jpg",
+    "static/media/black-building-under-white-sky.jpg": "/static/media/black-building-under-white-sky.447ac29c.jpg",
+    "static/media/gym-dumbells.jpg": "/static/media/gym-dumbells.f28ff098.jpg",
+    "static/media/mountain-scenery-1450082.jpg": "/static/media/mountain-scenery-1450082.fc9cf63c.jpg",
+    "static/media/noactbg.jpg": "/static/media/noactbg.b7ebd078.jpg",
+    "static/media/piano.jpg": "/static/media/piano.f7bbd6c4.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3914c359.js",
+    "static/js/2.10fc5792.chunk.js",
+    "static/css/main.2ccfc222.chunk.css",
+    "static/js/main.2d0a9d6a.chunk.js"
+  ]
+}

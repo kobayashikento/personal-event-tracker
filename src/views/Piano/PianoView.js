@@ -31,3 +31,20 @@
                         Next Page
                     </Button>
 </div> */}
+
+//  // pdf states 
+//  const [numPages, setNumPages] = React.useState(null);
+//  const [pageNumber, setPageNumber] = React.useState(1);
+//  function onDocumentLoadSuccess({ numPages }) {
+//      setNumPages(numPages);
+//      setPageNumber(1);
+//  }
+//  function changePage(offset) {
+//      setPageNumber(prevPageNumber => prevPageNumber + offset);
+//  }
+//  function previousPage() {
+//      changePage(-1);
+//  }
+//  function nextPage() {
+//      changePage(1);
+//  }

@@ -8,8 +8,7 @@ const appbarStyle = theme => ({
         height: "56px",
         width: "100%",
         [theme.breakpoints.up('sm')]: {
-            width: `calc(100% - ${drawerWidthPC})`,
-            marginLeft: drawerWidthPC,
+            paddingLeft: drawerWidthPC,
             height: appbarHeight,
         }
     },

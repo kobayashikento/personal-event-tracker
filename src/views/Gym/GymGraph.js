@@ -109,7 +109,7 @@ export default function DashGraph(props) {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", height: "76vh" }}>
+        <div style={{ display: "flex", flexDirection: "column"}}>
             <div style={{ display: "flex", marginTop: "32px", marginLeft: "auto", marginRight: "auto" }}>
                 <IconButton style={{ marginLeft: "16px" }} onClick={() => handleWeekChange('left')}>
                     <ChevronLeftIcon />

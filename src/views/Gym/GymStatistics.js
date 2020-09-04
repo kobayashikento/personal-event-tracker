@@ -130,9 +130,10 @@ export default function GymStatistics(props) {
             container
             className={classes.container}
             spacing={5}
+            style={{ zoom: "0.9", height: "90vh" }}
         >
-            <Grid item xs={7}>
-                <Card style={{ height: "80vh" }}>
+            <Grid item xs={7} style={{ height: "inherit" }}>
+                <Card style={{ height: "inherit" }}>
                     <CardContent style={{ padding: "0px" }}>
                         <AppBar position="static" color="default">
                             <Tabs
@@ -235,7 +236,6 @@ export default function GymStatistics(props) {
                                             Set on - {state.personalbest.date}
                                         </Typography>
                                     </div>
-
                                 }
                             </CardContent>
                         </Card>

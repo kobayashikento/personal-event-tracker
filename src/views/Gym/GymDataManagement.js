@@ -189,6 +189,7 @@ export default function GymContainer(props) {
             container
             className={classes.container}
             spacing={5}
+            style={{ zoom: "0.8" }}
         >
             <AppBar position="static" color="default">
                 <Tabs
