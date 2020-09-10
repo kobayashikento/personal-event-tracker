@@ -87,7 +87,7 @@ const options = workoutData.map((option) => {
     };
 });
 
-export default function GymStatistics(props) {
+const GymStatistics = React.memo((props) => {
     const classes = useStyles();
     // states 
     const targetRef = useRef();
@@ -159,6 +159,7 @@ export default function GymStatistics(props) {
                                 selectedData={state.selectedData}
                                 type={'days'}
                                 amount={14}
+                                playing={props.playing}
                             />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={1} >
@@ -170,6 +171,7 @@ export default function GymStatistics(props) {
                                 selectedData={state.selectedData}
                                 type={'months'}
                                 amount={1}
+                                playing={props.playing}
                             />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={2}>
@@ -181,6 +183,7 @@ export default function GymStatistics(props) {
                                 selectedData={state.selectedData}
                                 type={'months'}
                                 amount={3}
+                                playing={props.playing}
                             />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={3}>
@@ -244,10 +247,12 @@ export default function GymStatistics(props) {
             </Grid>
         </Grid>
     );
-    {/* <Grid ref={targetRef} className={classes.gymContainer} item xs={(props.tabIndex === 0) ? 8 : 12} >
-                {createTabPanel()}
-            </Grid>
-            <Grid className={classes.gymSelection} item xs={4}>
-               
-            </Grid> */}
-}
+}, (prevProps, nextProps) => {
+    if (prevProps.playing || nextProps.playing) {
+        return true;
+    } else {
+        return false;
+    }
+});
+
+export default GymStatistics;

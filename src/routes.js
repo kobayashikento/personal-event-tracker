@@ -33,7 +33,7 @@ const mainmenuRoutes = [
     },
     {
         path: "/main-menu/gym",
-        name: "Gym",
+        name: "Fitness",
         component: GymStatistics,
         icon: FitnessCenterIcon,
     },

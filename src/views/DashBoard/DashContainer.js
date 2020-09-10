@@ -1,50 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import clsx from 'clsx';
-import ReactPlayer from 'react-player'
-import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 import moment from 'moment';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import AccordionActions from '@material-ui/core/AccordionActions';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
-import Collapse from '@material-ui/core/Collapse';
 import Snackbar from '@material-ui/core/Snackbar';
-import Slider from '@material-ui/core/Slider';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
 // import material ui icons 
 import PauseIcon from '@material-ui/icons/Pause';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import StraightenIcon from '@material-ui/icons/Straighten';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 import InsertInvitationIcon from '@material-ui/icons/InsertInvitation';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -53,20 +32,17 @@ import LoopIcon from '@material-ui/icons/Loop';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import HistoryIcon from '@material-ui/icons/History';
 
+// import material table 
 import MaterialTable from 'material-table';
+
+// import style
+import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
+import { icons } from '../../assets/styles/masterStyle.js';
 
 import workoutRoutine from '../../assets/data/workoutRoutine.json';
 import gymData from '../../assets/data/gymData.json';
-
-import CountDownTimer from '../../components/CountDownTimer.js';
-import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
-
-import { icons } from '../../assets/styles/masterStyle.js';
-
 import musicData from '../../assets/data/musicLibrary.json';
 import sheetData from '../../assets/data/sheetmusic.json';
-
-import spider from '../../assets/images/13850-spider-web.gif';
 
 const useStyle = makeStyles(styles);
 
@@ -116,7 +92,8 @@ export default function DashContainer(props) {
             snackbarOpen: false,
             musicModalOpen: false,
             sheetModalOpen: false,
-            liftsIndex: 0
+            liftsIndex: 0,
+            played: props.played
         }
     );
 
@@ -313,17 +290,29 @@ export default function DashContainer(props) {
         return lifts;
     }
 
-    //style 
-    const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
-
     return (
         <Grid
             container
             spacing={5}
         >
             <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
-            <Grid item xs={7} ref={targetRef}
-            >
+
+
+
+
+
+
+            {/* {props.dbRefObj.ref().child('workoutRoutine').on('value', snap => console.log(snap.val()))} */}
+
+
+
+
+
+
+
+
+
+            <Grid item xs={7} ref={targetRef}>
                 <Card style={{ height: expanded ? "" : state.width }}>
                     <Grid container >
                         <Grid item xs={7} style={{ display: "flex", flexDirection: "column" }}>
@@ -332,7 +321,7 @@ export default function DashContainer(props) {
                                 <Typography variant="subtitle1" color="textSecondary"> {musicData[props.currMusicIndex].subtitle}</Typography>
                                 <input
                                     type='range' min={0} max={0.999999} step='any'
-                                    value={props.played}
+                                    value={state.played}
                                     onChange={handleSeekChange}
                                     onMouseUp={handleSeekMouseUp}
                                     onMouseDown={handleSeekMouseDown}

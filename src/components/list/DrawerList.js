@@ -50,7 +50,7 @@ export default function DrawerList(props) {
                         style={{ color: props.theme.colors.primarytext }}
                         className={classNames(classes.drawerButtonNested)}
                         onClick={(event) => handleGymIndexChanege(event, index)}
-                        selected={props.gymSelectedIndex === index}
+                        selected={window.location.pathname === prop.path}
                     >
                         <ListItemText
                             primary={prop.name}
@@ -63,12 +63,12 @@ export default function DrawerList(props) {
     );
 
     const gymdrawerItems = (index, Icon, name, path) => {
-        if (name === "Gym") {
+        if (name === "Fitness") {
             return (
                 <React.Fragment key={index} >
                     < ListItem
                         button
-                        selected={props.selectedIndex === index}
+                        selected={window.location.pathname.includes(path)}
                         className={classNames(classes.drawerButtonItem)}
                         key={name}
                         style={{ color: props.theme.colors.primarytext }}
@@ -102,7 +102,7 @@ export default function DrawerList(props) {
                 >
                     <ListItem
                         button
-                        selected={props.selectedIndex === index}
+                        selected={window.location.pathname === path}
                         className={classNames(classes.drawerButton)}
                         style={{ color: props.theme.colors.primarytext }}
                         key={name}

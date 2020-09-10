@@ -4,3 +4,6 @@
 .DS_Store
 personal-event-tracker/src/assets/data/dashEvents.json
 *.pdf
+build/
+build/*
+node_modules/

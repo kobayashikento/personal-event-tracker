@@ -26,7 +26,7 @@ import dog from '../../assets/images/15224-cute-doggie.gif';
 
 const useStyles = makeStyles(styles);
 
-export default function DashGraph(props) {
+const GymGraph = (props) => {
     const classes = useStyles();
     let numEntries = 0;
     //states
@@ -109,7 +109,7 @@ export default function DashGraph(props) {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column"}}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", marginTop: "32px", marginLeft: "auto", marginRight: "auto" }}>
                 <IconButton style={{ marginLeft: "16px" }} onClick={() => handleWeekChange('left')}>
                     <ChevronLeftIcon />
@@ -129,7 +129,7 @@ export default function DashGraph(props) {
             {getScatterData().props.data.length === 0 ?
                 <div>
                     <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
-                        No Data Available
+                        Please select a workout
                         </Typography>
                     <img className={classes.run} src={dog} />
                 </div>
@@ -142,7 +142,7 @@ export default function DashGraph(props) {
                     <img className={classes.run} src={dog} />
                 </div>
                 : null}
-            <ResponsiveContainer minHeight={100} width="100%" height="100%">
+            <ResponsiveContainer minHeight={"30rem"} width="100%" height="100%">
                 <ScatterChart
                     className={classes.chart}
                     margin={{ top: 0, right: 45, left: 24, bottom: 54 }}>
@@ -161,3 +161,5 @@ export default function DashGraph(props) {
         </div>
     );
 }
+
+export default React.memo(GymGraph);
