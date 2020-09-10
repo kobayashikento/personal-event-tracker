@@ -93,7 +93,6 @@ export default function DashContainer(props) {
             musicModalOpen: false,
             sheetModalOpen: false,
             liftsIndex: 0,
-            played: props.played
         }
     );
 
@@ -321,7 +320,7 @@ export default function DashContainer(props) {
                                 <Typography variant="subtitle1" color="textSecondary"> {musicData[props.currMusicIndex].subtitle}</Typography>
                                 <input
                                     type='range' min={0} max={0.999999} step='any'
-                                    value={state.played}
+                                    value={props.played}
                                     onChange={handleSeekChange}
                                     onMouseUp={handleSeekMouseUp}
                                     onMouseDown={handleSeekMouseDown}

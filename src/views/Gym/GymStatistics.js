@@ -87,7 +87,7 @@ const options = workoutData.map((option) => {
     };
 });
 
-const GymStatistics = React.memo((props) => {
+const GymStatistics = (props) => {
     const classes = useStyles();
     // states 
     const targetRef = useRef();
@@ -247,12 +247,6 @@ const GymStatistics = React.memo((props) => {
             </Grid>
         </Grid>
     );
-}, (prevProps, nextProps) => {
-    if (prevProps.playing || nextProps.playing) {
-        return true;
-    } else {
-        return false;
-    }
-});
+};
 
 export default GymStatistics;

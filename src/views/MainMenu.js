@@ -49,51 +49,46 @@ const MainMenu = () => {
         musicSelectedRowId: null,
         loop: false,
         playing: false,
+        played: 0,
         seeking: false
     });
-
-    let played = 0
 
     // media player functions
     const handleChangeMusic = (control) => {
         if (control === "prev" && state.currMusicIndex !== 0) {
-            setState({ ...state, currMusicIndex: state.currMusicIndex - 1, });
-            played = 0;
+            setState({ ...state, currMusicIndex: state.currMusicIndex - 1, played: 0 })
         } else if (control === "next" && state.currMusicIndex !== musicData.length) {
-            setState({ ...state, currMusicIndex: state.currMusicIndex + 1, });
-            played = 0;
+            setState({ ...state, currMusicIndex: state.currMusicIndex + 1, played: 0 })
         } else if (control === "prev" && state.currMusicIndex === 0) {
-            setState({ ...state, currMusicIndex: 0, playing: false });
-            played = 0;
+            setState({ ...state, currMusicIndex: 0, played: 0, playing: false })
         }
     }
     const handleSeekMouseDown = e => {
-        setState({ ...state, seeking: true });
+        setState({ ...state, seeking: true })
     }
     const handleSeekChange = e => {
-        played = parseFloat(e.target.value);
+        setState({ ...state, played: parseFloat(e.target.value) })
     }
     const handleSeekMouseUp = e => {
-        setState({ ...state, seeking: false });
-        ref.current.seekTo(parseFloat(e.target.value));
+        setState({ ...state, seeking: false })
+        ref.current.seekTo(parseFloat(e.target.value))
     }
     const handleLoop = () => {
-        setState({ ...state, loop: !state.loop });
+        setState({ ...state, loop: !state.loop })
     }
     const handlePlayPause = () => {
-        setState({ ...state, playing: !state.playing });
+        setState({ ...state, playing: !state.playing })
     }
     const handleEnded = () => {
-        setState({ ...state, playing: false });
+        setState({ ...state, playing: false })
     }
     const handleProgress = event => {
         if (!state.seeking) {
-            played = event.played;
+            setState({ ...state, played: event.played })
         }
     }
     const handleMusicIndexChange = (row) => {
-        setState({ ...state, currMusicIndex: row, playing: false });
-        played = 0;
+        setState({ ...state, currMusicIndex: row, playing: false, played: 0 });
     }
     const handleTabChange = (index) => {
         setState({ ...state, gymSelectedTab: index, gymSelectedIndex: index })
@@ -159,17 +154,10 @@ const MainMenu = () => {
                                     handleLoop={() => handleLoop()}
                                     currMusicIndex={state.currMusicIndex}
                                     musicSelected={state.musicSelected}
-                                    progressBar={<input
-                                        type='range' min={0} max={0.999999} step='any'
-                                        value={played}
-                                        onChange={handleSeekChange}
-                                        onMouseUp={handleSeekMouseUp}
-                                        onMouseDown={handleSeekMouseDown}
-                                        style={{ marginTop: "16px", width: "200px" }}
-                                    />}
+                                    playing={state.playing}
                                     loop={state.loop}
                                     handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
-                                    played={played}
+                                    played={state.played}
                                     handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
                                     handleSeekChange={(e) => handleSeekChange(e)}
                                     handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
@@ -243,7 +231,7 @@ const MainMenu = () => {
                     playing={state.playing}
                     loop={state.loop}
                     handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
-                    played={played}
+                    played={state.played}
                     handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
                     handleSeekChange={(e) => handleSeekChange(e)}
                     handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
@@ -266,7 +254,7 @@ const MainMenu = () => {
     );
 }
 
-export default React.memo(MainMenu);
+export default MainMenu;
 
 
 
