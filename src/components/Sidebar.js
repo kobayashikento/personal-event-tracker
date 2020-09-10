@@ -30,7 +30,10 @@ export default function SideBar(props) {
     const classes = useStyles(styleProps);
     const theme = useTheme(styles);
 
-    const [state, setState] = React.useState({ snackbarOpen: false });
+    const [state, setState] = React.useState({
+        snackbarOpen: false,
+        
+    });
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const handleDrawerToggle = () => {
