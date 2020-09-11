@@ -87,7 +87,7 @@ const options = workoutData.map((option) => {
     };
 });
 
-const GymStatistics = (props) => {
+export default function GymStatistics(props) {
     const classes = useStyles();
     // states 
     const targetRef = useRef();
@@ -248,5 +248,3 @@ const GymStatistics = (props) => {
         </Grid>
     );
 };
-
-export default GymStatistics;

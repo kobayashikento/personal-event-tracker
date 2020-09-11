@@ -30,25 +30,49 @@ export default function SideBar(props) {
     const classes = useStyles(styleProps);
     const theme = useTheme(styles);
 
-    const [state, setState] = React.useState({ snackbarOpen: false });
+    const [state, setState] = React.useState({
+        snackbarOpen: false,
+        loop: false,
+        playing: false,
+        played: 0,
+        seeking: false
+    });
     const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    // music player handle functions 
+    const handleSeekMouseDown = e => {
+        setState({ ...state, seeking: true })
+    }
+    const handleSeekChange = e => {
+        setState({ ...state, played: parseFloat(e.target.value) })
+    }
+    const handleSeekMouseUp = e => {
+        setState({ ...state, seeking: false })
+        ref.current.seekTo(parseFloat(e.target.value))
+    }
+    const handleLoop = () => {
+        setState({ ...state, loop: !state.loop })
+    }
+    const handlePlayPause = () => {
+        setState({ ...state, playing: !state.playing })
+    }
+    const handleEnded = () => {
+        setState({ ...state, playing: false })
+    }
+    const handleProgress = event => {
+        if (!state.seeking) {
+            setState({ ...state, played: event.played })
+        }
+    }
+    const handleMusicIndexChange = (row) => {
+        setState({ ...state, currMusicIndex: row, playing: false, played: 0 });
+    }
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     }
-    const handleLoop = () => {
-        setState({ ...state, snackbarOpen: true });
-        props.handleLoop();
-    }
-    const handleSeekMouseDown = e => {
-        props.handleSeekMouseDown(e);
-    }
-    const handleSeekChange = e => {
-        props.handleSeekChange(e);
-    }
-    const handleSeekMouseUp = e => {
-        props.handleSeekMouseUp(e);
-    }
+
+    // Create the componenets for the media player 
     const mediaPlayer = () => {
         return (
             <div style={{ marginTop: "auto", marginBottom: "22px" }}>
@@ -84,8 +108,40 @@ export default function SideBar(props) {
         );
     }
 
+    <prop.component
+    {...props}
+    dbRefObj={dbRefObj}
+    tabIndex={state.gymSelectedTab}
+    theme={state.activeTheme}
+    handleListItemClick={(index) => handleListItemClick(index)}
+    handleChange={(theme) => changeActiveTheme(theme)}
+    handleTabChange={(index) => handleTabChange(index)}
+    handleChangeMusic={(control) => handleChangeMusic(control)}
+    handlePlayPause={() => handlePlayPause()}
+    handleLoop={() => handleLoop()}
+    currMusicIndex={state.currMusicIndex}
+    musicSelected={state.musicSelected}
+    playing={state.playing}
+    loop={state.loop}
+    handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
+    played={state.played}
+    handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
+    handleSeekChange={(e) => handleSeekChange(e)}
+    handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
+/>}
+
     return (
         <div className={classes.wrapper}>
+            <ReactPlayer
+                ref={ref}
+                width="0"
+                height="0"
+                playing={state.playing}
+                url={musicData[state.currMusicIndex].fullUrl}
+                onEnded={() => handleEnded()}
+                loop={state.loop}
+                onProgress={handleProgress}
+            />
             <Appbar
                 routes={props.routes}
                 theme={props.theme}

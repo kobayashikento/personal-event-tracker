@@ -24,7 +24,7 @@ import firebase from 'firebase';
 
 const useStyles = makeStyles(styles);
 
-const MainMenu = () => {
+export default function MainMenu() {
     const classes = useStyles();
     const ref = React.createRef();
     let theme;
@@ -47,10 +47,6 @@ const MainMenu = () => {
         musicSelected: true,
         musicCurrRow: {},
         musicSelectedRowId: null,
-        loop: false,
-        playing: false,
-        played: 0,
-        seeking: false
     });
 
     // media player functions
@@ -63,33 +59,10 @@ const MainMenu = () => {
             setState({ ...state, currMusicIndex: 0, played: 0, playing: false })
         }
     }
-    const handleSeekMouseDown = e => {
-        setState({ ...state, seeking: true })
-    }
-    const handleSeekChange = e => {
-        setState({ ...state, played: parseFloat(e.target.value) })
-    }
-    const handleSeekMouseUp = e => {
-        setState({ ...state, seeking: false })
-        ref.current.seekTo(parseFloat(e.target.value))
-    }
-    const handleLoop = () => {
-        setState({ ...state, loop: !state.loop })
-    }
-    const handlePlayPause = () => {
-        setState({ ...state, playing: !state.playing })
-    }
-    const handleEnded = () => {
-        setState({ ...state, playing: false })
-    }
-    const handleProgress = event => {
-        if (!state.seeking) {
-            setState({ ...state, played: event.played })
-        }
-    }
-    const handleMusicIndexChange = (row) => {
-        setState({ ...state, currMusicIndex: row, playing: false, played: 0 });
-    }
+
+
+
+
     const handleTabChange = (index) => {
         setState({ ...state, gymSelectedTab: index, gymSelectedIndex: index })
     };
@@ -135,35 +108,7 @@ const MainMenu = () => {
     const switchRoutes = (
         <Switch>
             {mainmenuRoutes.map((prop, index) => {
-                if (prop.name === "Dashboard") {
-                    return (
-                        <Route
-                            key={index}
-                            path={prop.path}
-                            render={(props) =>
-                                <prop.component
-                                    {...props}
-                                    dbRefObj={dbRefObj}
-                                    tabIndex={state.gymSelectedTab}
-                                    theme={state.activeTheme}
-                                    handleListItemClick={(index) => handleListItemClick(index)}
-                                    handleChange={(theme) => changeActiveTheme(theme)}
-                                    handleTabChange={(index) => handleTabChange(index)}
-                                    handleChangeMusic={(control) => handleChangeMusic(control)}
-                                    handlePlayPause={() => handlePlayPause()}
-                                    handleLoop={() => handleLoop()}
-                                    currMusicIndex={state.currMusicIndex}
-                                    musicSelected={state.musicSelected}
-                                    playing={state.playing}
-                                    loop={state.loop}
-                                    handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
-                                    played={state.played}
-                                    handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
-                                    handleSeekChange={(e) => handleSeekChange(e)}
-                                    handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
-                                />}
-                        />
-                    )
+                if (prop.name === "Fitness"|| prop.name === "Dashboard") {
                 } else {
                     return (
                         <Route
@@ -223,38 +168,15 @@ const MainMenu = () => {
                     setGymSelectedIndex={(index) => setGymSelectedIndex(index)}
                     selectedIndex={state.selectedIndex}
                     gymSelectedIndex={state.gymSelectedIndex}
-                    handleChangeMusic={(control) => handleChangeMusic(control)}
-                    handlePlayPause={() => handlePlayPause()}
-                    handleLoop={() => handleLoop()}
-                    currMusicIndex={state.currMusicIndex}
-                    musicSelected={state.musicSelected}
-                    playing={state.playing}
-                    loop={state.loop}
-                    handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
-                    played={state.played}
-                    handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
-                    handleSeekChange={(e) => handleSeekChange(e)}
-                    handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
+                    switchRoutes={}
                 />
                 <div className={classes.contentsWrapper}>
-                    <ReactPlayer
-                        ref={ref}
-                        width="0"
-                        height="0"
-                        playing={state.playing}
-                        url={musicData[state.currMusicIndex].fullUrl}
-                        onEnded={() => handleEnded()}
-                        loop={state.loop}
-                        onProgress={handleProgress}
-                    />
                     {switchRoutes}
                 </div>
             </div>
         </MuiThemeProvider>
     );
-}
-
-export default MainMenu;
+};
 
 
 

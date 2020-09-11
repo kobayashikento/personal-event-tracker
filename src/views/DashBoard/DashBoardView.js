@@ -31,7 +31,8 @@ export default function DashBoardView(props) {
             checkedSwitch: false,
             currGymData: gymData[0],
             currWorkout: workRoutine[0].workouts[0],
-            routine: workRoutine[0]
+            routine: workRoutine[0],
+            played: 0
         });
 
     const handleSwitchChange = (event) => {
