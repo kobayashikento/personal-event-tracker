@@ -1,6 +1,7 @@
 import React from 'react';
 import { pdfjs } from 'react-pdf';
 import moment from 'moment';
+import firebase from 'firebase';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -13,28 +14,22 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
 // import material ui icons 
-import PauseIcon from '@material-ui/icons/Pause';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+
 import InsertInvitationIcon from '@material-ui/icons/InsertInvitation';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
-import LoopIcon from '@material-ui/icons/Loop';
-import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import HistoryIcon from '@material-ui/icons/History';
 
 // import material table 
 import MaterialTable from 'material-table';
-
+import MediaPlayer from '../../components/MediaPlayer.js'
 // import style
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 import { icons } from '../../assets/styles/masterStyle.js';
@@ -78,11 +73,6 @@ export default function DashContainer(props) {
             sheetHeight: 0,
             buttonLocation: 0,
             pageWidth: 0,
-            musicColumns: [
-                { title: 'Group', field: 'group' },
-                { title: 'Name', field: 'name' },
-                { title: 'Composer', field: 'composer' },
-            ],
             sheetColumns: [
                 { title: 'Name', field: 'name' },
                 { title: 'Composer', field: 'composer' }
@@ -176,47 +166,6 @@ export default function DashContainer(props) {
         return splitStr.join(' ');
     }
 
-    const displayMusicLibrary = () => {
-        return (
-            <Grid container direction="column">
-                <Grid item>
-                    <MaterialTable
-                        columns={state.musicColumns}
-                        data={
-                            musicData.map((music) => {
-                                return {
-                                    group: music.group,
-                                    name: music.name,
-                                    composer: music.subtitle
-                                }
-                            })
-                        }
-                        options={{
-                            showTitle: false,
-                            rowStyle: rowData => ({
-                                backgroundColor:
-                                    state.pianoSelected &&
-                                        rowData.tableData.id === props.currMusicIndex ? props.theme.colors.primary : "#fff"
-                            })
-                        }}
-                        icons={icons}
-                    // onRowClick={(event, rowData) => {
-                    //     if (rowData.tableData.id === state.pianoSelectedRowId) {
-                    //         setState({ ...state, pianoSelected: false, pianoSelectedRowId: null });
-                    //     } else {
-                    //         props.handleMusicIndexChange(rowData.tableData.id);
-                    //         setState({ ...state, pianoSelected: true });
-                    //     }
-                    // }}
-                    />
-                </Grid>
-                <Grid item style={{ display: "flex" }}>
-                    <Divider />
-                    <Button style={{ marginLeft: "auto", marginTop: "16px" }} color="secondary" size="large" variant="outlined">More Details</Button>
-                </Grid>
-            </Grid>
-        );
-    };
     const displaySheetLibrary = () => {
         return (
             <Grid container direction="column">
@@ -289,135 +238,31 @@ export default function DashContainer(props) {
         })
         return lifts;
     }
-
+    const firebaseConfig = {
+        apiKey: "AIzaSyBnytW52-pJjw0dl30OCw48vpa2OvV7S00",
+        authDomain: "life-tracker-7fb87.firebaseapp.com",
+        databaseURL: "https://life-tracker-7fb87.firebaseio.com",
+        projectId: "life-tracker-7fb87",
+        storageBucket: "life-tracker-7fb87.appspot.com",
+        messagingSenderId: "329127552217",
+        appId: "1:329127552217:web:bf3b5d72097e98d7be0ac8",
+        measurementId: "G-BQN7TSV44R"
+    };
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const dbRefObj = firebase.database()
     return (
         <Grid
             container
             spacing={5}
         >
             <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
-
-
-
-
-
-
-            {/* {props.dbRefObj.ref().child('workoutRoutine').on('value', snap => console.log(snap.val()))} */}
-
-
-
-
-
-
-
-
-
             <Grid item xs={7} ref={targetRef}>
-                <Card style={{ height: expanded ? "" : state.width }}>
-                    <Grid container >
-                        <Grid item xs={7} style={{ display: "flex", flexDirection: "column" }}>
-                            <CardContent className={classes.content}>
-                                <Typography gutterBottom variant="body1" component="h2"> {musicData[props.currMusicIndex].name} </Typography>
-                                <Typography variant="subtitle1" color="textSecondary"> {musicData[props.currMusicIndex].subtitle}</Typography>
-                                <input
-                                    type='range' min={0} max={0.999999} step='any'
-                                    value={state.played}
-                                    onChange={handleSeekChange}
-                                    onMouseUp={handleSeekMouseUp}
-                                    onMouseDown={handleSeekMouseDown}
-                                    style={{ marginTop: theme.spacing(2), width: "200px" }}
-                                />
-                            </CardContent>
-                            <div className={classes.controls}>
-                                <IconButton aria-label="previous" onClick={() => props.handleChangeMusic("prev")}>
-                                    {theme.direction === 'rtl' ? <SkipNextIcon fontSize="small" /> : <SkipPreviousIcon fontSize="small" />}
-                                </IconButton>
-                                <IconButton aria-label="play/pause" onClick={() => handlePlayPause()}>
-                                    {props.playing ? <PauseIcon fontSize="small" className={classes.playIcon} /> : <PlayArrowIcon fontSize="small" className={classes.playIcon} />}
-                                </IconButton>
-                                <IconButton aria-label="next" onClick={() => props.handleChangeMusic("next")}>
-                                    {theme.direction === 'rtl' ? <SkipPreviousIcon fontSize="small" /> : <SkipNextIcon fontSize="small" />}
-                                </IconButton>
-                                <IconButton style={{ marginLeft: theme.spacing(2) }} onClick={() => handleLoop()}>
-                                    <LoopIcon fontSize="small" style={{ color: props.loop ? props.theme.colors.primary : "" }} />
-                                </IconButton>
-                                <Snackbar
-                                    open={state.snackbarOpen} autoHideDuration={5000} onClose={() => setState({ ...state, snackbarOpen: false })}
-                                    message={props.loop ? "Loop Enabled" : "Loop Disabled"}
-                                />
-                                <IconButton
-                                    style={{ width: "fit-content", marginLeft: theme.spacing(1) }}
-                                    onClick={() => handleModalOpen("music")}
-                                >
-                                    <PlaylistPlayIcon fontSize="small" />
-                                </IconButton>
-                            </div>
-                            <Modal
-                                open={state.musicModalOpen}
-                                onClose={() => handleModalClose("music")}
-                                closeAfterTransition
-                                BackdropComponent={Backdrop}
-                                BackdropProps={{
-                                    timeout: 500,
-                                }}
-                            >
-                                <Fade in={state.musicModalOpen}>
-                                    {displayMusicLibrary()}
-                                </Fade>
-                            </Modal>
-                        </Grid>
-                        <Grid item xs={5}>
-                            <img
-                                style={{ height: state.width }}
-                                src={`https://img.youtube.com/vi/${musicData[props.currMusicIndex].src}/0.jpg`}
-                            />
-                        </Grid>
-                    </Grid>
-
-                </Card>
-            </Grid>
-            <Grid item xs={5} >
-                <Card style={{ height: sheetExpanded ? "" : state.width, display: "flex", flexDirection: "column" }}>
-                    <CardContent>
-                        <div className={classes.cardColumn}>
-                            <FileCopyIcon style={{ marginRight: "16px" }} />
-                            <Typography gutterBottom variant="body1" component="h2"> Piano Sheet Library </Typography>
-                        </div>
-                    </CardContent>
-                    <div className={classes.sheetCardActionContainer}>
-                        <IconButton style={{ marginLeft: "16px" }} onClick={() => handleSheetIndexChange("prev")}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                        <CardActionArea style={{ width: "fit-content", padding: "16px" }}>
-                            <Grid>
-                                <Typography variant="body1" component="h3"> {titleCase(sheetData[state.sheetIndex].name)} <AspectRatioIcon /></Typography>
-                                <Typography variant="subtitle1" color="textSecondary" component="h4"> {titleCase(sheetData[state.sheetIndex].composer)}</Typography>
-                            </Grid>
-                        </CardActionArea>
-                        <IconButton style={{ marginRight: "auto" }} onClick={() => handleSheetIndexChange("next")}>
-                            <ChevronRightIcon />
-                        </IconButton>
-                    </div>
-                    <IconButton
-                        style={{ marginLeft: "auto", padding: "16px", right: "4px" }}
-                        onClick={() => handleModalOpen("sheet")}
-                    >
-                        <PlaylistPlayIcon />
-                    </IconButton>
-                    <Modal
-                        open={state.sheetModalOpen}
-                        onClose={() => handleModalClose("music")}
-                        closeAfterTransition
-                        BackdropComponent={Backdrop}
-                        BackdropProps={{
-                            timeout: 500,
-                        }}
-                    >
-                        <Fade in={state.sheetModalOpen}>
-                            {displaySheetLibrary()}
-                        </Fade>
-                    </Modal>
-                </Card>
+                <MediaPlayer
+                    theme={props.theme}
+                    width={state.width}
+                />
             </Grid>
             <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
             <Grid item xs={5}>

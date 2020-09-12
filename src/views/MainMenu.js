@@ -20,8 +20,6 @@ import { mainmenuRoutes } from '../routes.js';
 
 import themes from '../assets/data/themes.json';
 
-import firebase from 'firebase';
-
 const useStyles = makeStyles(styles);
 
 const MainMenu = () => {
@@ -122,20 +120,6 @@ const MainMenu = () => {
     }
 
     // init firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyBnytW52-pJjw0dl30OCw48vpa2OvV7S00",
-        authDomain: "life-tracker-7fb87.firebaseapp.com",
-        databaseURL: "https://life-tracker-7fb87.firebaseio.com",
-        projectId: "life-tracker-7fb87",
-        storageBucket: "life-tracker-7fb87.appspot.com",
-        messagingSenderId: "329127552217",
-        appId: "1:329127552217:web:bf3b5d72097e98d7be0ac8",
-        measurementId: "G-BQN7TSV44R"
-    };
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const dbRefObj = firebase.database()
 
     const switchRoutes = (
         <Switch>
@@ -148,7 +132,6 @@ const MainMenu = () => {
                             render={(props) =>
                                 <prop.component
                                     {...props}
-                                    dbRefObj={dbRefObj}
                                     tabIndex={state.gymSelectedTab}
                                     theme={state.activeTheme}
                                     handleListItemClick={(index) => handleListItemClick(index)}
@@ -183,7 +166,6 @@ const MainMenu = () => {
                             path={prop.path}
                             render={() =>
                                 <prop.component
-                                    dbRefObj={dbRefObj}
                                     tabIndex={state.gymSelectedTab}
                                     theme={state.activeTheme}
                                     handleListItemClick={(index) => handleListItemClick(index)}
