@@ -1,67 +1,60 @@
-[
+    [{
+        "workout": {
+            "name": "bench press",
+            "musclegroup": "chest",
+            "movement": "push"
+        },
+        "sets": "4",
+        "reps": "4-6",
+        "rest": "3"
+    },
     {
-        "routineName": "upper",
-        "workouts": [
-            {
-                "workout": {
-                    "name": "bench press",
-                    "musclegroup": "chest",
-                    "movement": "push"
-                },
-                "sets": "4",
-                "reps": "4-6",
-                "rest": "3"
-            },
-            {
-                "workout": {
-                    "name": "chest-supported row",
-                    "musclegroup": "back",
-                    "movement": "pull"
-                },
-                "sets": "3",
-                "reps": "6-8",
-                "rest": "2"
-            },
-            {
-                "workout": {
-                    "name": "standing overhead press",
-                    "musclegroup": "shoulder",
-                    "movement": "push"
-                },
-                "sets": "3",
-                "reps": "8-10",
-                "rest": "2-3"
-            },
-            {
-                "workout": {
-                    "name": "lat pulldown",
-                    "musclegroup": "back",
-                    "movement": "pull"
-                },
-                "sets": "3",
-                "reps": "10-12",
-                "rest": "2"
-            },
-            {
-                "workout": {
-                    "name": "high to low cable flies",
-                    "musclegroup": "chest",
-                    "movement": "pull"
-                },
-                "sets": "3",
-                "reps": "12-15",
-                "rest": "1.5-2"
-            },
-            {
-                "workout": {
-                    "name": "lying face pulls",
-                    "musclegroup": "back",
-                    "movement": "pull"
-                },
-                "sets": "3",
-                "reps": "10-12",
-                "rest": "1.5-2"
-            }
-        ]
-    }
-]
+        "workout": {
+            "name": "chest-supported row",
+            "musclegroup": "back",
+            "movement": "pull"
+        },
+        "sets": "3",
+        "reps": "6-8",
+        "rest": "2"
+    },
+    {
+        "workout": {
+            "name": "standing overhead press",
+            "musclegroup": "shoulder",
+            "movement": "push"
+        },
+        "sets": "3",
+        "reps": "8-10",
+        "rest": "2-3"
+    },
+    {
+        "workout": {
+            "name": "lat pulldown",
+            "musclegroup": "back",
+            "movement": "pull"
+        },
+        "sets": "3",
+        "reps": "10-12",
+        "rest": "2"
+    },
+    {
+        "workout": {
+            "name": "high to low cable flies",
+            "musclegroup": "chest",
+            "movement": "pull"
+        },
+        "sets": "3",
+        "reps": "12-15",
+        "rest": "1.5-2"
+    },
+    {
+        "workout": {
+            "name": "lying face pulls",
+            "musclegroup": "back",
+            "movement": "pull"
+        },
+        "sets": "3",
+        "reps": "10-12",
+        "rest": "1.5-2"
+    }]

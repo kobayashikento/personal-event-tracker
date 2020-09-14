@@ -14,27 +14,23 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 
 // import material ui icons 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-
 import InsertInvitationIcon from '@material-ui/icons/InsertInvitation';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 import HistoryIcon from '@material-ui/icons/History';
+import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
 
 // import material table 
 import MaterialTable from 'material-table';
 import MediaPlayer from '../../components/MediaPlayer.js'
 // import style
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
-import { icons } from '../../assets/styles/masterStyle.js';
+import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 
-import workoutRoutine from '../../assets/data/workoutRoutine.json';
 import gymData from '../../assets/data/gymData.json';
 import musicData from '../../assets/data/musicLibrary.json';
 import sheetData from '../../assets/data/sheetmusic.json';
@@ -46,97 +42,18 @@ export default function DashContainer(props) {
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
     const theme = useTheme(styles);
     const targetRef = React.useRef();
-    const targetRef1 = React.useRef();
     // styles 
     const classes = useStyle();
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
     // states 
-    const [expanded, setExpanded] = React.useState(false);
-    const [sheetExpanded, setSheetExpanded] = React.useState(false);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-    const handleSheetExpandClick = () => {
-        setSheetExpanded(!sheetExpanded);
-    };
-
     const [state, setState] = React.useState(
         {
-            pianoSelected: true,
-            pianoSelectedRowId: null,
-            sheetCurrentRow: {},
-            sheetSelected: true,
-            sheetSelectedRowId: null,
-            cardIndex: null,
             width: "30vh",
-            sheetHeight: 0,
             buttonLocation: 0,
-            pageWidth: 0,
-            sheetColumns: [
-                { title: 'Name', field: 'name' },
-                { title: 'Composer', field: 'composer' }
-            ],
-            sheetSelected: true,
-            sheetIndex: 0,
-            snackbarOpen: false,
-            musicModalOpen: false,
-            sheetModalOpen: false,
             liftsIndex: 0,
-            played: props.played
+            currRoutine: undefined,
         }
     );
-
-    const handleSheetIndexChange = (direction) => {
-        if (direction === "prev" && state.sheetIndex !== 0) {
-            setState({ ...state, sheetIndex: state.sheetIndex - 1 })
-        } else if (direction === "next" && state.sheetIndex !== sheetData.length) {
-            setState({ ...state, sheetIndex: state.sheetIndex + 1 })
-        }
-    }
-
-    // media player function
-    const handlePlayPause = () => {
-        setExpanded(false);
-        props.handlePlayPause();
-    }
-    const handleLoop = () => {
-        setState({ ...state, snackbarOpen: true });
-        props.handleLoop();
-    }
-    const handleSeekMouseDown = e => {
-        props.handleSeekMouseDown(e);
-    }
-    const handleSeekChange = e => {
-        props.handleSeekChange(e);
-    }
-    const handleSeekMouseUp = e => {
-        props.handleSeekMouseUp(e);
-    }
-
-    const handleCardClick = (index) => {
-        if (index === state.cardIndex) {
-            setState({ ...state, cardIndex: null })
-        } else {
-            setState({ ...state, cardIndex: index })
-        }
-    }
-
-    const handleModalOpen = (type) => {
-        if (type === "music") {
-            setState({ ...state, musicModalOpen: true });
-        } else if (type === "sheet") {
-            setState({ ...state, sheetModalOpen: true });
-        }
-    }
-
-    const handleModalClose = (type) => {
-        if (type === "music") {
-            setState({ ...state, musicModalOpen: false });
-        } else if (type === "sheet") {
-            setState({ ...state, sheetModalOpen: false });
-        }
-    }
 
     const handleLiftClick = (direction) => {
         if (direction === "left" && state.liftsIndex !== 0) {
@@ -156,15 +73,6 @@ export default function DashContainer(props) {
             });
         }
     }, [targetRef])
-
-    // functions 
-    const titleCase = (str) => {
-        var splitStr = str.toLowerCase().split(' ');
-        for (var i = 0; i < splitStr.length; i++) {
-            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-        }
-        return splitStr.join(' ');
-    }
 
     const displaySheetLibrary = () => {
         return (
@@ -224,20 +132,22 @@ export default function DashContainer(props) {
 
     const getPrevLiftsData = () => {
         let lifts = [];
-        workoutRoutine[0].workouts.map(workout => {
-            let temp = null;
-            gymData.map(props => {
-                if (workout.workout.name === props.workout.name) {
-                    temp = getMostRecent(props);
-                }
-            })
-            lifts.push({
-                name: workout.workout.name,
-                data: temp
-            })
-        })
+        // workoutRoutine[0].workouts.map(workout => {
+        //     let temp = null;
+        //     gymData.map(props => {
+        //         if (workout.workout.name === props.workout.name) {
+        //             temp = getMostRecent(props);
+        //         }
+        //     })
+        //     lifts.push({
+        //         name: workout.workout.name,
+        //         data: temp
+        //     })
+        // })
         return lifts;
     }
+
+    // init database
     const firebaseConfig = {
         apiKey: "AIzaSyBnytW52-pJjw0dl30OCw48vpa2OvV7S00",
         authDomain: "life-tracker-7fb87.firebaseapp.com",
@@ -251,7 +161,14 @@ export default function DashContainer(props) {
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
-    const dbRefObj = firebase.database()
+    const dbRefObjUser = firebase.database().ref().child('userSetting');
+    React.useEffect(() => {
+        dbRefObjUser.once('value', snap => {
+            console.log(snap.val())
+            setState({ ...state, currRoutine: snap.routine})
+        })
+    }, [])
+
     return (
         <Grid
             container
@@ -262,6 +179,7 @@ export default function DashContainer(props) {
                 <MediaPlayer
                     theme={props.theme}
                     width={state.width}
+                    mode={"dash"}
                 />
             </Grid>
             <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
@@ -273,26 +191,26 @@ export default function DashContainer(props) {
                             <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
                         </div>
                         <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
-                            Next workout day is : {titleCase(workoutRoutine[0].routineName)}
+                            {/* Next workout day is : {titleCase(dbRefObjUser.routine[dbRefObjUser.routineIndex].name)} */}
                         </Typography>
                         <Grid container>
                             <Grid item xs={7}>
-                                {workoutRoutine[0].workouts.map((routine, index) => {
+                                {/* {workoutRoutine[0].workouts.map((routine, index) => {
                                     return (
                                         <Typography key={routine.workout.name + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
                                             {(index + 1)} : {titleCase(routine.workout.name)}
                                         </Typography>
                                     );
-                                })}
+                                })} */}
                             </Grid>
                             <Grid item xs={5}>
-                                {workoutRoutine[0].workouts.map((routine, index) => {
+                                {/* {workoutRoutine[0].workouts.map((routine, index) => {
                                     return (
                                         <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
                                             Sets: {routine.sets} / Reps: {routine.reps}
                                         </Typography>
                                     );
-                                })}
+                                })} */}
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -300,7 +218,7 @@ export default function DashContainer(props) {
             </Grid>
             <Grid item xs={4} >
                 <Card style={{ height: "100%" }}>
-                    <CardContent style={{ height: "100%" }}>
+                    {/* <CardContent style={{ height: "100%" }}>
                         <div className={classes.cardColumn}>
                             <Grid container>
                                 <Grid item xs={12} style={{ display: "inline-flex" }}>
@@ -339,22 +257,21 @@ export default function DashContainer(props) {
                                 </Typography>
                             </div>
                         }
-                    </CardContent>
+                    </CardContent> */}
                 </Card>
             </Grid>
-            {/* <Grid item xs={3}>
-                <div>
-                    <Card>
-                        <CardActionArea onClick={() => handleCardClick(2)}>
-                            <CardContent>
-                                <div className={classes.cardColumn}>
-                                    <AddToPhotosIcon size="large" style={{ marginRight: "32px", marginTop: "4px" }} />
-                                    <Typography gutterBottom variant="h5" component="h2"> Add a Gym Entry </Typography>
-                                </div>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                    <Card>
+            <Grid item xs={3}>
+                <Card>
+                    <CardActionArea>
+                        <CardContent>
+                            <div className={classes.cardColumn}>
+                                <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
+                                <Typography gutterBottom variant="body1" component="h2"> Add a Gym Entry </Typography>
+                            </div>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+                {/* <Card>
                         <CardActionArea onClick={() => handleCardClick(2)}>
                             <CardContent>
                                 <div className={classes.cardColumn}>
@@ -363,95 +280,8 @@ export default function DashContainer(props) {
                                 </div>
                             </CardContent>
                         </CardActionArea>
-                    </Card>
-                </div>
-            </Grid> */}
+                    </Card> */}
+            </Grid>
         </Grid >
-
-        // <div className={classes.container}>
-        //     <div className={classes.toggleText}>
-        //         <Typography color="textPrimary" className={classes.typo} variant="h5">Gym</Typography>
-        //         <FormGroup row>
-        //             <FormControlLabel
-        //                 className={classes.typo}
-        //                 control={<Switch color="primary" checked={props.state.checkedSwitch} onChange={props.handleSwitchChange} name="checkedSwitch" />}
-        //                 label={<Typography className={classes.switchTypo} variant="h4">In the gym</Typography>}
-        //             />
-        //         </FormGroup>
-        //     </div>
-        //     {props.state.checkedSwitch && !matches ? <CountDownTimer /> : null}
-        //     <Accordion
-        //         expanded={expanded === 'panel1'}
-        //         onChange={handleChange('panel1', 1)}
-        //         className={classes.accordion}>
-        //         <AccordionSummary
-        //             className={classes.accordionSummary}
-        //             expandIcon={<ExpandMoreIcon />}
-        //             aria-controls="panel1c-content"
-        //             id="panel1c-header"
-        //         >
-        //             <div className={classes.column}>
-        //                 <ScheduleIcon className={classes.icon} />
-        //                 <Typography className={classes.heading}>Next Workout</Typography>
-        //             </div>
-        //             <div className={classes.column}>
-        //                 <Typography className={classes.secondaryHeading}>Muscle Group : {workoutRoutine[0].routineName}</Typography>
-        //             </div>
-        //         </AccordionSummary>
-        //         <AccordionDetails className={classes.details}>
-        //             <MaterialTable
-        //                 style={{ width: "100%" }}
-        //                 columns={[
-        //                     { title: 'Exercise', field: 'exercise', },
-        //                     { title: 'Sets', field: 'sets' },
-        //                     { title: 'Reps', field: 'reps' },
-        //                     { title: 'Rest', field: 'rest' },
-        //                 ]}
-        //                 data={
-        //                     (workoutRoutine[0].workouts.map((routine, index) => {
-        //                         return {
-        //                             exercise: titleCase(routine.workout.name),
-        //                             sets: titleCase(routine.sets),
-        //                             reps: titleCase(routine.reps),
-        //                             rest: titleCase(routine.rest)
-        //                         };
-        //          
-        //                 }
-        //                 options={{
-        //                     showTitle: false,
-        //                     search: false,
-        //                     toolbar: false,
-        //                     rowStyle: rowData => ({
-        //                         backgroundColor:
-        //                             state.selected &&
-        //                                 rowData.tableData.id === state.selectedRowId ? props.theme.colors.primary : "#fff"
-        //                     })
-        //                 }}
-        //                 icons={icons}
-        //                 onRowClick={(event, rowData) => {
-        //                     setState({ ...state, currentRow: rowData });
-        //                     if (rowData.tableData.id === state.selectedRowId) {
-        //                         setState({ ...state, selected: false });
-        //                         setState({ ...state, selectedRowId: null });
-        //                     } else {
-        //                         setState({ ...state, selected: true });
-        //                         setState({ ...state, selectedRowId: rowData.tableData.id });
-        //                         props.handleCellChange(rowData.tableData.id + 1)
-        //                     }
-        //                 }}
-        //             />
-        //         </AccordionDetails>
-        //         <Divider />
-        //         <AccordionActions>
-        //             <Link
-        //                 to={"/main-menu/gym-routine"}
-        //                 style={{ textDecoration: 'none' }}
-        //             >
-        //                 <Button color="secondary" size="large">More Details</Button>
-        //             </Link>
-        //         </AccordionActions>
-        //     </Accordion>
-
-        // </div>
     );
 }

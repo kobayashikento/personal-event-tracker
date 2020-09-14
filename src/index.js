@@ -13,15 +13,11 @@ import './assets/css/index.css';
 
 const store = createStore(reducer);
 
-console.log(store.getState())
-
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <Route path="/main-menu" component={MainMenu} />
-      </Router>
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <Router>
+      <Route path="/main-menu/" component={MainMenu} />
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );

@@ -19,12 +19,14 @@ import musicData from '../assets/data/musicLibrary.json';
 import { mainmenuRoutes } from '../routes.js';
 
 import themes from '../assets/data/themes.json';
+import MiniPlayer from '../components/MiniPlayer.js';
 
 const useStyles = makeStyles(styles);
 
 const MainMenu = () => {
     const classes = useStyles();
     const ref = React.createRef();
+
     let theme;
     themes.forEach(th => {
         if (typeof (th) != undefined) {
@@ -41,58 +43,11 @@ const MainMenu = () => {
         gymSelectedIndex: null,
         activeTheme: theme,
         selectedIndex: 0,
-        currMusicIndex: 0,
         musicSelected: true,
         musicCurrRow: {},
         musicSelectedRowId: null,
-        loop: false,
-        playing: false,
-        seeking: false
     });
 
-    let played = 0
-
-    // media player functions
-    const handleChangeMusic = (control) => {
-        if (control === "prev" && state.currMusicIndex !== 0) {
-            setState({ ...state, currMusicIndex: state.currMusicIndex - 1, });
-            played = 0;
-        } else if (control === "next" && state.currMusicIndex !== musicData.length) {
-            setState({ ...state, currMusicIndex: state.currMusicIndex + 1, });
-            played = 0;
-        } else if (control === "prev" && state.currMusicIndex === 0) {
-            setState({ ...state, currMusicIndex: 0, playing: false });
-            played = 0;
-        }
-    }
-    const handleSeekMouseDown = e => {
-        setState({ ...state, seeking: true });
-    }
-    const handleSeekChange = e => {
-        played = parseFloat(e.target.value);
-    }
-    const handleSeekMouseUp = e => {
-        setState({ ...state, seeking: false });
-        ref.current.seekTo(parseFloat(e.target.value));
-    }
-    const handleLoop = () => {
-        setState({ ...state, loop: !state.loop });
-    }
-    const handlePlayPause = () => {
-        setState({ ...state, playing: !state.playing });
-    }
-    const handleEnded = () => {
-        setState({ ...state, playing: false });
-    }
-    const handleProgress = event => {
-        if (!state.seeking) {
-            played = event.played;
-        }
-    }
-    const handleMusicIndexChange = (row) => {
-        setState({ ...state, currMusicIndex: row, playing: false });
-        played = 0;
-    }
     const handleTabChange = (index) => {
         setState({ ...state, gymSelectedTab: index, gymSelectedIndex: index })
     };
@@ -137,25 +92,6 @@ const MainMenu = () => {
                                     handleListItemClick={(index) => handleListItemClick(index)}
                                     handleChange={(theme) => changeActiveTheme(theme)}
                                     handleTabChange={(index) => handleTabChange(index)}
-                                    handleChangeMusic={(control) => handleChangeMusic(control)}
-                                    handlePlayPause={() => handlePlayPause()}
-                                    handleLoop={() => handleLoop()}
-                                    currMusicIndex={state.currMusicIndex}
-                                    musicSelected={state.musicSelected}
-                                    progressBar={<input
-                                        type='range' min={0} max={0.999999} step='any'
-                                        value={played}
-                                        onChange={handleSeekChange}
-                                        onMouseUp={handleSeekMouseUp}
-                                        onMouseDown={handleSeekMouseDown}
-                                        style={{ marginTop: "16px", width: "200px" }}
-                                    />}
-                                    loop={state.loop}
-                                    handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
-                                    played={played}
-                                    handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
-                                    handleSeekChange={(e) => handleSeekChange(e)}
-                                    handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
                                 />}
                         />
                     )
@@ -171,7 +107,6 @@ const MainMenu = () => {
                                     handleListItemClick={(index) => handleListItemClick(index)}
                                     handleChange={(theme) => changeActiveTheme(theme)}
                                     handleTabChange={(index) => handleTabChange(index)}
-                                    playing={state.playing}
                                 />}
                         />
                     );
@@ -217,30 +152,9 @@ const MainMenu = () => {
                     setGymSelectedIndex={(index) => setGymSelectedIndex(index)}
                     selectedIndex={state.selectedIndex}
                     gymSelectedIndex={state.gymSelectedIndex}
-                    handleChangeMusic={(control) => handleChangeMusic(control)}
-                    handlePlayPause={() => handlePlayPause()}
-                    handleLoop={() => handleLoop()}
-                    currMusicIndex={state.currMusicIndex}
-                    musicSelected={state.musicSelected}
-                    playing={state.playing}
-                    loop={state.loop}
-                    handleMusicIndexChange={(index) => handleMusicIndexChange(index)}
-                    played={played}
-                    handleSeekMouseDown={(e) => handleSeekMouseDown(e)}
-                    handleSeekChange={(e) => handleSeekChange(e)}
-                    handleSeekMouseUp={(e) => handleSeekMouseUp(e)}
                 />
                 <div className={classes.contentsWrapper}>
-                    <ReactPlayer
-                        ref={ref}
-                        width="0"
-                        height="0"
-                        playing={state.playing}
-                        url={musicData[state.currMusicIndex].fullUrl}
-                        onEnded={() => handleEnded()}
-                        loop={state.loop}
-                        onProgress={handleProgress}
-                    />
+                    <MiniPlayer />
                     {switchRoutes}
                 </div>
             </div>

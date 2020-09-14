@@ -6,7 +6,7 @@ import MaterialTable from 'material-table';
 
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { prev, played, next, pause, play, loop } from '../redux/actions/mediaPlayerActions.js';
+import { prev, played, next, pause, play, loop, seeking, setData, seekTo, setImage } from '../redux/actions/mediaPlayerActions.js';
 
 // import material ui
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,6 +40,10 @@ export default function MediaPlayer(props) {
     const classes = useStyle();
     const dispatch = useDispatch();
     const player = useSelector((reducer) => reducer.playerReducer)
+    const playerIndex = useSelector((reducer) => reducer.playerReducer.index)
+    const playerPlayed = useSelector((reducer) => reducer.playerReducer.played)
+    const playerLoop = useSelector((reducer) => reducer.playerReducer.loop)
+
     // init database
     const firebaseConfig = {
         apiKey: "AIzaSyBnytW52-pJjw0dl30OCw48vpa2OvV7S00",
@@ -54,7 +58,7 @@ export default function MediaPlayer(props) {
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
-    const dbRefObj = firebase.database().ref().child('musicLinks').on('value', snap => console.log(snap.val()))
+    const dbRefObj = firebase.database().ref().child('musicLinks');
 
     // init states
     const [expanded, setExpanded] = React.useState(false);
@@ -63,6 +67,30 @@ export default function MediaPlayer(props) {
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+    const [state, setState] = React.useState({
+        title: "", subtitle: "",
+        listLength: 0,
+    })
+
+    React.useEffect(() => {
+        dbRefObj.once('value', snap => {
+            setState({ ...state, title: snap.val()[player.index].name, subtitle: snap.val()[player.index].subtitle, listLength: snap.val().length, })
+            dispatch(setData(snap.val()[player.index].fullUrl))
+            dispatch(setImage(snap.val()[player.index].src))
+        });
+    }, [])
+
+    React.useEffect(() => {
+        dbRefObj.once('value', snap => {
+            setState({ ...state, title: snap.val()[player.index].name, subtitle: snap.val()[player.index].subtitle })
+            dispatch(setData(snap.val()[player.index].fullUrl))
+            dispatch(setImage(snap.val()[player.index].src))
+        });
+    }, [playerIndex])
+
+    React.useEffect(() => {
+        setSnackbarOpen(player.loop);
+    }, [playerLoop])
 
     const handleChangeMusic = (control) => {
         if (control === "prev" && player.index !== 0 && player.playing <= 0.1) {
@@ -70,7 +98,7 @@ export default function MediaPlayer(props) {
             dispatch(played(0));
         } else if (control === "prev" && player.index !== 0 && player.playing > 0.1) {
             dispatch(played(0));
-        } else if (control === "next" && player.index !== dbRefObj.length) {
+        } else if (control === "next" && player.index !== state.listLength - 1) {
             dispatch(next(player.index));
             dispatch(played(0));
         }
@@ -85,6 +113,16 @@ export default function MediaPlayer(props) {
     const handleLoop = () => {
         dispatch(loop());
     }
+    const handleSeekChange = e => {
+        dispatch(played(parseFloat(e.target.value)));
+    }
+    const handleSeekMouseUp = e => {
+        dispatch(seeking(false));
+        dispatch(seekTo(e.target.value));
+    }
+    const handleSeekMouseDown = e => {
+        dispatch(seeking(true));
+    }
 
     const displayMusicLibrary = () => {
         return (
@@ -96,14 +134,14 @@ export default function MediaPlayer(props) {
                             { title: 'Name', field: 'name' },
                             { title: 'Composer', field: 'composer' },
                         ]}
-                        data={
-                            dbRefObj.map((music) => {
-                                return {
-                                    group: music.group,
-                                    name: music.name,
-                                    composer: music.subtitle
-                                }
-                            })
+                        data={[]
+                            // dbRefObj.map((music) => {
+                            //     return {
+                            //         group: music.group,
+                            //         name: music.name,
+                            //         composer: music.subtitle
+                            //     }
+                            // })
                         }
                         options={{
                             showTitle: false,
@@ -135,13 +173,13 @@ export default function MediaPlayer(props) {
     return (
         <Card>
             <Grid container >
-                <Grid item xs={7} style={{ display: "flex", flexDirection: "column" }}>
+                <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column" }}>
                     <CardContent className={classes.content}>
-                        <Typography gutterBottom variant="body1" component="h2"> {dbRefObj[player.index].name} </Typography>
-                        <Typography variant="subtitle1" color="textSecondary"> {dbRefObj[player.index].subtitle}</Typography>
+                        <Typography gutterBottom variant="body1" component="h2"> {state.title} </Typography>
+                        <Typography variant="subtitle1" color="textSecondary"> {state.subtitle} </Typography>
                         <input
                             type='range' min={0} max={0.999999} step='any'
-                            value={player.played}
+                            value={playerPlayed}
                             onChange={handleSeekChange}
                             onMouseUp={handleSeekMouseUp}
                             onMouseDown={handleSeekMouseDown}
@@ -186,10 +224,10 @@ export default function MediaPlayer(props) {
                         </Fade>
                     </Modal>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={5} style={{ display: props.mode === "dash" ? "" : "none" }}>
                     <img
                         style={{ height: props.width }}
-                        src={`https://img.youtube.com/vi/${dbRefObj[player.index].src}/0.jpg`}
+                        src={`https://img.youtube.com/vi/${player.image}/0.jpg`}
                     />
                 </Grid>
             </Grid>

@@ -24,40 +24,6 @@ export default function DashBoardView(props) {
 
     // set states
     // need to have a json file that keeps tracks of current workout day probably a user setting file
-    const [activeAccordIndex, setActiveAccordIndex] = React.useState(0);
-    const [selectedCell, setSelectedCell] = React.useState(1);
-    const [state, setState] = React.useState(
-        {
-            checkedSwitch: false,
-            currGymData: gymData[0],
-            currWorkout: workRoutine[0].workouts[0],
-            routine: workRoutine[0]
-        });
-
-    const handleSwitchChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
-    const handleCellChange = (cell) => {
-        setSelectedCell(cell);
-    }
-
-    const handleIndexChange = (index) => {
-        if (activeAccordIndex === index) {
-            setActiveAccordIndex(0);
-        } else {
-            setActiveAccordIndex(index);
-        }
-    }
-    React.useEffect(() => {
-        var gymdata = state.currGymData;
-        gymData.map((data) => {
-            if (data.workout.name === state.routine.workouts[selectedCell - 1].workout.name) {
-                gymdata = data;
-            }
-        })
-        setState({ ...state, currGymData: gymdata, currWorkout: state.routine.workouts[selectedCell - 1] });
-    }, [selectedCell])
-
 
     return (
         <Grid
@@ -67,13 +33,6 @@ export default function DashBoardView(props) {
             <Grid item xs={12} style={{ padding: "24px", zoom: "0.9" }}>
                 <DashContainer
                     theme={props.theme}
-                    handleIndexChange={(index) => handleIndexChange(index)}
-                    handleSwitchChange={(event) => handleSwitchChange(event)}
-                    state={state}
-                    selectedCell={selectedCell}
-                    handleCellChange={(cell) => handleCellChange(cell)}
-                    checkedSwitch={state.checkedSwitch}
-                    {...props}
                 />
             </Grid>
         </Grid>
