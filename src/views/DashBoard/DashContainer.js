@@ -1,7 +1,7 @@
 import React from 'react';
 import { pdfjs } from 'react-pdf';
 import moment from 'moment';
-import firebase from 'firebase';
+import db from '../../firebase.js';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -13,7 +13,9 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
 
 // import material ui icons 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -32,7 +34,7 @@ import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 
 import gymData from '../../assets/data/gymData.json';
-import musicData from '../../assets/data/musicLibrary.json';
+import { useSelector } from 'react-redux';
 import sheetData from '../../assets/data/sheetmusic.json';
 
 const useStyle = makeStyles(styles);
@@ -42,8 +44,8 @@ export default function DashContainer(props) {
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
     const theme = useTheme(styles);
     const targetRef = React.useRef();
-    // styles 
     const classes = useStyle();
+    const data = useSelector((reducer) => reducer.dataReducer)
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
     // states 
     const [state, setState] = React.useState(
@@ -51,9 +53,13 @@ export default function DashContainer(props) {
             width: "30vh",
             buttonLocation: 0,
             liftsIndex: 0,
-            currRoutine: undefined,
+            modalOpen: false,
+            selectedWorkout: { workouts: [] }
         }
     );
+    const handleAutoComplete = (event, values) => {
+        setState({ ...state, selectedWorkout: values.prop })
+    }
 
     const handleLiftClick = (direction) => {
         if (direction === "left" && state.liftsIndex !== 0) {
@@ -73,6 +79,66 @@ export default function DashContainer(props) {
             });
         }
     }, [targetRef])
+
+    const getEntryData = () => {
+        let temp = [];
+        state.selectedWorkout.workouts.map(prop => {
+            for (var i = 0; i < parseInt(prop.sets); i++) {
+                temp.push({
+                    workout: titleCase(prop.workout.name),
+                    weight: 0,
+                    reps: 0
+                })
+            }
+        })
+        return temp;
+    }
+
+    const addGymEntryModal = () => {
+        return (
+            <Modal
+                open={state.modalOpen}
+                onClose={() => setState({ ...state, modalOpen: false })}
+            >
+                <Card className={classes.modalCard}>
+                    <CardContent>
+                        <Autocomplete
+                            options={
+                                data.allRoutines.map(props => {
+                                    return { prop: props }
+                                })
+                            }
+                            getOptionLabel={(option) => titleCase(option.prop.routineName)}
+                            renderInput={(params) => <TextField {...params} label="Routines" variant="outlined" />}
+                            onChange={handleAutoComplete}
+                        />
+                        <MaterialTable
+                            columns={[
+                                { title: "Workout", field: "workout", editable: 'never', defaultGroupOrder: 0},
+                                { title: "Weight", field: "weight", type: "numeric", validate: rowData => rowData.weight > 0 },
+                                { title: "Reps", field: "reps", type: "numeric", validate: rowData => rowData.reps > 0 }
+                            ]}
+                            data={getEntryData()}
+                            icons={icons}
+                            options={{
+                                showTitle: false,
+                                grouping: false,
+                                sorting: false,
+                                draggable: false
+                            }}
+                            cellEditable={{
+                                onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
+                                  return new Promise((resolve, reject) => {
+                                    setTimeout(resolve, 1000);
+                                  });
+                                }
+                              }}
+                        />
+                    </CardContent>
+                </Card>
+            </Modal>
+        );
+    }
 
     const displaySheetLibrary = () => {
         return (
@@ -147,28 +213,6 @@ export default function DashContainer(props) {
         return lifts;
     }
 
-    // init database
-    const firebaseConfig = {
-        apiKey: "AIzaSyBnytW52-pJjw0dl30OCw48vpa2OvV7S00",
-        authDomain: "life-tracker-7fb87.firebaseapp.com",
-        databaseURL: "https://life-tracker-7fb87.firebaseio.com",
-        projectId: "life-tracker-7fb87",
-        storageBucket: "life-tracker-7fb87.appspot.com",
-        messagingSenderId: "329127552217",
-        appId: "1:329127552217:web:bf3b5d72097e98d7be0ac8",
-        measurementId: "G-BQN7TSV44R"
-    };
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const dbRefObjUser = firebase.database().ref().child('userSetting');
-    React.useEffect(() => {
-        dbRefObjUser.once('value', snap => {
-            console.log(snap.val())
-            setState({ ...state, currRoutine: snap.routine})
-        })
-    }, [])
-
     return (
         <Grid
             container
@@ -191,26 +235,26 @@ export default function DashContainer(props) {
                             <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
                         </div>
                         <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
-                            {/* Next workout day is : {titleCase(dbRefObjUser.routine[dbRefObjUser.routineIndex].name)} */}
+                            Next workout day is : {titleCase(data.routine.routineName)}
                         </Typography>
                         <Grid container>
                             <Grid item xs={7}>
-                                {/* {workoutRoutine[0].workouts.map((routine, index) => {
+                                {data.routine.workouts.map((routine, index) => {
                                     return (
                                         <Typography key={routine.workout.name + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
                                             {(index + 1)} : {titleCase(routine.workout.name)}
                                         </Typography>
                                     );
-                                })} */}
+                                })}
                             </Grid>
                             <Grid item xs={5}>
-                                {/* {workoutRoutine[0].workouts.map((routine, index) => {
+                                {data.routine.workouts.map((routine, index) => {
                                     return (
                                         <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
                                             Sets: {routine.sets} / Reps: {routine.reps}
                                         </Typography>
                                     );
-                                })} */}
+                                })}
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -262,7 +306,7 @@ export default function DashContainer(props) {
             </Grid>
             <Grid item xs={3}>
                 <Card>
-                    <CardActionArea>
+                    <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
                         <CardContent>
                             <div className={classes.cardColumn}>
                                 <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
@@ -271,6 +315,7 @@ export default function DashContainer(props) {
                         </CardContent>
                     </CardActionArea>
                 </Card>
+                {addGymEntryModal()}
                 {/* <Card>
                         <CardActionArea onClick={() => handleCardClick(2)}>
                             <CardContent>

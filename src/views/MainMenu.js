@@ -14,10 +14,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
-import musicData from '../assets/data/musicLibrary.json';
+import { useDispatch } from 'react-redux';
+import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine} from '../redux/actions/dataAction.js';
 
 import { mainmenuRoutes } from '../routes.js';
-
+import db from '../firebase.js';
 import themes from '../assets/data/themes.json';
 import MiniPlayer from '../components/MiniPlayer.js';
 
@@ -26,6 +27,9 @@ const useStyles = makeStyles(styles);
 const MainMenu = () => {
     const classes = useStyles();
     const ref = React.createRef();
+    const dbRefObjUser = db.child('userSetting');
+    const dbRefObjRoutine = db.child('workoutRoutine');
+    const dispatch = useDispatch();
 
     let theme;
     themes.forEach(th => {
@@ -35,6 +39,16 @@ const MainMenu = () => {
             }
         }
     })
+
+    React.useEffect(() => {
+        dbRefObjUser.once('value', snap => {
+            dispatch(setRoutineIndex(snap.val().routineIndex))
+            dispatch(setRoutine(snap.val().routine[snap.val().routineIndex]))
+        })
+        dbRefObjRoutine.once('value', snap => {
+            dispatch(setAllRoutine(snap.val()))
+        })
+    }, [])
 
     // states 
     const [state, setState] = useState({

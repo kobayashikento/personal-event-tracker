@@ -34,6 +34,17 @@ const dashcontainerStyle = theme => ({
         width: "100%",
         marginTop: "16px"
     },
+    modalCard: {
+        position: 'absolute',
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: "10%",
+        left: "10%",
+        width: "72rem",
+        tranform: "translate(-10%, -10%)"
+    },
 
 
     switchTypo: {

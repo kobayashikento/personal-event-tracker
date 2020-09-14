@@ -1,6 +1,6 @@
 import React from 'react';
 
-import firebase from 'firebase';
+import db from '../firebase.js';
 
 import MaterialTable from 'material-table';
 
@@ -45,20 +45,7 @@ export default function MediaPlayer(props) {
     const playerLoop = useSelector((reducer) => reducer.playerReducer.loop)
 
     // init database
-    const firebaseConfig = {
-        apiKey: "AIzaSyBnytW52-pJjw0dl30OCw48vpa2OvV7S00",
-        authDomain: "life-tracker-7fb87.firebaseapp.com",
-        databaseURL: "https://life-tracker-7fb87.firebaseio.com",
-        projectId: "life-tracker-7fb87",
-        storageBucket: "life-tracker-7fb87.appspot.com",
-        messagingSenderId: "329127552217",
-        appId: "1:329127552217:web:bf3b5d72097e98d7be0ac8",
-        measurementId: "G-BQN7TSV44R"
-    };
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const dbRefObj = firebase.database().ref().child('musicLinks');
+    const dbRefObj = db.child('musicLinks');
 
     // init states
     const [expanded, setExpanded] = React.useState(false);
