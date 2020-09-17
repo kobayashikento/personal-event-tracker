@@ -97,13 +97,17 @@ export default function DashContainer(props) {
             setSnackbarOpen(true)
         } else {
             let items = [...state.entry]
-            items.push({
-                workoutName: state.selectedModalWorkout.name,
-                date: "",
-                reps: 0,
-                weight: 0
-            })
-            setState({ ...state, selectedModalWorkout: undefined, workoutModalOpen: false, selectedModalSets: undefined })
+            let temp = [];
+            for (var i = 0; i < state.selectedModalSets; i++) {
+                temp.push({
+                    workoutName: state.selectedModalWorkout.name,
+                    date: "",
+                    reps: 0,
+                    weight: 0
+                })
+            }
+            items.push(temp)
+            setState({ ...state, selectedModalWorkout: undefined, workoutModalOpen: false, selectedModalSets: undefined, entry: items })
         }
     }
 
@@ -226,7 +230,7 @@ export default function DashContainer(props) {
         return (
             <Modal
                 open={state.modalOpen}
-                onClose={() => setState({ ...state, modalOpen: false })}
+                onClose={() => setState({ ...state, modalOpen: false, selectedModalWorkout: undefined, entry: undefined })}
                 style={{ overflow: "scroll" }}
             >
                 <Card className={classes.modalCard}>
@@ -327,9 +331,9 @@ export default function DashContainer(props) {
                                     Add Workout
                                 </Button>
                                 <Snackbar
-                        open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
-                        message={"Select a workout"}
-                    />
+                                    open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
+                                    message={"Select a workout"}
+                                />
                             </CardContent>
                         </Card>
                     </Modal>
