@@ -29,6 +29,7 @@ const MainMenu = () => {
     const ref = React.createRef();
     const dbRefObjUser = db.child('userSetting');
     const dbRefObjRoutine = db.child('workoutRoutine');
+    const dbRefObjWorkout = db.child('workouts');
     const dispatch = useDispatch();
 
     let theme;
@@ -47,6 +48,9 @@ const MainMenu = () => {
         })
         dbRefObjRoutine.once('value', snap => {
             dispatch(setAllRoutine(snap.val()))
+        })
+        dbRefObjWorkout.once('value', snap => {
+            dispatch(setWorkout(snap.val()))
         })
     }, [])
 

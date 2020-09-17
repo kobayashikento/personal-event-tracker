@@ -40,10 +40,11 @@ const dashcontainerStyle = theme => ({
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
-        top: "10%",
-        left: "10%",
-        width: "72rem",
-        tranform: "translate(-10%, -10%)"
+        top: "5%",
+        left: "29%",
+        width: "50rem",
+        overflow: "scroll",
+        transform: "translate(-5%, -5%)"
     },
 
 

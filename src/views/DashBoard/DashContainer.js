@@ -1,7 +1,7 @@
 import React from 'react';
 import { pdfjs } from 'react-pdf';
 import moment from 'moment';
-import db from '../../firebase.js';
+import { useForm } from 'react-hook-form';
 
 // import material ui cores
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
@@ -16,6 +16,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Snackbar from '@material-ui/core/Snackbar';
 
 // import material ui icons 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -33,9 +39,10 @@ import MediaPlayer from '../../components/MediaPlayer.js'
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 
-import gymData from '../../assets/data/gymData.json';
 import { useSelector } from 'react-redux';
 import sheetData from '../../assets/data/sheetmusic.json';
+
+import EntryContent from '../../components/EntryContent.js';
 
 const useStyle = makeStyles(styles);
 
@@ -54,11 +61,123 @@ export default function DashContainer(props) {
             buttonLocation: 0,
             liftsIndex: 0,
             modalOpen: false,
-            selectedWorkout: { workouts: [] }
+            workoutModalOpen: false,
+            selectedWorkout: undefined,
+            entry: undefined,
+            disableRemoveSet: false,
+            disableAddSet: false,
+            disableRemoveWorkout: false,
+            selectedModalWorkout: undefined,
+            selectedModalSets: undefined
         }
     );
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
     const handleAutoComplete = (event, values) => {
-        setState({ ...state, selectedWorkout: values.prop })
+        if (values === null) {
+            setState({ ...state, selectedWorkout: undefined })
+        } else {
+            setState({ ...state, selectedWorkout: values })
+        }
+    }
+
+    const handleWorkoutAutoComplete = (event, values) => {
+        if (values === null) {
+            setState({ ...state, selectedModalWorkout: undefined })
+        } else {
+            setState({ ...state, selectedModalWorkout: values })
+        }
+    }
+
+    const handleAddWorkout = () => {
+        if (state.selectedModalWorkout === undefined) {
+            setSnackbarOpen(true)
+        } else if (state.selectedModalSets === undefined) {
+            setSnackbarOpen(true)
+        } else {
+            let items = [...state.entry]
+            items.push({
+                workoutName: state.selectedModalWorkout.name,
+                date: "",
+                reps: 0,
+                weight: 0
+            })
+            setState({ ...state, selectedModalWorkout: undefined, workoutModalOpen: false, selectedModalSets: undefined })
+        }
+    }
+
+    const handleNext = (object, index) => {
+        let items = [...state.entry[index]]
+        for (var i = 0; i < items.length; i++) {
+            let item = { ...items[i] }
+            item = object[i]
+            items[i] = item
+        }
+        let copyEntry = [...state.entry]
+        let entryItem = [...copyEntry[index]]
+        entryItem = items
+        copyEntry[index] = entryItem
+        setState({ ...state, entry: copyEntry })
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = (object, index) => {
+        let items = [...state.entry[index]]
+        for (var i = 0; i < items.length; i++) {
+            let item = { ...items[i] }
+            item = object[i]
+            items[i] = item
+        }
+        let copyEntry = [...state.entry]
+        let entryItem = [...copyEntry[index]]
+        entryItem = items
+        copyEntry[index] = entryItem
+        setState({ ...state, entry: copyEntry })
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleSetChange = (type, index) => {
+        if (type === "remove") {
+            let items = [...state.entry]
+            let item = items[index]
+            if (item.length > 1) {
+                item.pop()
+                items[index] = item
+                setState({ ...state, entry: items, disableAddSet: false })
+            } else {
+                setState({ ...state, disableRemoveSet: true });
+            }
+        } else if (type === "add") {
+            let items = [...state.entry]
+            let item = items[index]
+            if (item.length < 7) {
+                let temp = item[0]
+                item.push(temp);
+                items[index] = item
+                setState({ ...state, entry: items, disableRemoveSet: false })
+            } else {
+                setState({ ...state, disableAddSet: true });
+            }
+        }
+    }
+
+    const handleWorkoutTextChange = (event) => {
+        setState({ ...state, selectedModalSets: parseInt(event.target.value) })
+    }
+
+    const handleWorkoutChange = (type) => {
+        if (type === "remove") {
+            if (state.entry.length !== 0) {
+                let items = [...state.entry]
+                items.splice([activeStep], 1)
+                setState({ ...state, entry: items })
+            } else {
+                setState({ ...state, disableRemoveWorkout: true })
+            }
+        } else if (type === "add") {
+            setState({ ...state, workoutModalOpen: true })
+        }
     }
 
     const handleLiftClick = (direction) => {
@@ -80,63 +199,142 @@ export default function DashContainer(props) {
         }
     }, [targetRef])
 
-    const getEntryData = () => {
-        let temp = [];
-        state.selectedWorkout.workouts.map(prop => {
-            for (var i = 0; i < parseInt(prop.sets); i++) {
-                temp.push({
-                    workout: titleCase(prop.workout.name),
-                    weight: 0,
-                    reps: 0
-                })
-            }
-        })
-        return temp;
-    }
+    // Stepper
+    React.useEffect(() => {
+        // Need to create an object [{ date: "", weight: 0, reps: 0, workoutName: ""}, {}...]
+        if (state.selectedWorkout !== undefined) {
+            let temp = [];
+            state.selectedWorkout.workouts.map(prop => {
+                let workoutObj = [];
+                for (var i = 0; i < parseInt(prop.sets); i++) {
+                    workoutObj.push({
+                        workoutName: (prop.workout.name),
+                        date: "",
+                        reps: 0,
+                        weight: 0
+                    });
+                }
+                temp.push(workoutObj);
+            })
+            setState({ ...state, entry: temp })
+        } else {
+            setState({ ...state, entry: undefined })
+        }
+    }, [state.selectedWorkout])
 
     const addGymEntryModal = () => {
         return (
             <Modal
                 open={state.modalOpen}
                 onClose={() => setState({ ...state, modalOpen: false })}
+                style={{ overflow: "scroll" }}
             >
                 <Card className={classes.modalCard}>
                     <CardContent>
                         <Autocomplete
                             options={
-                                data.allRoutines.map(props => {
-                                    return { prop: props }
-                                })
+                                data.allRoutines
                             }
-                            getOptionLabel={(option) => titleCase(option.prop.routineName)}
+                            getOptionLabel={(option) => titleCase(option.routineName)}
                             renderInput={(params) => <TextField {...params} label="Routines" variant="outlined" />}
                             onChange={handleAutoComplete}
                         />
-                        <MaterialTable
-                            columns={[
-                                { title: "Workout", field: "workout", editable: 'never', defaultGroupOrder: 0},
-                                { title: "Weight", field: "weight", type: "numeric", validate: rowData => rowData.weight > 0 },
-                                { title: "Reps", field: "reps", type: "numeric", validate: rowData => rowData.reps > 0 }
-                            ]}
-                            data={getEntryData()}
-                            icons={icons}
-                            options={{
-                                showTitle: false,
-                                grouping: false,
-                                sorting: false,
-                                draggable: false
-                            }}
-                            cellEditable={{
-                                onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
-                                  return new Promise((resolve, reject) => {
-                                    setTimeout(resolve, 1000);
-                                  });
-                                }
-                              }}
-                        />
+                        <div>
+                            <Button
+                                style={{ display: state.selectedWorkout === undefined ? "none" : "" }}
+                                variant="outlined"
+                                className={classes.button}
+                                onClick={() => handleWorkoutChange("remove")}
+                            >
+                                Remove Workout
+                                            </Button>
+                            <Button
+                                style={{ display: state.selectedWorkout === undefined ? "none" : "" }}
+                                variant="outlined"
+                                className={classes.button}
+                                onClick={() => handleWorkoutChange("add")}
+                            >
+                                Add Workout
+                                            </Button>
+                        </div>
+                        {state.selectedWorkout !== undefined && state.entry !== undefined ?
+                            <Stepper activeStep={activeStep} orientation="vertical">
+                                {state.entry.map((label, index) => (
+                                    <Step key={label[0].workoutName}>
+                                        <StepLabel>{titleCase(label[0].workoutName)}</StepLabel>
+                                        <StepContent>
+                                            <div>
+                                                <Button
+                                                    disabled={state.disableRemoveSet}
+                                                    variant="outlined"
+                                                    className={classes.button}
+                                                    onClick={() => handleSetChange("remove", index)}
+                                                >
+                                                    Remove Set
+                                            </Button>
+                                                <Button
+                                                    disabled={state.disableAddSet}
+                                                    variant="outlined"
+                                                    className={classes.button}
+                                                    onClick={() => handleSetChange("add", index)}
+                                                >
+                                                    Add Set
+                                            </Button>
+                                            </div>
+                                            <EntryContent
+                                                entry={label}
+                                                maxLength={state.entry.length}
+                                                index={index}
+                                                handleNext={(obj, index) => handleNext(obj, index)}
+                                                handleBack={(obj, index) => handleBack(obj, index)}
+                                                name={label[0].workoutName}
+                                            />
+                                        </StepContent>
+                                    </Step>
+                                ))}
+                            </Stepper> : null}
                     </CardContent>
+                    <Modal
+                        open={state.workoutModalOpen}
+                        onClose={() => setState({ ...state, workoutModalOpen: false, selectedModalWorkout: undefined })}
+                        style={{ overflow: "scroll" }}
+                    >
+                        <Card className={classes.modalCard}>
+                            <CardContent>
+                                <Autocomplete
+                                    options={
+                                        data.workout
+                                    }
+                                    getOptionLabel={(option) => titleCase(option.name)}
+                                    renderInput={(params) => <TextField {...params} label="Workouts" variant="outlined" />}
+                                    onChange={handleWorkoutAutoComplete}
+                                />
+                                <TextField type="number" placeholder="Number of sets" name="sets" variant="standard"
+                                    onChange={handleWorkoutTextChange}
+                                    InputProps={{ endAdornment: <InputAdornment position="end">Sets</InputAdornment>, }} defaultValue={0} />
+                                <Button
+                                    variant="outlined"
+                                    className={classes.button}
+                                    onClick={() => setState({ ...state, workoutModalOpen: false, selectedModalWorkout: undefined })}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    className={classes.button}
+                                    onClick={handleAddWorkout}
+                                >
+                                    Add Workout
+                                </Button>
+                                <Snackbar
+                        open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
+                        message={"Select a workout"}
+                    />
+                            </CardContent>
+                        </Card>
+                    </Modal>
                 </Card>
-            </Modal>
+            </Modal >
         );
     }
 
