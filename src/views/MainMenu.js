@@ -14,8 +14,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
-import { useDispatch } from 'react-redux';
-import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine} from '../redux/actions/dataAction.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine } from '../redux/actions/dataAction.js';
 
 import { mainmenuRoutes } from '../routes.js';
 import db from '../firebase.js';
@@ -27,6 +27,7 @@ const useStyles = makeStyles(styles);
 const MainMenu = () => {
     const classes = useStyles();
     const ref = React.createRef();
+    const data = useSelector((reducer) => reducer.dataReducer)
     const dbRefObjUser = db.child('userSetting');
     const dbRefObjRoutine = db.child('workoutRoutine');
     const dbRefObjWorkout = db.child('workouts');

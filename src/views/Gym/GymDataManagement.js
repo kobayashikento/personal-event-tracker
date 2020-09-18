@@ -25,6 +25,8 @@ import routineJson from '../../assets/data/workoutRoutine.json';
 // data
 import workoutData from '../../assets/data/gymData.json';
 import workoutJson from '../../assets/data/workouts.json';
+import GymManageWorkout from './GymManageWorkout.js';
+import GymManageRoutine from './GymManageRoutine.js';
 
 const useStyles = makeStyles(styles);
 
@@ -254,94 +256,15 @@ export default function GymContainer(props) {
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={1} >
             </TabPanel>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={2}>
-                <MaterialTable
-                    className={classes.manageDataTable}
-                    columns={state.workoutColumn}
-                    data={state.workoutData}
-                    options={{
-                        grouping: true,
-                        showTitle: false,
-                        pageSize: state.pageSize
-                    }}
-                    icons={icons}
-                    editable={{
-                        onRowAdd: newData =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    setState({ ...state, workoutData: newData });
-
-                                    resolve();
-                                }, 1000)
-                            }),
-                        onRowUpdate: (newData, oldData) =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataUpdate = [...state.workoutData];
-                                    const index = oldData.tableData.id;
-                                    dataUpdate[index] = newData;
-                                    setState({ ...state, workoutData: dataUpdate });
-
-                                    resolve();
-                                }, 1000)
-                            }),
-                        onRowDelete: oldData =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataDelete = [...state.workoutData];
-                                    const index = oldData.tableData.id;
-                                    dataDelete.splice(index, 1);
-                                    setState({ ...state, workoutData: dataDelete });
-
-                                    resolve()
-                                }, 1000)
-                            }),
-                    }}
-                />
+                <GymManageWorkout />
             </TabPanel>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={3}>
-                <MaterialTable
-                    className={classes.manageDataTable}
-                    columns={state.routineColumn}
-                    data={state.routineData}
-                    options={{
-                        grouping: false,
-                        showTitle: false,
-                        pageSize: state.pageSize
-                    }}
-                    icons={icons}
-                    editable={{
-                        onRowAdd: newData =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    setState({ ...state, routineData: newData });
-
-                                    resolve();
-                                }, 1000)
-                            }),
-                        onRowUpdate: (newData, oldData) =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataUpdate = [...state.routineData];
-                                    const index = oldData.tableData.id;
-                                    dataUpdate[index] = newData;
-                                    setState({ ...state, routineData: dataUpdate });
-
-                                    resolve();
-                                }, 1000)
-                            }),
-                        onRowDelete: oldData =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataDelete = [...state.routineData];
-                                    const index = oldData.tableData.id;
-                                    dataDelete.splice(index, 1);
-                                    setState({ ...state, routineData: dataDelete });
-
-                                    resolve()
-                                }, 1000)
-                            }),
-                    }}
-                />
+               <GymManageRoutine />
             </TabPanel>
         </Grid>);
 }
+
+
+
+
+
