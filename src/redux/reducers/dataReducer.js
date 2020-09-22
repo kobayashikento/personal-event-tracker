@@ -3,6 +3,7 @@ import {
     SET_ROUTINE_INDEX,
     SET_WORKOUT,
     SET_ALL_ROUTINE,
+    SET_ENTRIES
 } from '../actions/dataAction.js';
 
 export function dataReducer(state = {
@@ -12,7 +13,8 @@ export function dataReducer(state = {
     }, 
     routineIndex: 0, 
     workout: undefined,
-    allRoutines: []
+    allRoutines: [],
+    entries: undefined
 }, action) {
     switch (action.type) {
         case SET_ROUTINE:
@@ -34,6 +36,12 @@ export function dataReducer(state = {
             return {
                 ...state,
                 allRoutines: action.payload
+            }
+        }
+        case SET_ENTRIES: {
+            return {
+                ...state, 
+                entries: action.payload
             }
         }
         default: return state;

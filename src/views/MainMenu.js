@@ -15,7 +15,7 @@ import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine } from '../redux/actions/dataAction.js';
+import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine, setEntries } from '../redux/actions/dataAction.js';
 
 import { mainmenuRoutes } from '../routes.js';
 import db from '../firebase.js';
@@ -52,6 +52,9 @@ const MainMenu = () => {
         })
         dbRefObjWorkout.once('value', snap => {
             dispatch(setWorkout(snap.val()))
+        })
+        db.child("gymEntries").once('value', snap => {
+            dispatch(setEntries(snap.val()))
         })
     }, [])
 

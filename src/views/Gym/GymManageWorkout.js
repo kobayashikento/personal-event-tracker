@@ -4,7 +4,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { setWorkout } from '../../redux/actions/dataAction.js';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,9 +21,16 @@ const useStyles = makeStyles(styles);
 export default function GymManageWorkout(props) {
     const classes = useStyles();
     const data = useSelector((reducer) => reducer.dataReducer)
-    const [workout, setWorkout] = React.useState(data.workout);
+    const [workout, setCurrWorkout] = React.useState(data.workout);
     const [message, setMessage] = React.useState("")
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const dispatch = useDispatch();
+
+    React.useEffect(() => {
+        db.child("workouts").once('value', snap => {
+            dispatch(setWorkout(snap.val()))
+        })
+    }, [])
 
     const workoutExists = (newData) => {
         workout.map(prop => {
@@ -75,15 +84,16 @@ export default function GymManageWorkout(props) {
                     onRowAdd: newData =>
                         new Promise((resolve, reject) => {
                             setTimeout(() => {
-                                if (validInput(newData)) {
-                                    const temp = [...workout]
-                                    temp.push(newData)
-                                    setWorkout(temp)
-                                    db.child('workouts').set(temp)
-                                    resolve()
-                                } else if (workoutExists(newData)) {
+                                if (workoutExists(newData)) {
                                     setMessage("Workout already exists")
                                     setSnackbarOpen(true);
+                                    reject();
+                                } else if (validInput(newData)) {
+                                    const temp = [...workout]
+                                    temp.push(newData)
+                                    setCurrWorkout(temp)
+                                    db.child('workouts').set(temp)
+                                    resolve()
                                 } else {
                                     setSnackbarOpen(true);
                                     reject();
@@ -97,7 +107,7 @@ export default function GymManageWorkout(props) {
                                     const dataUpdate = [...workout];
                                     const index = oldData.tableData.id;
                                     dataUpdate[index] = newData;
-                                    setWorkout(dataUpdate);
+                                    setCurrWorkout(dataUpdate);
                                     db.child('workouts').set(dataUpdate)
                                     resolve();
                                 } else if (workoutExists(newData)) {
@@ -114,7 +124,7 @@ export default function GymManageWorkout(props) {
                                 const dataDelete = [...workout];
                                 const index = oldData.tableData.id;
                                 dataDelete.splice(index, 1);
-                                setWorkout(dataDelete);
+                                setCurrWorkout(dataDelete);
                                 db.child('workouts').set(dataDelete)
                                 resolve()
                             }, 1000)

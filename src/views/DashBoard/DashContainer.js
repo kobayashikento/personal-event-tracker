@@ -22,6 +22,8 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Snackbar from '@material-ui/core/Snackbar';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
 
 // import material ui icons 
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -41,6 +43,8 @@ import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 
 import { useSelector } from 'react-redux';
 import sheetData from '../../assets/data/sheetmusic.json';
+
+import db from '../../firebase.js';
 
 import EntryContent from '../../components/EntryContent.js';
 
@@ -64,6 +68,7 @@ export default function DashContainer(props) {
             workoutModalOpen: false,
             selectedWorkout: undefined,
             entry: undefined,
+            allEntries: data.entries,
             disableRemoveSet: false,
             disableAddSet: false,
             disableRemoveWorkout: false,
@@ -73,10 +78,16 @@ export default function DashContainer(props) {
     );
     const [activeStep, setActiveStep] = React.useState(0);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [snackbarCompletedOpen, setSnackbarCompletedOpen] = React.useState(false);
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
 
     const handleAutoComplete = (event, values) => {
         if (values === null) {
-            setState({ ...state, selectedWorkout: undefined })
+            setState({ ...state, selectedWorkout: undefined, entry: undefined })
         } else {
             setState({ ...state, selectedWorkout: values })
         }
@@ -111,20 +122,75 @@ export default function DashContainer(props) {
         }
     }
 
-    const handleNext = (object, index) => {
-        let items = [...state.entry[index]]
-        for (var i = 0; i < items.length; i++) {
-            let item = { ...items[i] }
-            item = object[i]
-            items[i] = item
+    const checkFormCompleted = (object) => {
+        let completed = true;
+        object.map(prop => {
+            if (prop.reps === 0 || prop.weight === 0) {
+                completed = false;
+            }
+        })
+        return completed;
+    }
+
+    const handleNext = (object, index, type) => {
+        if (type !== "update") {
+            if (checkFormCompleted(object)) {
+                let items = [...state.entry[index]]
+                for (var i = 0; i < items.length; i++) {
+                    let item = { ...items[i] }
+                    object[i].date = selectedDate.toString()
+                    item = object[i]
+                    items[i] = item
+                }
+                let copyEntry = [...state.entry]
+                let entryItem = [...copyEntry[index]]
+                entryItem = items
+                copyEntry[index] = entryItem
+                setState({ ...state, entry: copyEntry })
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                if (type === "finish") {
+                    let dbEntry = [];
+                    if (copyEntry !== undefined) {
+                        copyEntry.map(prop => {
+                            if (prop !== undefined) {
+                                prop.map(entry => {
+                                    dbEntry.push(entry)
+                                })
+                            }
+                        })
+                    }
+                    if (data.entries === undefined) {
+                        console.log("paased")
+                        db.child("gymEntries").set(dbEntry);
+                        setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
+                        setSelectedDate(new Date());
+                    } else {
+                        const temp = [data.entries];
+                        temp.push(dbEntry);
+                        db.child("gymEntries").set(temp);
+                        setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
+                        setSelectedDate(new Date());
+                    }
+                }
+            } else {
+                setSnackbarCompletedOpen(true);
+            }
+        } else {
+            let items = [...state.entry[index]]
+            for (var i = 0; i < items.length; i++) {
+                let item = { ...items[i] }
+                object[i].date = selectedDate.toString()
+                item = object[i]
+                items[i] = item
+            }
+            let copyEntry = [...state.entry]
+            let entryItem = [...copyEntry[index]]
+            entryItem = items
+            copyEntry[index] = entryItem
+            setState({ ...state, entry: copyEntry })
         }
-        let copyEntry = [...state.entry]
-        let entryItem = [...copyEntry[index]]
-        entryItem = items
-        copyEntry[index] = entryItem
-        setState({ ...state, entry: copyEntry })
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
+
 
     const handleBack = (object, index) => {
         let items = [...state.entry[index]]
@@ -155,10 +221,12 @@ export default function DashContainer(props) {
         } else if (type === "add") {
             let items = [...state.entry]
             let item = items[index]
+            console.log(items)
             if (item.length < 7) {
                 let temp = item[0]
                 item.push(temp);
                 items[index] = item
+                console.log(items)
                 setState({ ...state, entry: items, disableRemoveSet: false })
             } else {
                 setState({ ...state, disableAddSet: true });
@@ -203,24 +271,28 @@ export default function DashContainer(props) {
         }
     }, [targetRef])
 
-    // Stepper
+    // Create Stepper
     React.useEffect(() => {
         // Need to create an object [{ date: "", weight: 0, reps: 0, workoutName: ""}, {}...]
         if (state.selectedWorkout !== undefined) {
             let temp = [];
-            state.selectedWorkout.workouts.map(prop => {
-                let workoutObj = [];
-                for (var i = 0; i < parseInt(prop.sets); i++) {
-                    workoutObj.push({
-                        workoutName: (prop.workout.name),
-                        date: "",
-                        reps: 0,
-                        weight: 0
-                    });
-                }
-                temp.push(workoutObj);
-            })
-            setState({ ...state, entry: temp })
+            if (state.selectedWorkout.workouts !== undefined) {
+                state.selectedWorkout.workouts.map(prop => {
+                    let workoutObj = [];
+                    for (var i = 0; i < parseInt(prop.sets); i++) {
+                        workoutObj.push({
+                            workoutName: (prop.workout.name),
+                            date: "",
+                            reps: 0,
+                            weight: 0
+                        });
+                    }
+                    temp.push(workoutObj);
+                })
+                setState({ ...state, entry: temp })
+            } else {
+                setState({ ...state, entry: temp })
+            }
         } else {
             setState({ ...state, entry: undefined })
         }
@@ -230,7 +302,7 @@ export default function DashContainer(props) {
         return (
             <Modal
                 open={state.modalOpen}
-                onClose={() => setState({ ...state, modalOpen: false, selectedModalWorkout: undefined, entry: undefined })}
+                onClose={() => setState({ ...state, modalOpen: false, selectedWorkout: undefined, entry: undefined })}
                 style={{ overflow: "scroll" }}
             >
                 <Card className={classes.modalCard}>
@@ -285,13 +357,30 @@ export default function DashContainer(props) {
                                                     Add Set
                                             </Button>
                                             </div>
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <KeyboardDatePicker
+                                                    margin="normal"
+                                                    id="date-picker-dialog"
+                                                    label="Date picker dialog"
+                                                    format="MM/dd/yyyy"
+                                                    value={selectedDate}
+                                                    onChange={handleDateChange}
+                                                    KeyboardButtonProps={{
+                                                        'aria-label': 'change date',
+                                                    }}
+                                                />
+                                            </MuiPickersUtilsProvider>
                                             <EntryContent
                                                 entry={label}
                                                 maxLength={state.entry.length}
                                                 index={index}
-                                                handleNext={(obj, index) => handleNext(obj, index)}
-                                                handleBack={(obj, index) => handleBack(obj, index)}
+                                                handleNext={(obj, index, type) => handleNext(obj, index, type)}
+                                                handleBack={(obj, index, type) => handleBack(obj, index, type)}
                                                 name={label[0].workoutName}
+                                            />
+                                            <Snackbar
+                                                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={snackbarCompletedOpen} autoHideDuration={5000} onClose={() => setSnackbarCompletedOpen(false)}
+                                                message={"Form incomplete"}
                                             />
                                         </StepContent>
                                     </Step>
@@ -342,50 +431,6 @@ export default function DashContainer(props) {
         );
     }
 
-    const displaySheetLibrary = () => {
-        return (
-            <Grid container direction="column">
-                <Grid item>
-                    <MaterialTable
-                        style={{ width: "100%" }}
-                        columns={state.sheetColumns}
-                        data={
-                            sheetData.map((sheet) => {
-                                return {
-                                    name: sheet.name,
-                                    composer: sheet.composer
-                                }
-                            })
-                        }
-                        options={{
-                            showTitle: false,
-                            rowStyle: rowData => ({
-                                backgroundColor:
-                                    state.sheetSelected &&
-                                        rowData.tableData.id === state.sheetIndex ? props.theme.colors.primary : "#fff"
-                            })
-                        }}
-                        icons={icons}
-                        onRowClick={(event, rowData) => {
-                            setState({ ...state, sheetCurrentRow: rowData });
-                            if (rowData.tableData.id === state.pianoSelectedRowId) {
-                                setState({ ...state, sheetSelected: false });
-                                setState({ ...state, sheetSelectedRowId: null });
-                            } else {
-                                setState({ ...state, sheetSelected: true });
-                                setState({ ...state, sheetIndex: rowData.tableData.id });
-                            }
-                        }}
-                    />
-                </Grid>
-                <Grid item style={{ display: "flex" }}>
-                    <Divider />
-                    <Button style={{ marginLeft: "auto", marginTop: "16px" }} color="secondary" size="large" variant="outlined">More Details</Button>
-                </Grid>
-            </Grid>
-        );
-    }
-
     const getMostRecent = (props) => {
         let recentDate = moment('2010-10-20');
         let recentEntry = null;
@@ -428,6 +473,19 @@ export default function DashContainer(props) {
                     mode={"dash"}
                 />
             </Grid>
+            <Grid item xs={3} >
+                <Card>
+                    <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
+                        <CardContent>
+                            <div className={classes.cardColumn}>
+                                <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
+                                <Typography gutterBottom variant="body1" component="h2"> Add Gym Entry </Typography>
+                            </div>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+                {addGymEntryModal()}
+            </Grid>
             <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
             <Grid item xs={5}>
                 <Card style={{ height: "100%" }}>
@@ -462,9 +520,9 @@ export default function DashContainer(props) {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={4} >
+            {/* <Grid item xs={4} >
                 <Card style={{ height: "100%" }}>
-                    {/* <CardContent style={{ height: "100%" }}>
+                    <CardContent style={{ height: "100%" }}>
                         <div className={classes.cardColumn}>
                             <Grid container>
                                 <Grid item xs={12} style={{ display: "inline-flex" }}>
@@ -503,21 +561,10 @@ export default function DashContainer(props) {
                                 </Typography>
                             </div>
                         }
-                    </CardContent> */}
+                    </CardContent>
                 </Card>
-            </Grid>
+            </Grid> */}
             <Grid item xs={3}>
-                <Card>
-                    <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
-                        <CardContent>
-                            <div className={classes.cardColumn}>
-                                <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
-                                <Typography gutterBottom variant="body1" component="h2"> Add a Gym Entry </Typography>
-                            </div>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-                {addGymEntryModal()}
                 {/* <Card>
                         <CardActionArea onClick={() => handleCardClick(2)}>
                             <CardContent>

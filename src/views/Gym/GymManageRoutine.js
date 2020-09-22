@@ -4,9 +4,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { setAllRoutine } from '../../redux/actions/dataAction.js';
 
 import styles from '../../assets/styles/views/gym/gymdatamanagementStyle.js';
 
@@ -22,26 +23,65 @@ export default function GymManageWorkout(props) {
     const [routine, setRoutine] = React.useState(data.allRoutines);
     const [message, setMessage] = React.useState("")
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const dispatch = useDispatch();
 
-    const routineExists = (newData) => {
-        routine.map(prop => {
-            let tempnewData = newData.name.replace(/\s+/g, '');
-            let tempProp = prop.name.replace(/\s+/g, '');
-            if (tempnewData === tempProp) {
-                return true;
-            }
+    React.useEffect(() => {
+        db.child("workoutRoutine").once('value', snap => {
+            dispatch(setAllRoutine(snap.val()))
         })
-        return false;
+    }, [])
+
+    const routineExists = (newData, id) => {
+        if (routine[id].workouts !== undefined) {
+            routine[id].workouts.map(prop => {
+                let tempnewData = getLookUp()[newData.workout].replace(/\s+/g, '');
+                let tempProp = prop.workout.name.replace(/\s+/g, '');
+                if (tempnewData === tempProp) {
+                    return true;
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
+    const validInput = (input) => {
+        if (Object.keys(input).length !== 4) {
+            setMessage("Complete all forms")
+            setSnackbarOpen(true);
+            return false;
+        } else {
+            if (input.workout === undefined) {
+                setMessage("Please Select a workout")
+                setSnackbarOpen(true);
+                return false;
+            } else if (input.sets === 0 || input.sets > 10) {
+                setMessage("Invalid number of sets. Sets must be greater 0 and less than 10")
+                setSnackbarOpen(true);
+                return false;
+            } else if (!/\d+\-+\d+/ | /\d+/.test(input.reps) === false) {
+                setMessage("Reps must match the format 'digit' + '-' 'digit' or 'digit'")
+                setSnackbarOpen(true);
+                return false;
+            } else if (/\d+\-+\d+/ | /\d+/.test(input.rest) === false) {
+                setMessage("Rest must match the format 'digit' + '-' 'digit' or 'digit'")
+                setSnackbarOpen(true);
+                return false;
+            }
+        }
+        setMessage("")
+        return true;
     }
 
     const getRoutineInfo = () => {
         let temp = [];
         if (routine !== undefined) {
             routine.map(prop => {
-                temp.push({
-                    name: titleCase(prop.routineName),
-                    numWork: prop.workouts.length
-                })
+                temp.push(
+                    {
+                        name: titleCase(prop.routineName)
+                    }
+                )
             })
         }
         return temp;
@@ -49,26 +89,74 @@ export default function GymManageWorkout(props) {
 
     const getLookUp = () => {
         let temp = []
-        data.workout.map(prop => {
-            temp[0].splice(
-                {
-                    [prop.tableData.id]: titleCase(prop.name)
-                }
-            )
-        })
-        
-        console.log(temp)
-        return Object.fromEntries(temp)
+        if (data.workout !== undefined) {
+            data.workout.map(prop => {
+                temp.push(
+                    {
+                        [prop.tableData.id]: titleCase(prop.name)
+                    }
+                )
+            })
+            let temp1 = {};
+            temp.map(prop => Object.assign(temp1, prop))
+            return temp1
+        } else {
+            return temp
+        }
+    }
+
+    const validRoutine = (newData) => {
+        if (Object.keys(newData).length !== 1) {
+            setMessage("Complete all forms")
+            setSnackbarOpen(true);
+            return false;
+        } else if (newData.name.length < 3) {
+            setMessage("Routine Name must be longer than 3 letters")
+            setSnackbarOpen(true);
+            return false;
+        }
+        return true;
     }
 
     const getIdFromWorkout = (name) => {
-        // for (var i = 0; i < getRoutineInfo().length; i++) {
-        //     if (Object.values(getRoutineInfo()[i]) === titleCase(name)) {
-        //         console.log(parseInt(Object.keys(getRoutineInfo()[i])))
-        //         return parseInt(Object.keys(getRoutineInfo()[i]))
-        //     }
-        // }
-        // return 0
+        let temp = getLookUp();
+        for (var i = 0; i < Object.keys(temp).length; i++) {
+            if (temp[i] === titleCase(name)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    const getWorkoutFromId = (newData) => {
+        const id = newData.workout
+        let name = getLookUp()[id];
+        if (data.workout !== undefined) {
+            data.workout.map(prop => {
+                if (titleCase(name).replace(/\s+/g, '') === titleCase(prop.name).replace(/\s+/g, '')) {
+                    newData.workout = prop;
+                    return newData;
+                }
+            })
+        }
+        return newData;
+    }
+
+    const getDataInnerTable = (rowData) => {
+        let temp = [];
+        if (routine[rowData.tableData.id].workouts !== undefined) {
+            routine[rowData.tableData.id].workouts.map(prop => {
+                temp.push({
+                    workout: getIdFromWorkout(prop.workout.name),
+                    sets: prop.sets,
+                    reps: prop.reps,
+                    rest: prop.rest
+                })
+            })
+        } else {
+
+        }
+        return temp;
     }
 
     return (
@@ -77,7 +165,6 @@ export default function GymManageWorkout(props) {
                 className={classes.manageDataTable}
                 columns={[
                     { title: 'Routine', field: 'name' },
-                    { title: 'Number of workouts', field: 'numWork', type: "numeric" }
                 ]}
                 data={getRoutineInfo()}
                 options={{
@@ -106,31 +193,54 @@ export default function GymManageWorkout(props) {
                                     }}
                                     icons={icons}
                                     data={
-                                        routine[rowData.tableData.id].workouts.map(prop => {
-                                            return {
-                                                workout: 0,
-                                                sets: prop.sets,
-                                                reps: prop.reps,
-                                                rest: prop.rest
-                                            }
-                                        })
+                                        getDataInnerTable(rowData)
                                     }
                                     editable={{
                                         onRowAdd: newData =>
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
-                                                    // if (validInput(newData)) {
-                                                    //     const temp = [...workout]
-                                                    //     temp.push(newData)
-                                                    //     setWorkout(temp)
-                                                    //     db.child('workouts').set(temp)
-                                                    //     resolve()
-                                                    // } else if (workoutExists(newData)) {
-                                                    //     setMessage("Workout already exists")
-                                                    //     setSnackbarOpen(true);
-                                                    // } else {
-                                                    //     setSnackbarOpen(true);
-                                                    //     reject();
+                                                    if (routineExists(newData, rowData.tableData.id)) {
+                                                        setMessage("Workout already exists")
+                                                        setSnackbarOpen(true);
+                                                        reject();
+                                                    } else if (validInput(newData)) {
+                                                        const temp = [...routine]
+                                                        const addData = temp[rowData.tableData.id]
+                                                        const convertData = getWorkoutFromId(newData)
+                                                        if (addData.workouts !== undefined) {
+                                                            addData.workouts.push(convertData)
+                                                            temp[rowData.tableData.id] = addData
+                                                        } else {
+                                                            addData["workouts"] = [convertData]
+                                                            temp[rowData.tableData.id] = addData
+                                                        }
+                                                        setRoutine(temp)
+                                                        db.child('workoutRoutine').set(temp)
+                                                        resolve()
+                                                    } else {
+                                                        reject();
+                                                    }
+                                                    reject();
+                                                }, 1000)
+                                            }),
+                                        onRowUpdate: (newData, oldData) =>
+                                            new Promise((resolve, reject) => {
+                                                setTimeout(() => {
+                                                    if (routineExists(newData, rowData.tableData.id)) {
+                                                        setMessage("Workout already exists")
+                                                        setSnackbarOpen(true);
+                                                        reject();
+                                                    } else if (validInput(newData)) {
+                                                        const temp = [...routine];
+                                                        const dataUpdate = temp[rowData.tableData.id]
+                                                        dataUpdate[oldData.tableData.id] = newData
+                                                        temp[rowData.tableData.id] = dataUpdate
+                                                        setRoutine(temp)
+                                                        db.child('workoutRoutine').set(temp)
+                                                        resolve();
+                                                    } else {
+                                                        reject();
+                                                    }
                                                 }, 1000)
                                             }),
                                         onRowDelete: oldData =>
@@ -150,6 +260,38 @@ export default function GymManageWorkout(props) {
                         }
                     }
                 ]}
+                editable={{
+                    onRowAdd: newData =>
+                        new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                if (validRoutine(newData)) {
+                                    let newRoutine = {
+                                        routineName: newData.name,
+                                        workouts: []
+                                    }
+                                    let temp = [...routine]
+                                    temp.push(newRoutine)
+                                    setRoutine(temp)
+                                    db.child('workoutRoutine').set(temp)
+                                    resolve();
+                                } else {
+                                    reject();
+                                }
+                            }, 1000)
+                        }),
+                    onRowDelete: oldData =>
+                        new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                const dataDelete = [...routine];
+                                const index = oldData.tableData.id;
+                                dataDelete.splice(index, 1);
+                                setRoutine(dataDelete);
+                                console.log(dataDelete)
+                                db.child('workoutRoutine').set(dataDelete)
+                                resolve();
+                            }, 1000)
+                        }),
+                }}
             />
             <Snackbar
                 open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}

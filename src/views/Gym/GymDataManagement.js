@@ -193,7 +193,7 @@ export default function GymContainer(props) {
             spacing={5}
             style={{ zoom: "0.8" }}
         >
-            <AppBar position="static" color="default">
+            <AppBar position="static" color="default" style={{zIndex: "2"}}>
                 <Tabs
                     value={state.tabIndex}
                     onChange={handleChange}

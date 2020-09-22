@@ -80,11 +80,13 @@ export default function MediaPlayer(props) {
     }, [playerLoop])
 
     const handleChangeMusic = (control) => {
-        if (control === "prev" && player.index !== 0 && player.playing <= 0.1) {
+        if (control === "prev" && player.index !== 0 && player.played <= 0.01) {
             dispatch(prev(player.index));
             dispatch(played(0));
-        } else if (control === "prev" && player.index !== 0 && player.playing > 0.1) {
-            dispatch(played(0));
+        } else if (control === "prev" && player.played > 0.01) {
+            dispatch(seekTo(0));
+        } else if (control === "prev" && player.index === 0){
+            dispatch(seekTo("0"));
         } else if (control === "next" && player.index !== state.listLength - 1) {
             dispatch(next(player.index));
             dispatch(played(0));
@@ -158,7 +160,7 @@ export default function MediaPlayer(props) {
     };
 
     return (
-        <Card>
+        <Card style={{ background: props.theme.colors.primary }}>
             <Grid container >
                 <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column" }}>
                     <CardContent className={classes.content}>

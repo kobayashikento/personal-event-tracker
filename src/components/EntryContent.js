@@ -16,7 +16,6 @@ const useStyle = makeStyles(styles);
 export default function EntryContent(props) {
     // props, array containing entry objects [{ date: "", weight: 0, reps: 0, workoutName: ""}, {}...]
     const classes = useStyle();
-    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarChangeOpen, setSnackbarChangeOpen] = React.useState(false);
     let data = [];
 
@@ -27,16 +26,7 @@ export default function EntryContent(props) {
         } else if (split[1] === "weight") {
             data[split[0]].weight = parseInt(event.target.value)
         }
-    }
-
-    function checkComplete() {
-        let temp = true;
-        data.map(prop => {
-            if (prop.reps === 0 || prop.weight === 0) {
-                temp = false;
-            }
-        })
-        return temp;
+        props.handleNext(data, props.index, "update")
     }
 
     function checkChanged() {
@@ -50,10 +40,11 @@ export default function EntryContent(props) {
     }
 
     const handleNext = (event) => {
-        if (!checkComplete()) {
-            setSnackbarOpen(true)
+
+        if (props.index === props.maxLength - 1) {
+            props.handleNext(data, props.index, "finish")
         } else {
-            props.handleNext(data, props.index)
+            props.handleNext(data, props.index, "next")
         }
     }
 
@@ -75,22 +66,18 @@ export default function EntryContent(props) {
                             <TextField type="number" placeholder="Weight" name="Weight" variant="standard" id={index + " weight"} onChange={handleChange}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">lbs</InputAdornment>,
-                                }} defaultValue={entry.weight} />
+                                }} defaultValue={0} />
                             <TextField type="number" placeholder="Reps" name="Reps" variant="standard" id={index + " reps"} onChange={handleChange}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">Reps</InputAdornment>,
-                                }} defaultValue={entry.reps} />
+                                }} defaultValue={0} />
                         </div>
                     )
                 }) : null}
             <Button disabled={props.index === 0} onClick={handleBack}>Back</Button>
-            <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
+            <Button variant="contained" color="primary" onClick={handleNext}>{props.index === props.maxLength - 1 ? "Finish" : "Next"}</Button>
             <Snackbar
-                open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)}
-                message={"Form not complete"}
-            />
-            <Snackbar
-                open={snackbarChangeOpen} autoHideDuration={5000} onClose={() => setSnackbarChangeOpen(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={snackbarChangeOpen} autoHideDuration={5000} onClose={() => setSnackbarChangeOpen(false)}
                 message={"Changes saved"}
             />
         </div>
