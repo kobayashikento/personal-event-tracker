@@ -41,8 +41,8 @@ import MediaPlayer from '../../components/MediaPlayer.js'
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 
-import { useSelector } from 'react-redux';
-import sheetData from '../../assets/data/sheetmusic.json';
+import { useSelector, useDispatch } from 'react-redux';
+import { setEntries } from '../../redux/actions/dataAction.js';
 
 import db from '../../firebase.js';
 
@@ -57,11 +57,12 @@ export default function DashContainer(props) {
     const targetRef = React.useRef();
     const classes = useStyle();
     const data = useSelector((reducer) => reducer.dataReducer)
-    const matches = useMediaQuery(theme.breakpoints.up('sm'));
+    const dispatch = useDispatch();
+
     // states 
     const [state, setState] = React.useState(
         {
-            width: "30vh",
+            width: 0,
             buttonLocation: 0,
             liftsIndex: 0,
             modalOpen: false,
@@ -84,6 +85,13 @@ export default function DashContainer(props) {
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
+
+    React.useEffect(() => {
+        db.child("gymEntries").once('value', snap => {
+            dispatch(setEntries(snap.val()))
+        })
+    }, [])
+
 
     const handleAutoComplete = (event, values) => {
         if (values === null) {
@@ -138,7 +146,7 @@ export default function DashContainer(props) {
                 let items = [...state.entry[index]]
                 for (var i = 0; i < items.length; i++) {
                     let item = { ...items[i] }
-                    object[i].date = selectedDate.toString()
+                    object[i].date = selectedDate.getTime()
                     item = object[i]
                     items[i] = item
                 }
@@ -159,17 +167,21 @@ export default function DashContainer(props) {
                             }
                         })
                     }
-                    if (data.entries === undefined) {
-                        console.log("paased")
+                    console.log(data.entries)
+                    if (data.entries === undefined || data.entries === null) {
                         db.child("gymEntries").set(dbEntry);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
+                        setActiveStep(0);
+                        return;
                     } else {
                         const temp = [data.entries];
                         temp.push(dbEntry);
                         db.child("gymEntries").set(temp);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
+                        setActiveStep(0);
+                        return;
                     }
                 }
             } else {
@@ -179,7 +191,7 @@ export default function DashContainer(props) {
             let items = [...state.entry[index]]
             for (var i = 0; i < items.length; i++) {
                 let item = { ...items[i] }
-                object[i].date = selectedDate.toString()
+                object[i].date = selectedDate.getTime();
                 item = object[i]
                 items[i] = item
             }
@@ -221,12 +233,10 @@ export default function DashContainer(props) {
         } else if (type === "add") {
             let items = [...state.entry]
             let item = items[index]
-            console.log(items)
             if (item.length < 7) {
                 let temp = item[0]
                 item.push(temp);
                 items[index] = item
-                console.log(items)
                 setState({ ...state, entry: items, disableRemoveSet: false })
             } else {
                 setState({ ...state, disableAddSet: true });
@@ -237,6 +247,8 @@ export default function DashContainer(props) {
     const handleWorkoutTextChange = (event) => {
         setState({ ...state, selectedModalSets: parseInt(event.target.value) })
     }
+
+    console.log(state.entry)
 
     const handleWorkoutChange = (type) => {
         if (type === "remove") {
@@ -264,9 +276,7 @@ export default function DashContainer(props) {
         if (targetRef.current) {
             setState({
                 ...state,
-                buttonLocation: (targetRef.current.offsetWidth * 0.50),
-                sheetHeight: (targetRef.current.offsetWidth * 0.75),
-                pageWidth: (targetRef.current.offsetWidth * 0.5),
+                width: (targetRef.current.offsetWidth),
             });
         }
     }, [targetRef])
@@ -315,9 +325,9 @@ export default function DashContainer(props) {
                             renderInput={(params) => <TextField {...params} label="Routines" variant="outlined" />}
                             onChange={handleAutoComplete}
                         />
-                        <div>
+                        <div className={classes.changeWorkout}>
                             <Button
-                                style={{ display: state.selectedWorkout === undefined ? "none" : "" }}
+                                style={{ display: state.selectedWorkout === undefined ? "none" : "", marginRight: theme.spacing(2) }}
                                 variant="outlined"
                                 className={classes.button}
                                 onClick={() => handleWorkoutChange("remove")}
@@ -339,12 +349,27 @@ export default function DashContainer(props) {
                                     <Step key={label[0].workoutName}>
                                         <StepLabel>{titleCase(label[0].workoutName)}</StepLabel>
                                         <StepContent>
-                                            <div>
+                                            <div className={classes.date}>
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id="date-picker-dialog"
+                                                        label="Date picker dialog"
+                                                        format="MM/dd/yyyy"
+                                                        value={selectedDate}
+                                                        onChange={handleDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                        style={{ margin: theme.spacing(2) }}
+                                                    />
+                                                </MuiPickersUtilsProvider>
                                                 <Button
                                                     disabled={state.disableRemoveSet}
                                                     variant="outlined"
                                                     className={classes.button}
                                                     onClick={() => handleSetChange("remove", index)}
+                                                    style={{ marginRight: theme.spacing(2) }}
                                                 >
                                                     Remove Set
                                             </Button>
@@ -357,19 +382,6 @@ export default function DashContainer(props) {
                                                     Add Set
                                             </Button>
                                             </div>
-                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                                <KeyboardDatePicker
-                                                    margin="normal"
-                                                    id="date-picker-dialog"
-                                                    label="Date picker dialog"
-                                                    format="MM/dd/yyyy"
-                                                    value={selectedDate}
-                                                    onChange={handleDateChange}
-                                                    KeyboardButtonProps={{
-                                                        'aria-label': 'change date',
-                                                    }}
-                                                />
-                                            </MuiPickersUtilsProvider>
                                             <EntryContent
                                                 entry={label}
                                                 maxLength={state.entry.length}
@@ -469,7 +481,6 @@ export default function DashContainer(props) {
             <Grid item xs={7} ref={targetRef}>
                 <MediaPlayer
                     theme={props.theme}
-                    width={state.width}
                     mode={"dash"}
                 />
             </Grid>

@@ -17,7 +17,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Route path="/main-menu/" component={MainMenu} />
-      <Redirect from="/" to="/main-menu/dashboard" />
+      {/* <Redirect from="/" to="/main-menu/dashboard" /> */}
     </Router>
   </Provider>,
   document.getElementById('root')

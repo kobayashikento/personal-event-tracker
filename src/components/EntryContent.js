@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import material ui core 
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -15,6 +15,7 @@ const useStyle = makeStyles(styles);
 
 export default function EntryContent(props) {
     // props, array containing entry objects [{ date: "", weight: 0, reps: 0, workoutName: ""}, {}...]
+    const theme = useTheme(styles);
     const classes = useStyle();
     const [snackbarChangeOpen, setSnackbarChangeOpen] = React.useState(false);
     let data = [];
@@ -40,7 +41,6 @@ export default function EntryContent(props) {
     }
 
     const handleNext = (event) => {
-
         if (props.index === props.maxLength - 1) {
             props.handleNext(data, props.index, "finish")
         } else {
@@ -62,20 +62,20 @@ export default function EntryContent(props) {
                     data.push({ reps: entry.reps, weight: entry.weight, workoutName: props.name, date: "" })
                     return (
                         <div style={{ display: "flex" }} key={index}>
-                            <Typography> Set {index + 1}</Typography>
-                            <TextField type="number" placeholder="Weight" name="Weight" variant="standard" id={index + " weight"} onChange={handleChange}
+                            <Typography style={{ padding: theme.spacing(1) }}> Set {index + 1}</Typography>
+                            <TextField className={classes.textField} type="number" placeholder="Weight" name="Weight" variant="standard" id={index + " weight"} onChange={handleChange}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">lbs</InputAdornment>,
                                 }} defaultValue={0} />
-                            <TextField type="number" placeholder="Reps" name="Reps" variant="standard" id={index + " reps"} onChange={handleChange}
+                            <TextField className={classes.textField} type="number" placeholder="Reps" name="Reps" variant="standard" id={index + " reps"} onChange={handleChange}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">Reps</InputAdornment>,
                                 }} defaultValue={0} />
                         </div>
                     )
                 }) : null}
-            <Button disabled={props.index === 0} onClick={handleBack}>Back</Button>
-            <Button variant="contained" color="primary" onClick={handleNext}>{props.index === props.maxLength - 1 ? "Finish" : "Next"}</Button>
+            <Button style={{ marginTop: theme.spacing(1) }} disabled={props.index === 0} onClick={handleBack}>Back</Button>
+            <Button style={{ marginTop: theme.spacing(1) }} variant="contained" color="primary" onClick={handleNext}>{props.index === props.maxLength - 1 ? "Finish" : "Next"}</Button>
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={snackbarChangeOpen} autoHideDuration={5000} onClose={() => setSnackbarChangeOpen(false)}
                 message={"Changes saved"}

@@ -90,6 +90,9 @@ export default function GymManageWorkout(props) {
                                     reject();
                                 } else if (validInput(newData)) {
                                     const temp = [...workout]
+                                    newData.name.replace(/ /g,'')
+                                    newData.musclegroup.replace(/ /g,'')
+                                    newData.movement.replace(/ /g,'')
                                     temp.push(newData)
                                     setCurrWorkout(temp)
                                     db.child('workouts').set(temp)
@@ -106,6 +109,9 @@ export default function GymManageWorkout(props) {
                                 if (validInput(newData)) {
                                     const dataUpdate = [...workout];
                                     const index = oldData.tableData.id;
+                                    newData.name.replace(/ /g,'')
+                                    newData.musclegroup.replace(/ /g,'')
+                                    newData.movement.replace(/ /g,'')
                                     dataUpdate[index] = newData;
                                     setCurrWorkout(dataUpdate);
                                     db.child('workouts').set(dataUpdate)

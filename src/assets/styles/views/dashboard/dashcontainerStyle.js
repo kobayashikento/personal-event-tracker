@@ -46,6 +46,15 @@ const dashcontainerStyle = theme => ({
         overflow: "scroll",
         transform: "translate(-5%, -5%)"
     },
+    changeWorkout: {
+        marginTop: theme.spacing(2),
+        marginLeft: theme.spacing(2)
+    },
+    date:{
+        display: "flex",
+        alignItems: "center"
+    },
+
 
 
     switchTypo: {

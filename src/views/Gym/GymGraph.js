@@ -26,7 +26,7 @@ import dog from '../../assets/images/15224-cute-doggie.gif';
 
 const useStyles = makeStyles(styles);
 
-const GymGraph = (props) => {
+export default function GymGraph(props) {
     const classes = useStyles();
     let numEntries = 0;
     //states
@@ -36,6 +36,7 @@ const GymGraph = (props) => {
             selectedEnd: props.end,
         }
     )
+
     const handleWeekChange = (direction) => {
         if (direction === 'right' && !state.selectedEnd.isSame(moment())) {
             setState({ ...state, selectedEnd: state.selectedEnd.add(props.amount, props.type) });
@@ -48,16 +49,18 @@ const GymGraph = (props) => {
 
     // function that selects data based on the selected workout and date range 
     const filteredByDate = () => {
-        if (props.selectedData === null) {
-            return []
+        if (props.data === undefined) {
+            return undefined;
+        } else if (props.data.length === 0) {
+            return [];
         } else {
             return {
-                name: props.selectedData.name,
+                name: props.data[0].workoutName,
                 workoutdata:
-                    props.selectedData.data.map(data => {
-                        if (moment(data.date).isBetween(state.selectedStart, state.selectedEnd)) {
+                    props.data.map(entry => {
+                        if (moment(entry.date).isBetween(state.selectedStart, state.selectedEnd)) {
                             return {
-                                data
+                                entry
                             };
                         }
                     })
@@ -68,11 +71,11 @@ const GymGraph = (props) => {
     const createData = (array) => {
         let temp = [];
         array.workoutdata.map(workout => {
-            if (workout !== undefined) {
+            if (workout !== undefined || workout !== null) {
                 numEntries = numEntries + 1;
                 temp.push({
-                    "time": moment(workout.data.date).valueOf(),
-                    "value": workout.data.weight
+                    "time": moment(workout.entry.date).valueOf(),
+                    "value": workout.entry.weight
                 })
             }
         })
@@ -81,7 +84,7 @@ const GymGraph = (props) => {
 
     const getScatterData = () => {
         numEntries = 0;
-        if (filteredByDate().length === 0) {
+        if (filteredByDate() === undefined || filteredByDate().length === 0 || filteredByDate().workoutdata.length === 0 || filteredByDate().workoutdata[0] === undefined) {
             return (
                 <Scatter
                     data={[]}
@@ -122,44 +125,47 @@ const GymGraph = (props) => {
                         {getScatterData().props.data.length} - Total Entries
                     </Typography>
                 </div>
-                <IconButton style={{ marginRight: "16px" }} onClick={() => handleWeekChange('right')}>
+                <IconButton disabled={moment(state.selectedEnd).isSameOrAfter(moment(), 'day')} style={{ marginRight: "16px" }} onClick={() => handleWeekChange('right')}>
                     <ChevronRightIcon />
                 </IconButton>
             </div>
-            {getScatterData().props.data.length === 0 ?
+            {filteredByDate() === undefined ?
                 <div>
                     <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
                         Please select a workout
                         </Typography>
                     <img className={classes.run} src={dog} />
                 </div>
-                : null}
-            {getScatterData().props.data.length === 1 ?
-                <div>
-                    <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
-                        No Enough Data Points
-                        </Typography>
-                    <img className={classes.run} src={dog} />
-                </div>
-                : null}
-            <ResponsiveContainer minHeight={"30rem"} width="100%" height="100%">
-                <ScatterChart
-                    className={classes.chart}
-                    margin={{ top: 0, right: 45, left: 24, bottom: 54 }}>
-                    <XAxis dataKey='time'
-                        domain={['auto', 'auto']}
-                        name='Time'
-                        tickFormatter={(unixTime) => moment(unixTime).format('MM-DD-YYYY')}
-                        type='number'
-                    />
-                    <YAxis dataKey='value' name='Weight' domain={['auto', 'auto']} unit="lbs" />
-                    {getScatterData()}
-                    <Tooltip />
-                    <Legend height={36} wrapperStyle={{ top: 10, left: 25 }} />
-                </ScatterChart>
-            </ResponsiveContainer>
+                : filteredByDate().length === 0 ?
+                    <div>
+                        <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
+                            No Enough Data Points
+                    </Typography>
+                        <img className={classes.run} src={dog} />
+                    </div> : filteredByDate().workoutdata[0] === undefined ?
+                        <div>
+                            <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
+                                No Data for this date
+                </Typography>
+                            <img className={classes.run} src={dog} />
+                        </div> :
+                        <ResponsiveContainer aspect={1.3} width="100%">
+                            <ScatterChart
+                                className={classes.chart}
+                                margin={{ top: 0, right: 45, left: 24, bottom: 54 }}>
+                                <XAxis dataKey='time'
+                                    domain={['auto', 'auto']}
+                                    name='Time'
+                                    tickFormatter={(unixTime) => moment(unixTime).format('MM-DD-YYYY')}
+                                    type='number'
+                                />
+                                <YAxis dataKey='value' name='Weight' domain={['auto', 'auto']} unit="lbs" />
+                                {getScatterData()}
+                                <Tooltip />
+                                <Legend height={36} wrapperStyle={{ top: 10, left: 25 }}
+                                />
+                            </ScatterChart>
+                        </ResponsiveContainer>}
         </div>
     );
 }
-
-export default React.memo(GymGraph);

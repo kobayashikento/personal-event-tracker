@@ -43,6 +43,7 @@ export default function MediaPlayer(props) {
     const playerIndex = useSelector((reducer) => reducer.playerReducer.index)
     const playerPlayed = useSelector((reducer) => reducer.playerReducer.played)
     const playerLoop = useSelector((reducer) => reducer.playerReducer.loop)
+    const targetRef = React.useRef();
 
     // init database
     const dbRefObj = db.child('musicLinks');
@@ -56,7 +57,7 @@ export default function MediaPlayer(props) {
     };
     const [state, setState] = React.useState({
         title: "", subtitle: "",
-        listLength: 0,
+        listLength: 0, width: 0
     })
 
     React.useEffect(() => {
@@ -85,7 +86,7 @@ export default function MediaPlayer(props) {
             dispatch(played(0));
         } else if (control === "prev" && player.played > 0.01) {
             dispatch(seekTo(0));
-        } else if (control === "prev" && player.index === 0){
+        } else if (control === "prev" && player.index === 0) {
             dispatch(seekTo("0"));
         } else if (control === "next" && player.index !== state.listLength - 1) {
             dispatch(next(player.index));
@@ -159,10 +160,19 @@ export default function MediaPlayer(props) {
         );
     };
 
+    React.useLayoutEffect(() => {
+        if (targetRef.current) {
+            setState({
+                ...state,
+                width: (targetRef.current.offsetWidth),
+            });
+        }
+    }, [targetRef])
+
     return (
-        <Card style={{ background: props.theme.colors.primary }}>
-            <Grid container >
-                <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column" }}>
+        <Card style={{ background: props.theme.colors.primary, height: props.mode === "dash" ? "30vh" : "" , boxShadow: props.mode === "dash"? "": "0 0 0 0 black"}} ref={targetRef}>
+            <Grid container style={{ height: "inherit" }} >
+                <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column", height: "inherit" }}>
                     <CardContent className={classes.content}>
                         <Typography gutterBottom variant="body1" component="h2"> {state.title} </Typography>
                         <Typography variant="subtitle1" color="textSecondary"> {state.subtitle} </Typography>
@@ -185,7 +195,7 @@ export default function MediaPlayer(props) {
                         <IconButton aria-label="next" onClick={() => handleChangeMusic("next")}>
                             <SkipNextIcon fontSize="small" />
                         </IconButton>
-                        <IconButton style={{ marginLeft: "16px" }} onClick={() => handleLoop()}>
+                        <IconButton onClick={() => handleLoop()}>
                             <LoopIcon fontSize="small" style={{ color: player.loop ? props.theme.colors.primary : "" }} />
                         </IconButton>
                         <Snackbar
@@ -193,7 +203,7 @@ export default function MediaPlayer(props) {
                             message={player.loop ? "Loop Enabled" : "Loop Disabled"}
                         />
                         <IconButton
-                            style={{ width: "fit-content", marginLeft: "8px" }}
+                            style={{ width: "fit-content", }}
                             onClick={() => setModalOpen(true)}
                         >
                             <PlaylistPlayIcon fontSize="small" />
@@ -213,9 +223,9 @@ export default function MediaPlayer(props) {
                         </Fade>
                     </Modal>
                 </Grid>
-                <Grid item xs={5} style={{ display: props.mode === "dash" ? "" : "none" }}>
+                <Grid item xs={5} style={{ display: props.mode === "dash" ? "flex" : "none", height: "inherit" }}>
                     <img
-                        style={{ height: props.width }}
+                        style={{ height: "inherit", marginLeft: "auto" }}
                         src={`https://img.youtube.com/vi/${player.image}/0.jpg`}
                     />
                 </Grid>

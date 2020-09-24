@@ -17,8 +17,10 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
 import TextField from '@material-ui/core/TextField';
+
+import { useSelector } from 'react-redux';
+
 
 import MaterialTable from 'material-table';
 import Grid from '@material-ui/core/Grid';
@@ -28,11 +30,6 @@ import styles from '../../assets/styles/views/gym/gymstatisticsStyle.js';
 
 import { icons } from '../../assets/styles/masterStyle.js';
 import GymGraph from './GymGraph.js';
-import routineJson from '../../assets/data/workoutRoutine.json';
-
-// data
-import workoutData from '../../assets/data/gymData.json';
-import workoutJson from '../../assets/data/workouts.json';
 
 const useStyles = makeStyles(styles);
 
@@ -67,27 +64,9 @@ function a11yProps(index) {
     };
 }
 
-// Functions for display 
-const countGymDays = () => {
-    let days = [];
-    workoutData.map(workout => {
-        workout.data.map(day => {
-            if (!days.includes(day.date)) {
-                days.push(day.date)
-            }
-        })
-    })
-    return days.length;
-}
+export default function GymStatistics(props) {
+    const data = useSelector((reducer) => reducer.dataReducer)
 
-const options = workoutData.map((option) => {
-    return {
-        name: titleCase(option.workout.name), group: titleCase(option.workout.musclegroup),
-        ...option
-    };
-});
-
-const GymStatistics = React.memo((props) => {
     const classes = useStyles();
     // states 
     const targetRef = useRef();
@@ -95,35 +74,70 @@ const GymStatistics = React.memo((props) => {
     const [state, setState] = React.useState({
         tabIndex: 0,
         cardIndex: 0,
-        selectedData: null,
-        personalbest: []
+        personalbest: undefined,
+        selectedWorkout: undefined
     })
     const handleAutoComplete = (event, values) => {
-        setState({ ...state, selectedData: values });
+        if (values !== null) {
+            getPersonalBest(values)
+        } else {
+            setState({ ...state, personalbest: undefined, selectedWorkout: undefined });
+        }
     }
     // react state for tabs 
     const handleTabChange = (event, index) => [
         setState({ ...state, tabIndex: index })
     ];
 
-    React.useEffect(() => {
-        if (state.selectedData !== null) {
-            let pb;
-            let maxWeight = 0;
-            state.selectedData.data.map(workout => {
-                if (workout.weight > maxWeight) {
-                    pb = workout;
-                } else if (workout.weight === maxWeight) {
-                    if (moment(workout.date).isBefore(moment(pb.date))) {
-                        pb = workout;
-                    }
+    const getPersonalBest = (workout) => {
+        if (data.entries !== undefined || data.entries !== null) {
+            const workouts = [];
+            data.entries.map(entry => {
+                if (titleCase(workout.name).replace(/ /g, '') === titleCase(entry.workoutName).replace(/ /g, '')) {
+                    workouts.push(entry)
                 }
             })
-            setState({ ...state, personalbest: pb })
-        } else {
-            setState({ ...state, personalbest: [] })
+            if (workouts.length !== 0) {
+                setState({ ...state, personalbest: getEntryData(workouts), selectedWorkout: workouts })
+                return;
+            }
+            setState({ ...state, personalbest: workouts, selectedWorkout: workouts })
+            return;
         }
-    }, [state.selectedData])
+    }
+
+    const getEntryData = (array) => {
+        // index 0 - personal best, index 1 - most recent date
+        let personalbest = array[0]
+        let recent = array[0].date;
+        array.map(entry => {
+            if (entry.weight > personalbest.weight && moment(entry.date).isBefore(personalbest.date)) {
+                personalbest = entry;
+            }
+            if (moment(entry.date).isBefore(recent)) {
+                recent = entry;
+            }
+        })
+        return [personalbest, moment(recent).format('MMMM Do YYYY')];
+    }
+
+    const getPersonalBestText = () => {
+        return (state.personalbest[0].weight + " lbs " + state.personalbest[0].reps + " reps" + "\n" + "Set on - " + state.personalbest[1]);
+    }
+
+    const getAutoCompleteList = () => {
+        let options = [];
+        if (data.workout !== undefined) {
+            data.workout.map((option) => {
+                options.push({
+                    name: titleCase(option.name), group: titleCase(option.musclegroup)
+                })
+            })
+            return options;
+        } else {
+            return options;
+        }
+    }
 
     return (
         <Grid
@@ -152,18 +166,16 @@ const GymStatistics = React.memo((props) => {
                         </AppBar>
                         <TabPanel value={state.tabIndex} index={0} >
                             <GymGraph
-                                data={state.selectedData}
+                                data={state.selectedWorkout}
                                 theme={props.theme}
                                 start={moment().subtract(14, 'days')}
                                 end={moment()}
-                                selectedData={state.selectedData}
                                 type={'days'}
                                 amount={14}
-                                playing={props.playing}
                             />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={1} >
-                            <GymGraph
+                            {/* <GymGraph
                                 data={state.selectedData}
                                 theme={props.theme}
                                 start={moment().subtract(1, 'months')}
@@ -171,11 +183,10 @@ const GymStatistics = React.memo((props) => {
                                 selectedData={state.selectedData}
                                 type={'months'}
                                 amount={1}
-                                playing={props.playing}
-                            />
+                            /> */}
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={2}>
-                            <GymGraph
+                            {/* <GymGraph
                                 data={state.selectedData}
                                 theme={props.theme}
                                 start={moment().subtract(3, 'months')}
@@ -183,8 +194,7 @@ const GymStatistics = React.memo((props) => {
                                 selectedData={state.selectedData}
                                 type={'months'}
                                 amount={3}
-                                playing={props.playing}
-                            />
+                            /> */}
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={3}>
 
@@ -193,7 +203,7 @@ const GymStatistics = React.memo((props) => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={5} ref={targetRef}>
+            <Grid item xs={5}>
                 <Grid
                     container
                     spacing={5}
@@ -202,10 +212,10 @@ const GymStatistics = React.memo((props) => {
                     <Grid item xs={12}>
                         <Autocomplete
                             limitTags={1}
-                            options={options.sort((a, b) => -b.group.localeCompare(a.group))}
+                            options={getAutoCompleteList().sort((a, b) => -b.group.localeCompare(a.group))}
                             id="multiple-limit-tags"
-                            groupBy={(option) => option.group}
-                            getOptionLabel={(option) => option.name}
+                            groupBy={(option) => titleCase(option.group)}
+                            getOptionLabel={(option) => titleCase(option.name)}
                             renderInput={(params) => (
                                 <TextField {...params} variant="outlined" label="Workouts" placeholder="Workout" />
                             )}
@@ -215,28 +225,32 @@ const GymStatistics = React.memo((props) => {
                     <Grid item xs={12}>
                         <Card style={{ height: "20vh" }}>
                             <CardContent>
-                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> One Rep Max </Typography>
-                                <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1"> {countGymDays()} </Typography>
+                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> Last Worked On </Typography>
+                                <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1">
+                                    {state.personalbest === undefined ? "No Workout Selected" : state.personalbest.length === 0 ? "No Data For The Workout" : state.personalbest[1]}
+                                </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12}>
-                        <Card style={{ height: "20vh" }}>
+                        <Card >
                             <CardContent>
                                 <Typography className={classes.typo} variant="subtitle1" color="textSecondary"> Personal Best </Typography>
-                                {state.personalbest.length === 0 ?
-                                    <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1"> No Workout Selected </Typography> :
+                                <Typography className={classes.daysTypo} gutterBottom variant="h5" component="h1" >
+                                    {state.personalbest === undefined ? "No Workout Selected" : state.personalbest.length === 0 ? "No Data For The Workout" : ""}
+                                </Typography>
+                                {state.personalbest === undefined ? null : state.personalbest.length === 0 ? null :
                                     <div>
                                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                             <Typography display="inline" className={classes.daysTypo} gutterBottom variant="h5" component="h1">
-                                                {state.personalbest.weight} lbs
+                                                {state.personalbest[0].weight} lbs
                                              </Typography>
                                             <Typography display="inline" className={classes.typo} variant="subtitle1" color="textSecondary">
-                                                / {state.personalbest.rep} reps
+                                                / {state.personalbest[0].reps} reps
                                                 </Typography>
                                         </div>
                                         <Typography className={classes.typo} variant="subtitle1" color="textSecondary">
-                                            Set on - {state.personalbest.date}
+                                            Set on - {state.personalbest[1]}
                                         </Typography>
                                     </div>
                                 }
@@ -247,12 +261,4 @@ const GymStatistics = React.memo((props) => {
             </Grid>
         </Grid>
     );
-}, (prevProps, nextProps) => {
-    if (prevProps.playing || nextProps.playing) {
-        return true;
-    } else {
-        return false;
-    }
-});
-
-export default GymStatistics;
+}

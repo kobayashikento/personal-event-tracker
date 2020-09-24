@@ -51,11 +51,14 @@ export default function SideBar(props) {
                     </Typography>
                     {drawerItems(props)}
                     {window.location.pathname === "/main-menu/dashboard" ? null :
-                        <MediaPlayer
-                            theme={props.theme}
-                            mode={"side"}
-                            width={drawerWidthPC}
-                        />}
+                        <div style={{ marginTop: "auto", paddingBottom: "32px" }}>
+                            <MediaPlayer
+                                theme={props.theme}
+                                mode={"side"}
+                                width={drawerWidthPC}
+                            />
+                        </div>
+                    }
                 </Drawer>
             </Hidden>
             <Hidden smUp implementation="css">

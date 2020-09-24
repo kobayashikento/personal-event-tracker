@@ -21,7 +21,6 @@ export default function MiniPlayer() {
         }
     }
     React.useEffect(()=>{
-        console.log(playerSeekTo)
         ref.current.seekTo(parseFloat(playerSeekTo));
     },[playerSeekTo])
 
