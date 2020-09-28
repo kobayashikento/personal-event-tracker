@@ -80,6 +80,7 @@ export default function DashContainer(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarCompletedOpen, setSnackbarCompletedOpen] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState("");
     const [selectedDate, setSelectedDate] = React.useState(new Date());
 
     const handleDateChange = (date) => {
@@ -111,15 +112,17 @@ export default function DashContainer(props) {
 
     const handleAddWorkout = () => {
         if (state.selectedModalWorkout === undefined) {
+            setSnackbarMessage("Select a workout")
             setSnackbarOpen(true)
         } else if (state.selectedModalSets === undefined) {
+            setSnackbarMessage("Number of sets must be greater than 0")
             setSnackbarOpen(true)
         } else {
             let items = [...state.entry]
             let temp = [];
             for (var i = 0; i < state.selectedModalSets; i++) {
                 temp.push({
-                    workoutName: state.selectedModalWorkout.name,
+                    workout: state.selectedModalWorkout.name,
                     date: "",
                     reps: 0,
                     weight: 0
@@ -167,7 +170,6 @@ export default function DashContainer(props) {
                             }
                         })
                     }
-                    console.log(data.entries)
                     if (data.entries === undefined || data.entries === null) {
                         db.child("gymEntries").set(dbEntry);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
@@ -175,8 +177,10 @@ export default function DashContainer(props) {
                         setActiveStep(0);
                         return;
                     } else {
-                        const temp = [data.entries];
-                        temp.push(dbEntry);
+                        const temp = [...data.entries];
+                        dbEntry.map(entry => {
+                            temp.push(entry);
+                        })
                         db.child("gymEntries").set(temp);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
@@ -248,27 +252,23 @@ export default function DashContainer(props) {
         setState({ ...state, selectedModalSets: parseInt(event.target.value) })
     }
 
-    console.log(state.entry)
-
     const handleWorkoutChange = (type) => {
         if (type === "remove") {
             if (state.entry.length !== 0) {
                 let items = [...state.entry]
                 items.splice([activeStep], 1)
                 setState({ ...state, entry: items })
+                if (activeStep !== 0) {
+                    setActiveStep(activeStep - 1)
+                }
+                return;
             } else {
                 setState({ ...state, disableRemoveWorkout: true })
+                return;
             }
         } else if (type === "add") {
             setState({ ...state, workoutModalOpen: true })
-        }
-    }
-
-    const handleLiftClick = (direction) => {
-        if (direction === "left" && state.liftsIndex !== 0) {
-            setState({ ...state, liftsIndex: state.liftsIndex - 1 });
-        } else if (direction === "right" && state.liftsIndex !== getPrevLiftsData().length - 1) {
-            setState({ ...state, liftsIndex: state.liftsIndex + 1 });
+            return;
         }
     }
 
@@ -283,7 +283,7 @@ export default function DashContainer(props) {
 
     // Create Stepper
     React.useEffect(() => {
-        // Need to create an object [{ date: "", weight: 0, reps: 0, workoutName: ""}, {}...]
+        // Need to create an object [{ date: "", weight: 0, reps: 0, workout: ""}, {}...]
         if (state.selectedWorkout !== undefined) {
             let temp = [];
             if (state.selectedWorkout.workouts !== undefined) {
@@ -291,7 +291,7 @@ export default function DashContainer(props) {
                     let workoutObj = [];
                     for (var i = 0; i < parseInt(prop.sets); i++) {
                         workoutObj.push({
-                            workoutName: (prop.workout.name),
+                            workout: (prop.workout.name),
                             date: "",
                             reps: 0,
                             weight: 0
@@ -308,11 +308,16 @@ export default function DashContainer(props) {
         }
     }, [state.selectedWorkout])
 
+    const handleModalClose = () => {
+        setState({ ...state, modalOpen: false, selectedWorkout: undefined, entry: undefined })
+        setActiveStep(0)
+    }
+
     const addGymEntryModal = () => {
         return (
             <Modal
                 open={state.modalOpen}
-                onClose={() => setState({ ...state, modalOpen: false, selectedWorkout: undefined, entry: undefined })}
+                onClose={() => handleModalClose()}
                 style={{ overflow: "scroll" }}
             >
                 <Card className={classes.modalCard}>
@@ -346,8 +351,8 @@ export default function DashContainer(props) {
                         {state.selectedWorkout !== undefined && state.entry !== undefined ?
                             <Stepper activeStep={activeStep} orientation="vertical">
                                 {state.entry.map((label, index) => (
-                                    <Step key={label[0].workoutName}>
-                                        <StepLabel>{titleCase(label[0].workoutName)}</StepLabel>
+                                    <Step key={label[0].workout}>
+                                        <StepLabel>{titleCase(label[0].workout)}</StepLabel>
                                         <StepContent>
                                             <div className={classes.date}>
                                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -388,7 +393,7 @@ export default function DashContainer(props) {
                                                 index={index}
                                                 handleNext={(obj, index, type) => handleNext(obj, index, type)}
                                                 handleBack={(obj, index, type) => handleBack(obj, index, type)}
-                                                name={label[0].workoutName}
+                                                name={label[0].workout}
                                             />
                                             <Snackbar
                                                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={snackbarCompletedOpen} autoHideDuration={5000} onClose={() => setSnackbarCompletedOpen(false)}
@@ -415,25 +420,25 @@ export default function DashContainer(props) {
                                     onChange={handleWorkoutAutoComplete}
                                 />
                                 <TextField type="number" placeholder="Number of sets" name="sets" variant="standard"
-                                    onChange={handleWorkoutTextChange}
+                                    onChange={handleWorkoutTextChange} style={{ padding: "16px" }}
                                     InputProps={{ endAdornment: <InputAdornment position="end">Sets</InputAdornment>, }} defaultValue={0} />
                                 <Button
                                     variant="outlined"
-                                    className={classes.button}
+                                    className={classes.addWorkoutModalButton}
                                     onClick={() => setState({ ...state, workoutModalOpen: false, selectedModalWorkout: undefined })}
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     variant="outlined"
-                                    className={classes.button}
+                                    className={classes.addWorkoutModalButton}
                                     onClick={handleAddWorkout}
                                 >
                                     Add Workout
                                 </Button>
                                 <Snackbar
                                     open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
-                                    message={"Select a workout"}
+                                    message={snackbarMessage}
                                 />
                             </CardContent>
                         </Card>
@@ -531,61 +536,15 @@ export default function DashContainer(props) {
                     </CardContent>
                 </Card>
             </Grid>
-            {/* <Grid item xs={4} >
-                <Card style={{ height: "100%" }}>
-                    <CardContent style={{ height: "100%" }}>
-                        <div className={classes.cardColumn}>
-                            <Grid container>
-                                <Grid item xs={12} style={{ display: "inline-flex" }}>
-                                    <HistoryIcon style={{ marginRight: "16px" }} />
-                                    <Typography gutterBottom variant="body1" component="h2"> Previous Lifts </Typography>
-                                </Grid>
-                                <Grid item xs={12} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                                    <IconButton onClick={() => handleLiftClick('left')}>
-                                        <ChevronLeftIcon fontSize="small" />
-                                    </IconButton>
-                                    <Typography variant="body1" component="h1" style={{ textAlign: "center", marginLeft: theme.spacing(2), marginRight: theme.spacing(2) }}>
-                                        {titleCase(getPrevLiftsData()[state.liftsIndex].name)}
-                                    </Typography>
-                                    <IconButton onClick={() => handleLiftClick('right')}>
-                                        <ChevronRightIcon fontSize="small" />
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
+            <Grid item xs={5} >
+                <Card style={{ height: "100%", background: props.theme.colors.primary }}>
+                    <CardContent >
+                    <div className={classes.cardColumn}>
+                            <InsertInvitationIcon style={{ marginRight: "16px" }} />
+                            <Typography gutterBottom variant="body1" component="h2"> Previous Weights </Typography>
                         </div>
-                        {getPrevLiftsData()[state.liftsIndex].data === null ?
-                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2rem" }}>
-                                <Typography display="inline" gutterBottom variant="h5" component="h1">
-                                    No Data
-                                 </Typography>
-                            </div> : <div>
-                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2rem" }}>
-                                    <Typography display="inline" gutterBottom variant="h5" component="h1">
-                                        {getPrevLiftsData()[state.liftsIndex].data.weight} lbs
-                                         </Typography>
-                                    <Typography display="inline" style={{ marginLeft: "8px" }} variant="subtitle1" color="textSecondary">
-                                        / {getPrevLiftsData()[state.liftsIndex].data.rep} reps
-                                            </Typography>
-                                </div>
-                                <Typography style={{ textAlign: "center", marginTop: "2rem" }} variant="subtitle1" color="textSecondary">
-                                    Last Workout: {getPrevLiftsData()[state.liftsIndex].data.date}
-                                </Typography>
-                            </div>
-                        }
                     </CardContent>
                 </Card>
-            </Grid> */}
-            <Grid item xs={3}>
-                {/* <Card>
-                        <CardActionArea onClick={() => handleCardClick(2)}>
-                            <CardContent>
-                                <div className={classes.cardColumn}>
-                                    <AddToPhotosIcon size="large" style={{ marginRight: "32px", marginTop: "4px" }} />
-                                    <Typography gutterBottom variant="h5" component="h2"> Quick Progress Check</Typography>
-                                </div>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card> */}
             </Grid>
         </Grid >
     );

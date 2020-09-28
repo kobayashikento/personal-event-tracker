@@ -10,6 +10,13 @@ const mediaplayerStyle = theme => ({
         paddingTop: theme.spacing(1),
         paddingLeft: theme.spacing(3),
     },
+    spin: {
+        animation: `$spin 5000ms infinite`
+    },
+    "@keyframes spin": {
+        from: { transform: "rotate(360deg)" },
+        to: { transform: "rotate(0deg)" }
+    }
 })
 
 export default mediaplayerStyle;

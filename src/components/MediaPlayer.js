@@ -82,6 +82,7 @@ export default function MediaPlayer(props) {
 
     const handleChangeMusic = (control) => {
         if (control === "prev" && player.index !== 0 && player.played <= 0.01) {
+            console.log("paased")
             dispatch(prev(player.index));
             dispatch(played(0));
         } else if (control === "prev" && player.played > 0.01) {
@@ -170,7 +171,7 @@ export default function MediaPlayer(props) {
     }, [targetRef])
 
     return (
-        <Card style={{ background: props.theme.colors.primary, height: props.mode === "dash" ? "30vh" : "" , boxShadow: props.mode === "dash"? "": "0 0 0 0 black"}} ref={targetRef}>
+        <Card style={{ background: props.theme.colors.primary, height: props.mode === "dash" ? "30vh" : "", boxShadow: props.mode === "dash" ? "" : "0 0 0 0 black" }} ref={targetRef}>
             <Grid container style={{ height: "inherit" }} >
                 <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column", height: "inherit" }}>
                     <CardContent className={classes.content}>
@@ -196,18 +197,18 @@ export default function MediaPlayer(props) {
                             <SkipNextIcon fontSize="small" />
                         </IconButton>
                         <IconButton onClick={() => handleLoop()}>
-                            <LoopIcon fontSize="small" style={{ color: player.loop ? props.theme.colors.primary : "" }} />
+                            <LoopIcon fontSize="small" className={player.loop ? classes.spin : ""} />
                         </IconButton>
                         <Snackbar
                             open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
                             message={player.loop ? "Loop Enabled" : "Loop Disabled"}
                         />
-                        <IconButton
+                        {/* <IconButton
                             style={{ width: "fit-content", }}
                             onClick={() => setModalOpen(true)}
                         >
                             <PlaylistPlayIcon fontSize="small" />
-                        </IconButton>
+                        </IconButton> */}
                     </div>
                     <Modal
                         open={modalOpen}

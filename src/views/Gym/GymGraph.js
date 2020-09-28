@@ -55,7 +55,7 @@ export default function GymGraph(props) {
             return [];
         } else {
             return {
-                name: props.data[0].workoutName,
+                name: props.data[0].workout,
                 workoutdata:
                     props.data.map(entry => {
                         if (moment(entry.date).isBetween(state.selectedStart, state.selectedEnd)) {
@@ -68,23 +68,66 @@ export default function GymGraph(props) {
         }
     }
 
-    const createData = (array) => {
-        let temp = [];
-        array.workoutdata.map(workout => {
-            if (workout !== undefined || workout !== null) {
-                numEntries = numEntries + 1;
-                temp.push({
-                    "time": moment(workout.entry.date).valueOf(),
-                    "value": workout.entry.weight
-                })
+    //Divide
+    const groupByDate = (array) => {
+        // getting a data structure thats [{entry: {date: , reps: , weight: , workout: }}, {etnry: }]
+        const temp = [];
+        array.map(prop => {
+            if (prop === undefined || prop === null) {
+            } else if (dateExists(prop.entry.date, temp) !== null) {
+                temp[dateExists(prop.entry.date, temp)].entries.push(prop.entry)
+            } else {
+                temp.push(
+                    {
+                        converDate: moment(prop.entry.date).format('MM-DD-YYYY'),
+                        entries: [prop.entry]
+                    }
+                )
             }
         })
         return temp;
     }
 
+    const dateExists = (date, temp) => {
+        for (var i = 0; i < temp.length; i++) {
+            if (temp[i].converDate === moment(date).format('MM-DD-YYYY')) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    // Get highest lift per date
+    const sortHighLift = (groupByDate) => {
+        let temp = groupByDate;
+        groupByDate.map((prop, index) => {
+            let highest = prop.entries[0];
+            for (var i = 0; i < prop.entries.length; i++) {
+                if (prop.entries[i].weight > highest.weight) {
+                    highest = prop.entries[i];
+                }
+            }
+            temp[index].entries = highest
+        })
+        return temp;
+    }
+
+    const allUndefined = (entry) => {
+        let temp = true;
+        if (filteredByDate() === undefined || filteredByDate().length === 0 || filteredByDate().workoutdata.length === 0) {
+        } else {
+            filteredByDate().workoutdata.map(prop =>{
+                if (prop !== undefined){
+                    temp = false;
+                }
+            })
+        }
+        return temp;
+    }
+
     const getScatterData = () => {
         numEntries = 0;
-        if (filteredByDate() === undefined || filteredByDate().length === 0 || filteredByDate().workoutdata.length === 0 || filteredByDate().workoutdata[0] === undefined) {
+        if (filteredByDate() === undefined || filteredByDate().length === 0 || filteredByDate().workoutdata.length === 0 || allUndefined()) {
             return (
                 <Scatter
                     data={[]}
@@ -109,6 +152,19 @@ export default function GymGraph(props) {
                 />
             );
         }
+    }
+
+    const createData = (array) => {
+        let temp = [];
+        const groupedArray = groupByDate(array.workoutdata)
+        const sortedByHigh = sortHighLift(groupedArray)
+        sortedByHigh.map(prop => {
+            temp.push({
+                "time": prop.entries.date,
+                "value": prop.entries.weight
+            })
+        })
+        return temp;
     }
 
     return (
@@ -142,7 +198,7 @@ export default function GymGraph(props) {
                             No Enough Data Points
                     </Typography>
                         <img className={classes.run} src={dog} />
-                    </div> : filteredByDate().workoutdata[0] === undefined ?
+                    </div> : allUndefined() ?
                         <div>
                             <Typography style={{ marginTop: "25%", textAlign: "center" }} variant="subtitle1" component="h1" color="textSecondary">
                                 No Data for this date

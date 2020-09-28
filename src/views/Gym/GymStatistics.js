@@ -93,7 +93,7 @@ export default function GymStatistics(props) {
         if (data.entries !== undefined || data.entries !== null) {
             const workouts = [];
             data.entries.map(entry => {
-                if (titleCase(workout.name).replace(/ /g, '') === titleCase(entry.workoutName).replace(/ /g, '')) {
+                if (titleCase(workout.name).replace(/ /g, '') === titleCase(entry.workout).replace(/ /g, '')) {
                     workouts.push(entry)
                 }
             })
@@ -175,26 +175,24 @@ export default function GymStatistics(props) {
                             />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={1} >
-                            {/* <GymGraph
-                                data={state.selectedData}
+                            <GymGraph
+                                data={state.selectedWorkout}
                                 theme={props.theme}
                                 start={moment().subtract(1, 'months')}
                                 end={moment()}
-                                selectedData={state.selectedData}
                                 type={'months'}
                                 amount={1}
-                            /> */}
+                            />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={2}>
-                            {/* <GymGraph
-                                data={state.selectedData}
+                            <GymGraph
+                                data={state.selectedWorkout}
                                 theme={props.theme}
                                 start={moment().subtract(3, 'months')}
                                 end={moment()}
-                                selectedData={state.selectedData}
                                 type={'months'}
                                 amount={3}
-                            /> */}
+                            />
                         </TabPanel>
                         <TabPanel value={state.tabIndex} index={3}>
 

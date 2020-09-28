@@ -32,17 +32,20 @@ export default function GymManageWorkout(props) {
     }, [])
 
     const routineExists = (newData, id) => {
+        let temp
         if (routine[id].workouts !== undefined) {
             routine[id].workouts.map(prop => {
+                
                 let tempnewData = getLookUp()[newData.workout].replace(/\s+/g, '');
                 let tempProp = prop.workout.name.replace(/\s+/g, '');
-                if (tempnewData === tempProp) {
-                    return true;
+                if (titleCase(tempnewData) === titleCase(tempProp)) {
+                    temp = true;
                 }
             })
         } else {
-            return false;
+            temp = false;
         }
+        return temp;
     }
 
     const validInput = (input) => {
@@ -192,9 +195,7 @@ export default function GymManageWorkout(props) {
                                         pageSize: 5
                                     }}
                                     icons={icons}
-                                    data={
-                                        getDataInnerTable(rowData)
-                                    }
+                                    data={getDataInnerTable(rowData)}
                                     editable={{
                                         onRowAdd: newData =>
                                             new Promise((resolve, reject) => {
@@ -216,7 +217,7 @@ export default function GymManageWorkout(props) {
                                                         }
                                                         setRoutine(temp)
                                                         db.child('workoutRoutine').set(temp)
-                                                        resolve()
+                                                        resolve();
                                                     } else {
                                                         reject();
                                                     }
@@ -251,7 +252,7 @@ export default function GymManageWorkout(props) {
                                                     dataDelete[rowData.tableData.id].workouts.splice(index, 1);
                                                     setRoutine(dataDelete);
                                                     db.child('workoutRoutine').set(dataDelete)
-                                                    resolve()
+                                                    resolve();
                                                 }, 1000)
                                             }),
                                     }}
@@ -286,7 +287,6 @@ export default function GymManageWorkout(props) {
                                 const index = oldData.tableData.id;
                                 dataDelete.splice(index, 1);
                                 setRoutine(dataDelete);
-                                console.log(dataDelete)
                                 db.child('workoutRoutine').set(dataDelete)
                                 resolve();
                             }, 1000)
