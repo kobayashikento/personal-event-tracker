@@ -267,7 +267,7 @@ export default function GymManageWorkout(props) {
                             setTimeout(() => {
                                 if (validRoutine(newData)) {
                                     let newRoutine = {
-                                        routineName: newData.name,
+                                        routineName: newData.name.trim(),
                                         workouts: []
                                     }
                                     let temp = [...routine]

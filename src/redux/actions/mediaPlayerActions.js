@@ -7,7 +7,6 @@ export const PLAYED = 'PLAYED'
 export const SEEKING = 'SEEKING'
 export const SET_DATA = 'SET_DATA'
 export const SEEK_TO = 'SEEK_TO'
-export const SET_IMAGE = 'SET_IMAGE'
 
 export function play() {
     return { type: PLAY, payload: true }
@@ -43,8 +42,4 @@ export function setData(url) {
 
 export function seekTo(value) {
     return { type: SEEK_TO, payload: value }
-}
-
-export function setImage(src) {
-    return { type: SET_IMAGE, payload: src }
 }

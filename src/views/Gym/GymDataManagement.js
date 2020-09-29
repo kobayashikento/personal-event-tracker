@@ -114,16 +114,16 @@ export default function GymContainer(props) {
                 </Tabs>
             </AppBar>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={0} >
-               <GymManageEntries />
+               {/* <GymManageEntries /> */}
             </TabPanel>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={1} >
-                <GymManageSchedule />
+                {/* <GymManageSchedule /> */}
             </TabPanel>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={2}>
                 <GymManageWorkout />
             </TabPanel>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={3}>
-               <GymManageRoutine />
+               {/* <GymManageRoutine /> */}
             </TabPanel>
         </Grid>);
 }

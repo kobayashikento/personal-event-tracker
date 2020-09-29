@@ -6,40 +6,34 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setWorkout } from '../../redux/actions/dataAction.js';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 import styles from '../../assets/styles/views/gym/gymdatamanagementStyle.js';
 
 import db from '../../firebase.js';
+import { connect } from 'react-redux';
+import { setWorkout } from '../../redux/actions/dataAction.js';
 
 import MaterialTable from 'material-table';
 
 const useStyles = makeStyles(styles);
 
-export default function GymManageWorkout(props) {
+const GymManageWorkout = (props, {workout, setWorkout}) => {
     const classes = useStyles();
-    const data = useSelector((reducer) => reducer.dataReducer)
-    const [workout, setCurrWorkout] = React.useState(data.workout);
-    const [message, setMessage] = React.useState("")
+    const [message, setMessage] = React.useState("");
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const dispatch = useDispatch();
 
-    React.useEffect(() => {
-        db.child("workouts").once('value', snap => {
-            dispatch(setWorkout(snap.val()))
-        })
-    }, [])
-
     const workoutExists = (newData) => {
-        workout.map(prop => {
-            let tempnewData = newData.name.replace(/\s+/g, '');
-            let tempProp = prop.name.replace(/\s+/g, '');
-            if (tempnewData === tempProp) {
-                return true;
-            }
-        })
+        if (workout !== undefined){
+            workout.map(prop => {
+                let tempnewData = newData.name.replace(/\s+/g, '');
+                let tempProp = prop.name.replace(/\s+/g, '');
+                if (tempnewData === tempProp) {
+                    return true;
+                }
+            })
+        }
         return false;
     }
 
@@ -89,14 +83,13 @@ export default function GymManageWorkout(props) {
                                     setSnackbarOpen(true);
                                     reject();
                                 } else if (validInput(newData)) {
-                                    const temp = [...workout]
-                                    newData.name.replace(/ /g,'')
-                                    newData.musclegroup.replace(/ /g,'')
-                                    newData.movement.replace(/ /g,'')
-                                    temp.push(newData)
-                                    setCurrWorkout(temp)
-                                    db.child('workouts').set(temp)
-                                    resolve()
+                                    newData.name.replace(/ /g, '').trim()
+                                    newData.musclegroup.replace(/ /g, '').trim()
+                                    newData.movement.replace(/ /g, '').trim()
+                                    setWorkout(newData)
+                                    setMessage("Workout Added")
+                                    setSnackbarOpen(true)
+                                    resolve();
                                 } else {
                                     setSnackbarOpen(true);
                                     reject();
@@ -109,11 +102,14 @@ export default function GymManageWorkout(props) {
                                 if (validInput(newData)) {
                                     const dataUpdate = [...workout];
                                     const index = oldData.tableData.id;
-                                    newData.name.replace(/ /g,'')
-                                    newData.musclegroup.replace(/ /g,'')
-                                    newData.movement.replace(/ /g,'')
+                                    newData.name.replace(/ /g, '')
+                                    newData.name.trim()
+                                    newData.musclegroup.replace(/ /g, '')
+                                    newData.musclegroup.trim()
+                                    newData.movement.replace(/ /g, '')
+                                    newData.movement.trim()
                                     dataUpdate[index] = newData;
-                                    setCurrWorkout(dataUpdate);
+                                    //setCurrWorkout(dataUpdate);
                                     db.child('workouts').set(dataUpdate)
                                     resolve();
                                 } else if (workoutExists(newData)) {
@@ -130,7 +126,7 @@ export default function GymManageWorkout(props) {
                                 const dataDelete = [...workout];
                                 const index = oldData.tableData.id;
                                 dataDelete.splice(index, 1);
-                                setCurrWorkout(dataDelete);
+                                //setCurrWorkout(dataDelete);
                                 db.child('workouts').set(dataDelete)
                                 resolve()
                             }, 1000)
@@ -146,3 +142,17 @@ export default function GymManageWorkout(props) {
         // </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        workout: state.dataReducer.workout
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setWorkout: (workout) => dispatch(setWorkout(workout))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GymManageWorkout)

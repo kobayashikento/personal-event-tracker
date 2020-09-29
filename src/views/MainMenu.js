@@ -15,10 +15,10 @@ import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine, setEntries } from '../redux/actions/dataAction.js';
+import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine, setEntries, setSchedule } from '../redux/actions/dataAction.js';
 
 import { mainmenuRoutes } from '../routes.js';
-import db from '../firebase.js';
+import firebase from '../firebase.js';
 import themes from '../assets/data/themes.json';
 import MiniPlayer from '../components/MiniPlayer.js';
 
@@ -28,9 +28,9 @@ const MainMenu = () => {
     const classes = useStyles();
     const ref = React.createRef();
     const data = useSelector((reducer) => reducer.dataReducer)
-    const dbRefObjUser = db.child('userSetting');
-    const dbRefObjRoutine = db.child('workoutRoutine');
-    const dbRefObjWorkout = db.child('workouts');
+    // const dbRefObjUser = db.child('userSetting');
+    // const dbRefObjRoutine = db.child('workoutRoutine');
+    // const dbRefObjWorkout = db.child('workouts');
     const dispatch = useDispatch();
 
     let theme;
@@ -42,21 +42,22 @@ const MainMenu = () => {
         }
     })
 
-    React.useEffect(() => {
-        dbRefObjUser.once('value', snap => {
-            dispatch(setRoutineIndex(snap.val().routineIndex))
-            dispatch(setRoutine(snap.val().routine[snap.val().routineIndex]))
-        })
-        dbRefObjRoutine.once('value', snap => {
-            dispatch(setAllRoutine(snap.val()))
-        })
-        dbRefObjWorkout.once('value', snap => {
-            dispatch(setWorkout(snap.val()))
-        })
-        db.child("gymEntries").once('value', snap => {
-            dispatch(setEntries(snap.val()))
-        })
-    }, [])
+    // React.useEffect(() => {
+    //     dbRefObjUser.once('value', snap => {
+    //         dispatch(setRoutineIndex(snap.val().routineIndex))
+    //         dispatch(setRoutine(snap.val().routine[snap.val().routineIndex]))
+    //     })
+    //     dbRefObjRoutine.once('value', snap => {
+    //         dispatch(setAllRoutine(snap.val()))
+    //     })
+
+    //     db.child("gymEntries").once('value', snap => {
+    //         dispatch(setEntries(snap.val()))
+    //     })
+    //     db.child("schedule").once('value', snap => {
+    //         dispatch(setSchedule(snap.val()))
+    //     })
+    // }, [])
 
     // states 
     const [state, setState] = useState({

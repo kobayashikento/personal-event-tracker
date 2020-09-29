@@ -87,11 +87,11 @@ export default function DashContainer(props) {
         setSelectedDate(date);
     };
 
-    React.useEffect(() => {
-        db.child("gymEntries").once('value', snap => {
-            dispatch(setEntries(snap.val()))
-        })
-    }, [])
+    // React.useEffect(() => {
+    //     db.child("gymEntries").once('value', snap => {
+    //         dispatch(setEntries(snap.val()))
+    //     })
+    // }, [])
 
 
     const handleAutoComplete = (event, values) => {
@@ -171,7 +171,7 @@ export default function DashContainer(props) {
                         })
                     }
                     if (data.entries === undefined || data.entries === null) {
-                        db.child("gymEntries").set(dbEntry);
+                        //db.child("gymEntries").set(dbEntry);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
                         setActiveStep(0);
@@ -181,7 +181,7 @@ export default function DashContainer(props) {
                         dbEntry.map(entry => {
                             temp.push(entry);
                         })
-                        db.child("gymEntries").set(temp);
+                        //db.child("gymEntries").set(temp);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
                         setActiveStep(0);
@@ -506,7 +506,7 @@ export default function DashContainer(props) {
             <Grid item xs={5}>
                 <Card style={{ height: "100%" }}>
                     <CardContent>
-                        <div className={classes.cardColumn}>
+                        {/* <div className={classes.cardColumn}>
                             <InsertInvitationIcon style={{ marginRight: "16px" }} />
                             <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
                         </div>
@@ -532,7 +532,7 @@ export default function DashContainer(props) {
                                     );
                                 })}
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                     </CardContent>
                 </Card>
             </Grid>

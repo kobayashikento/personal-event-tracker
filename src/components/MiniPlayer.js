@@ -1,39 +1,62 @@
 import React from 'react';
 
 import ReactPlayer from 'react-player';
-import { useSelector } from "react-redux";
-import { useDispatch } from 'react-redux';
-import { pause, played } from '../redux/actions/mediaPlayerActions.js';
+import { pause, played, seekTo } from '../redux/actions/mediaPlayerActions.js';
 
+import { connect } from 'react-redux';
 
-export default function MiniPlayer() {
-    const player = useSelector((reducer) => reducer.playerReducer)
-    const playerSeekTo = useSelector((reducer) => reducer.playerReducer.seekTo)
-    const dispatch = useDispatch();
-    const ref = React.createRef();
+const MiniPlayer = ({ playerSeeking, playerSeekTo, playerPlaying, playerIndex, playerData, playerLoop, played, pause, seekTo }) => {
+    const player = React.useRef(null);
 
     const handleEnded = () => {
-        dispatch(pause());
+        pause();
+        played(0);
     }
     const handleProgress = event => {
-        if (player.seeking === false) {
-            dispatch(played(event.played))
+        if (playerSeeking === false) {
+            played(event.played)
         }
     }
-    React.useEffect(()=>{
-        ref.current.seekTo(parseFloat(playerSeekTo));
-    },[playerSeekTo])
+
+    React.useEffect(() => {
+        if (player.current !== null) {
+            console.log(player)
+            player.current.seekTo(parseFloat(playerSeekTo));
+            seekTo(0);
+        }
+    }, [playerSeekTo])
 
     return (
         <ReactPlayer
-            ref={ref}
+            ref={player}
             width="0"
             height="0"
-            playing={player.playing}
-            url={player.data}
+            playing={playerPlaying}
+            url={playerData[playerIndex]}
             onEnded={() => handleEnded()}
-            loop={player.loop}
+            loop={playerLoop}
             onProgress={handleProgress}
         />
     );
 }
+
+const mapStateToProps = (state) => {
+    return {
+        playerSeeking: state.playerReducer.seeking,
+        playerSeekTo: state.playerReducer.seekTo,
+        playerPlaying: state.playerReducer.playing,
+        playerIndex: state.playerReducer.index,
+        playerData: state.playerReducer.data,
+        playerLoop: state.playerReducer.loop
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        pause: dispatch(pause()),
+        seekTo: (value) => dispatch(seekTo(value)),
+        played: (value) => dispatch(played(value)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MiniPlayer)

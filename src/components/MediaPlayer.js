@@ -6,7 +6,7 @@ import MaterialTable from 'material-table';
 
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { prev, played, next, pause, play, loop, seeking, setData, seekTo, setImage } from '../redux/actions/mediaPlayerActions.js';
+import { prev, played, next, pause, play, loop, seeking, setData, seekTo } from '../redux/actions/mediaPlayerActions.js';
 
 // import material ui
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,23 +30,17 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import LoopIcon from '@material-ui/icons/Loop';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 
+import { connect } from 'react-redux';
+
 import { icons } from '../assets/styles/masterStyle.js';
 
 import styles from '../assets/styles/components/mediaplayerStyle.js';
 
 const useStyle = makeStyles(styles);
 
-export default function MediaPlayer(props) {
+const MediaPlayer = ({ playerData, playerIndex, playerPlayed, playerLoop, playerPlaying, prev, played, next, pause, play, loop, seeking, setData, seekTo, theme, mode }) => {
     const classes = useStyle();
-    const dispatch = useDispatch();
-    const player = useSelector((reducer) => reducer.playerReducer)
-    const playerIndex = useSelector((reducer) => reducer.playerReducer.index)
-    const playerPlayed = useSelector((reducer) => reducer.playerReducer.played)
-    const playerLoop = useSelector((reducer) => reducer.playerReducer.loop)
     const targetRef = React.useRef();
-
-    // init database
-    const dbRefObj = db.child('musicLinks');
 
     // init states
     const [expanded, setExpanded] = React.useState(false);
@@ -56,63 +50,45 @@ export default function MediaPlayer(props) {
         setExpanded(!expanded);
     };
     const [state, setState] = React.useState({
-        title: "", subtitle: "",
-        listLength: 0, width: 0
+        width: 0
     })
 
     React.useEffect(() => {
-        dbRefObj.once('value', snap => {
-            setState({ ...state, title: snap.val()[player.index].name, subtitle: snap.val()[player.index].subtitle, listLength: snap.val().length, })
-            dispatch(setData(snap.val()[player.index].fullUrl))
-            dispatch(setImage(snap.val()[player.index].src))
-        });
-    }, [])
-
-    React.useEffect(() => {
-        dbRefObj.once('value', snap => {
-            setState({ ...state, title: snap.val()[player.index].name, subtitle: snap.val()[player.index].subtitle })
-            dispatch(setData(snap.val()[player.index].fullUrl))
-            dispatch(setImage(snap.val()[player.index].src))
-        });
-    }, [playerIndex])
-
-    React.useEffect(() => {
-        setSnackbarOpen(player.loop);
+        setSnackbarOpen(playerLoop);
     }, [playerLoop])
 
     const handleChangeMusic = (control) => {
-        if (control === "prev" && player.index !== 0 && player.played <= 0.01) {
-            console.log("paased")
-            dispatch(prev(player.index));
-            dispatch(played(0));
-        } else if (control === "prev" && player.played > 0.01) {
-            dispatch(seekTo(0));
-        } else if (control === "prev" && player.index === 0) {
-            dispatch(seekTo("0"));
-        } else if (control === "next" && player.index !== state.listLength - 1) {
-            dispatch(next(player.index));
-            dispatch(played(0));
+        if (control === "prev" && playerIndex !== 0 && playerPlayed <= 0.01) {
+            prev(playerIndex);
+            played(0);
+        } else if (control === "prev" && playerPlayed > 0.01) {
+            seekTo(0);
+        } else if (control === "prev" && playerIndex === 0) {
+            seekTo(0);
+        } else if (control === "next" && playerIndex !== playerData.length - 1) {
+            next(playerIndex);
+            played(0);
         }
     }
     const handlePlayPause = () => {
-        if (player.playing === true) {
-            dispatch(pause());
+        if (playerPlaying === true) {
+            pause();
         } else {
-            dispatch(play());
+            play();
         }
     }
     const handleLoop = () => {
-        dispatch(loop());
+        loop();
     }
     const handleSeekChange = e => {
-        dispatch(played(parseFloat(e.target.value)));
+        played(parseFloat(e.target.value));
     }
     const handleSeekMouseUp = e => {
-        dispatch(seeking(false));
-        dispatch(seekTo(e.target.value));
+        seeking(false);
+        seekTo(e.target.value);
     }
     const handleSeekMouseDown = e => {
-        dispatch(seeking(true));
+        seeking(true);
     }
 
     const displayMusicLibrary = () => {
@@ -171,12 +147,12 @@ export default function MediaPlayer(props) {
     }, [targetRef])
 
     return (
-        <Card style={{ background: props.theme.colors.primary, height: props.mode === "dash" ? "30vh" : "", boxShadow: props.mode === "dash" ? "" : "0 0 0 0 black" }} ref={targetRef}>
+        <Card style={{ background: theme.colors.primary, height: mode === "dash" ? "30vh" : "", boxShadow: mode === "dash" ? "" : "0 0 0 0 black" }} ref={targetRef}>
             <Grid container style={{ height: "inherit" }} >
-                <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column", height: "inherit" }}>
+                <Grid item xs={mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column", height: "inherit" }}>
                     <CardContent className={classes.content}>
-                        <Typography gutterBottom variant="body1" component="h2"> {state.title} </Typography>
-                        <Typography variant="subtitle1" color="textSecondary"> {state.subtitle} </Typography>
+                        <Typography gutterBottom variant="body1" component="h2"> {playerData[playerIndex].title} </Typography>
+                        <Typography variant="subtitle1" color="textSecondary"> {playerData[playerIndex].subtitle} </Typography>
                         <input
                             type='range' min={0} max={0.999999} step='any'
                             value={playerPlayed}
@@ -191,17 +167,17 @@ export default function MediaPlayer(props) {
                             <SkipPreviousIcon fontSize="small" />
                         </IconButton>
                         <IconButton aria-label="play/pause" onClick={() => handlePlayPause()}>
-                            {player.playing ? <PauseIcon fontSize="small" className={classes.playIcon} /> : <PlayArrowIcon fontSize="small" className={classes.playIcon} />}
+                            {playerPlaying ? <PauseIcon fontSize="small" className={classes.playIcon} /> : <PlayArrowIcon fontSize="small" className={classes.playIcon} />}
                         </IconButton>
                         <IconButton aria-label="next" onClick={() => handleChangeMusic("next")}>
                             <SkipNextIcon fontSize="small" />
                         </IconButton>
                         <IconButton onClick={() => handleLoop()}>
-                            <LoopIcon fontSize="small" className={player.loop ? classes.spin : ""} />
+                            <LoopIcon fontSize="small" className={playerLoop && playerPlaying ? classes.spin : ""} />
                         </IconButton>
                         <Snackbar
                             open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
-                            message={player.loop ? "Loop Enabled" : "Loop Disabled"}
+                            message={playerLoop ? "Loop Enabled" : "Loop Disabled"}
                         />
                         {/* <IconButton
                             style={{ width: "fit-content", }}
@@ -224,13 +200,39 @@ export default function MediaPlayer(props) {
                         </Fade>
                     </Modal>
                 </Grid>
-                <Grid item xs={5} style={{ display: props.mode === "dash" ? "flex" : "none", height: "inherit" }}>
+                <Grid item xs={5} style={{ display: mode === "dash" ? "flex" : "none", height: "inherit" }}>
                     <img
                         style={{ height: "inherit", marginLeft: "auto" }}
-                        src={`https://img.youtube.com/vi/${player.image}/0.jpg`}
+                        src={`https://img.youtube.com/vi/${playerData[playerIndex].src}/0.jpg`}
                     />
                 </Grid>
             </Grid>
         </Card>
     );
 }
+
+const mapStateToProps = (state, props) => {
+    return {
+        playerIndex: state.playerReducer.index,
+        playerPlayed: state.playerReducer.played,
+        playerLoop: state.playerReducer.loop,
+        playerPlaying: state.playerReducer.playing,
+        playerData: state.playerReducer.data,
+        theme: props.theme,
+        mode: props.mode
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        play: dispatch(play()),
+        pause: dispatch(pause()),
+        next: (index) => dispatch(next(index)),
+        prev: (index) => dispatch(prev(index)),
+        loop: dispatch(loop()),
+        played: (value) => dispatch(played(value)),
+        seeking: (boolean) => dispatch(seekTo(boolean)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MediaPlayer)

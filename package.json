@@ -33,13 +33,15 @@
     "react-hook-form": "^6.7.0",
     "react-pdf": "^5.0.0",
     "react-player": "^2.6.1",
-    "react-redux": "^7.2.1",
+    "react-redux-firebase": "^3.0.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "react-transition-group": "^4.4.1",
     "recharts": "^1.8.5",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-firestore": "^0.13.0",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "NODE_PATH=./src react-scripts start",
