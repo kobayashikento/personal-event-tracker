@@ -15,24 +15,22 @@ import {
   createFirestoreInstance
 } from "redux-firestore";
 import { ReactReduxFirebaseProvider, getFirebase } from "react-redux-firebase";
-import db from './firebase.js';
+import firebase from './firebase.js';
 
 // import layouts
 import MainMenu from './views/MainMenu.js';
-import firebase from 'firebase/app'
 import './assets/css/index.css';
 
 const store = createStore(reducer,
   compose(
     applyMiddleware(thunk.withExtraArgument({ getFirestore, getFirebase })),
-    reduxFirestore(db),
+    reduxFirestore(firebase),
   )
 );
 
 const rrfProps = {
   firebase,
-  useFirestoreForProfile: true,
-  config: db,
+  config: firebase,
   dispatch: store.dispatch,
   createFirestoreInstance
 };

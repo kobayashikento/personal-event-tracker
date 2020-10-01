@@ -10,14 +10,7 @@ import {
     SEEK_TO,
 } from '../actions/mediaPlayerActions.js';
 
-export function playerReducer(state = { playing: false, played: 0, index: 0, data: [{
-    "fullUrl" : "https://www.youtube.com/watch?v=fmU9MXi9Uz0",
-    "group" : "Youtube",
-    "name" : "Gathers Under Night",
-    "src" : "fmU9MXi9Uz0",
-    "subtitle" : "Under Night In-Birth OST"
-  }]
-  , loop: false, played: 0, seeking: false, seekTo: 0 }, action) {
+export function playerReducer(state = { playing: false, played: 0, index: 0, data: {}, loop: false, played: 0, seeking: false, seekTo: 0 }, action) {
     switch (action.type) {
         case PLAY:
             return {

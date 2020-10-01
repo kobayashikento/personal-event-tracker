@@ -20,6 +20,7 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // import icons
 import IconButton from '@material-ui/core/IconButton';
@@ -31,14 +32,15 @@ import LoopIcon from '@material-ui/icons/Loop';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 
 import { connect } from 'react-redux';
-
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 import { icons } from '../assets/styles/masterStyle.js';
 
 import styles from '../assets/styles/components/mediaplayerStyle.js';
 
 const useStyle = makeStyles(styles);
 
-const MediaPlayer = ({ playerData, playerIndex, playerPlayed, playerLoop, playerPlaying, prev, played, next, pause, play, loop, seeking, setData, seekTo, theme, mode }) => {
+const MediaPlayer = (props) => {
     const classes = useStyle();
     const targetRef = React.useRef();
 
@@ -54,41 +56,41 @@ const MediaPlayer = ({ playerData, playerIndex, playerPlayed, playerLoop, player
     })
 
     React.useEffect(() => {
-        setSnackbarOpen(playerLoop);
-    }, [playerLoop])
+        setSnackbarOpen(props.playerLoop);
+    }, [props.playerLoop])
 
     const handleChangeMusic = (control) => {
-        if (control === "prev" && playerIndex !== 0 && playerPlayed <= 0.01) {
-            prev(playerIndex);
-            played(0);
-        } else if (control === "prev" && playerPlayed > 0.01) {
-            seekTo(0);
-        } else if (control === "prev" && playerIndex === 0) {
-            seekTo(0);
-        } else if (control === "next" && playerIndex !== playerData.length - 1) {
-            next(playerIndex);
-            played(0);
+        if (control === "prev" && props.playerIndex !== 0 && props.playerPlayed <= 0.01) {
+            props.prev(props.playerIndex);
+            props.played(0);
+        } else if (control === "prev" && props.playerPlayed > 0.01) {
+            props.seekTo(0);
+        } else if (control === "prev" && props.playerIndex === 0) {
+            props.played(0);
+        } else if (control === "next" && props.playerIndex !== props.playerData.length - 1) {
+            props.next(props.playerIndex);
+            props.played(0);
         }
     }
     const handlePlayPause = () => {
-        if (playerPlaying === true) {
-            pause();
+        if (props.playerPlaying === true) {
+            props.pause();
         } else {
-            play();
+            props.play();
         }
     }
     const handleLoop = () => {
-        loop();
+        props.loop();
     }
     const handleSeekChange = e => {
-        played(parseFloat(e.target.value));
+        props.played(parseFloat(e.target.value));
     }
     const handleSeekMouseUp = e => {
-        seeking(false);
-        seekTo(e.target.value);
+        props.seeking(false);
+        props.seekTo(e.target.value);
     }
     const handleSeekMouseDown = e => {
-        seeking(true);
+        props.seeking(true);
     }
 
     const displayMusicLibrary = () => {
@@ -147,15 +149,21 @@ const MediaPlayer = ({ playerData, playerIndex, playerPlayed, playerLoop, player
     }, [targetRef])
 
     return (
-        <Card style={{ background: theme.colors.primary, height: mode === "dash" ? "30vh" : "", boxShadow: mode === "dash" ? "" : "0 0 0 0 black" }} ref={targetRef}>
+        <Card style={{ background: props.theme.colors.primary, height: props.mode === "dash" ? "30vh" : "", boxShadow: props.mode === "dash" ? "" : "0 0 0 0 black" }} ref={targetRef}>
             <Grid container style={{ height: "inherit" }} >
-                <Grid item xs={mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column", height: "inherit" }}>
+                <Grid item xs={props.mode === "dash" ? 7 : 12} style={{ display: "flex", flexDirection: "column", height: "inherit" }}>
                     <CardContent className={classes.content}>
-                        <Typography gutterBottom variant="body1" component="h2"> {playerData[playerIndex].title} </Typography>
-                        <Typography variant="subtitle1" color="textSecondary"> {playerData[playerIndex].subtitle} </Typography>
+                        <Typography gutterBottom variant="body1" component="h2">
+                            {(Object.keys(props.playerData).length === 0 && props.playerData.constructor === Object || props.playerData === undefined) ? "loading..." :
+                                props.playerData[props.playerIndex].title}
+                        </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                            {(Object.keys(props.playerData).length === 0 && props.playerData.constructor === Object || props.playerData === undefined) ? "loading..." :
+                                props.playerData[props.playerIndex].subtitle}
+                        </Typography>
                         <input
                             type='range' min={0} max={0.999999} step='any'
-                            value={playerPlayed}
+                            value={props.playerPlayed}
                             onChange={handleSeekChange}
                             onMouseUp={handleSeekMouseUp}
                             onMouseDown={handleSeekMouseDown}
@@ -167,17 +175,17 @@ const MediaPlayer = ({ playerData, playerIndex, playerPlayed, playerLoop, player
                             <SkipPreviousIcon fontSize="small" />
                         </IconButton>
                         <IconButton aria-label="play/pause" onClick={() => handlePlayPause()}>
-                            {playerPlaying ? <PauseIcon fontSize="small" className={classes.playIcon} /> : <PlayArrowIcon fontSize="small" className={classes.playIcon} />}
+                            {props.playerPlaying ? <PauseIcon fontSize="small" className={classes.playIcon} /> : <PlayArrowIcon fontSize="small" className={classes.playIcon} />}
                         </IconButton>
                         <IconButton aria-label="next" onClick={() => handleChangeMusic("next")}>
                             <SkipNextIcon fontSize="small" />
                         </IconButton>
                         <IconButton onClick={() => handleLoop()}>
-                            <LoopIcon fontSize="small" className={playerLoop && playerPlaying ? classes.spin : ""} />
+                            <LoopIcon fontSize="small" className={props.playerLoop && props.playerPlaying ? classes.spin : ""} />
                         </IconButton>
                         <Snackbar
                             open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}
-                            message={playerLoop ? "Loop Enabled" : "Loop Disabled"}
+                            message={props.playerLoop ? "Loop Enabled" : "Loop Disabled"}
                         />
                         {/* <IconButton
                             style={{ width: "fit-content", }}
@@ -200,11 +208,13 @@ const MediaPlayer = ({ playerData, playerIndex, playerPlayed, playerLoop, player
                         </Fade>
                     </Modal>
                 </Grid>
-                <Grid item xs={5} style={{ display: mode === "dash" ? "flex" : "none", height: "inherit" }}>
-                    <img
-                        style={{ height: "inherit", marginLeft: "auto" }}
-                        src={`https://img.youtube.com/vi/${playerData[playerIndex].src}/0.jpg`}
-                    />
+                <Grid item xs={5} style={{ display: props.mode === "dash" ? "flex" : "none", height: "inherit" }}>
+                    {(Object.keys(props.playerData).length === 0 && props.playerData.constructor === Object || props.playerData === undefined) ?
+                        <CircularProgress color="primary" />
+                        : <img
+                            style={{ height: "inherit", marginLeft: "auto" }}
+                            src={`https://img.youtube.com/vi/${props.playerData[props.playerIndex].src}/0.jpg`}
+                        />}
                 </Grid>
             </Grid>
         </Card>
@@ -225,13 +235,14 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        play: dispatch(play()),
-        pause: dispatch(pause()),
+        play: () => dispatch(play()),
+        pause: () => dispatch(pause()),
         next: (index) => dispatch(next(index)),
         prev: (index) => dispatch(prev(index)),
-        loop: dispatch(loop()),
+        loop: () => dispatch(loop()),
         played: (value) => dispatch(played(value)),
-        seeking: (boolean) => dispatch(seekTo(boolean)),
+        seeking: (boolean) => dispatch(seeking(boolean)),
+        seekTo: (value) => dispatch(seekTo(value))
     }
 }
 

@@ -4,7 +4,7 @@ import {
     SET_WORKOUT,
     SET_ALL_ROUTINE,
     SET_ENTRIES,
-    SET_SCHEDULE
+    SET_SCHEDULE, ADD_WORKOUT,
 } from '../actions/dataAction.js';
 
 export function dataReducer(state = {
@@ -13,14 +13,7 @@ export function dataReducer(state = {
         workouts: []
     },
     routineIndex: 0,
-    workout: [{
-        "movement": "push",
-        "musclegroup": "chest",
-        "name": "bench press",
-        "tableData": {
-            "id": 0
-        }
-    }],
+    workout: undefined,
     allRoutines: [],
     entries: undefined,
     schedule: undefined
@@ -40,6 +33,11 @@ export function dataReducer(state = {
             return {
                 ...state,
                 workout: action.payload
+            }
+        case ADD_WORKOUT:
+            return {
+                ...state,
+                workout: state.workout.push(action.payload)
             }
         case SET_ALL_ROUTINE: {
             return {

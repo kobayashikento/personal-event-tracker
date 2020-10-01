@@ -16,22 +16,22 @@ import styles from '../assets/styles/components/mainmenuStyle.js';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine, setEntries, setSchedule } from '../redux/actions/dataAction.js';
+import { setData } from '../redux/actions/mediaPlayerActions.js';
 
 import { mainmenuRoutes } from '../routes.js';
-import firebase from '../firebase.js';
 import themes from '../assets/data/themes.json';
 import MiniPlayer from '../components/MiniPlayer.js';
 
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
+
 const useStyles = makeStyles(styles);
 
-const MainMenu = () => {
+const MainMenu = (props) => {
     const classes = useStyles();
     const ref = React.createRef();
     const data = useSelector((reducer) => reducer.dataReducer)
-    // const dbRefObjUser = db.child('userSetting');
-    // const dbRefObjRoutine = db.child('workoutRoutine');
-    // const dbRefObjWorkout = db.child('workouts');
-    const dispatch = useDispatch();
 
     let theme;
     themes.forEach(th => {
@@ -42,22 +42,13 @@ const MainMenu = () => {
         }
     })
 
-    // React.useEffect(() => {
-    //     dbRefObjUser.once('value', snap => {
-    //         dispatch(setRoutineIndex(snap.val().routineIndex))
-    //         dispatch(setRoutine(snap.val().routine[snap.val().routineIndex]))
-    //     })
-    //     dbRefObjRoutine.once('value', snap => {
-    //         dispatch(setAllRoutine(snap.val()))
-    //     })
-
-    //     db.child("gymEntries").once('value', snap => {
-    //         dispatch(setEntries(snap.val()))
-    //     })
-    //     db.child("schedule").once('value', snap => {
-    //         dispatch(setSchedule(snap.val()))
-    //     })
-    // }, [])
+    React.useEffect(() => {
+        if (Object.keys(props.data).length === 0 && props.data.constructor === Object) {
+        } else {
+            props.setWorkout(props.data.workout)
+            props.setData(props.data.music)
+        }
+    }, [props.data])
 
     // states 
     const [state, setState] = useState({
@@ -185,7 +176,25 @@ const MainMenu = () => {
     );
 }
 
-export default React.memo(MainMenu);
+const mapStateToProps = (state) => {
+    return {
+        data: state.firestore.ordered
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setWorkout: (workout) => dispatch(setWorkout(workout)),
+        setData: (data) => dispatch(setData(data))
+    }
+}
+
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    firestoreConnect([
+        { collection: "music" }, {collection: "workout"}
+    ])
+)(MainMenu)
 
 
 

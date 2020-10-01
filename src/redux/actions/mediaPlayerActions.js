@@ -36,8 +36,8 @@ export function seeking(boolean) {
     return { type: SEEKING, payload: boolean }
 }
 
-export function setData(url) {
-    return { type: SET_DATA, payload: url }
+export function setData(data) {
+    return { type: SET_DATA, payload: data }
 }
 
 export function seekTo(value) {

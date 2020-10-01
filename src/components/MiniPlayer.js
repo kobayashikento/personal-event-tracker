@@ -5,39 +5,47 @@ import { pause, played, seekTo } from '../redux/actions/mediaPlayerActions.js';
 
 import { connect } from 'react-redux';
 
-const MiniPlayer = ({ playerSeeking, playerSeekTo, playerPlaying, playerIndex, playerData, playerLoop, played, pause, seekTo }) => {
-    const player = React.useRef(null);
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
+
+const MiniPlayer = (props) => {
+    const player = React.createRef();
+    const isFirstRun = React.useRef(true);
+
+    React.useLayoutEffect(() => {
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
+        player.current.seekTo(parseFloat(props.playerSeekTo));
+    }, [props.playerSeekTo])
 
     const handleEnded = () => {
-        pause();
-        played(0);
+        props.played(0);
+        props.pause();
     }
     const handleProgress = event => {
-        if (playerSeeking === false) {
-            played(event.played)
+        if (!props.playerSeeking) {
+            props.played(event.played)
         }
     }
 
-    React.useEffect(() => {
-        if (player.current !== null) {
-            console.log(player)
-            player.current.seekTo(parseFloat(playerSeekTo));
-            seekTo(0);
-        }
-    }, [playerSeekTo])
-
-    return (
-        <ReactPlayer
-            ref={player}
-            width="0"
-            height="0"
-            playing={playerPlaying}
-            url={playerData[playerIndex]}
-            onEnded={() => handleEnded()}
-            loop={playerLoop}
-            onProgress={handleProgress}
-        />
-    );
+    if (Object.keys(props.playerData).length === 0 && props.playerData.constructor === Object) {
+        return (null);
+    } else {
+        return (
+            <ReactPlayer
+                ref={player}
+                width="0"
+                height="0"
+                playing={props.playerPlaying}
+                url={props.playerData[props.playerIndex].url}
+                onEnded={() => handleEnded()}
+                loop={props.playerLoop}
+                onProgress={handleProgress}
+            />
+        )
+    }
 }
 
 const mapStateToProps = (state) => {
@@ -53,10 +61,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        pause: dispatch(pause()),
+        pause: () => dispatch(pause()),
         seekTo: (value) => dispatch(seekTo(value)),
         played: (value) => dispatch(played(value)),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MiniPlayer)
+export default 
+    connect(mapStateToProps, mapDispatchToProps)(MiniPlayer)
