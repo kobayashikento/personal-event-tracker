@@ -7,13 +7,14 @@ import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { deleteRoutine, addRoutine, updateRoutine, addRoutineWorkout, deleteRoutineWorkout } from '../../redux/actions/dataAction.js';
+import { deleteRoutine, addRoutine, updateRoutine, addRoutineWorkout, deleteRoutineWorkout, bulkRoutineUpdate } from '../../redux/actions/dataAction.js';
 
 import styles from '../../assets/styles/views/gym/gymdatamanagementStyle.js';
 
 import { connect } from 'react-redux';
 
 import MaterialTable from 'material-table';
+import { prototype } from 'bootstrap-daterangepicker';
 
 const useStyles = makeStyles(styles);
 
@@ -121,17 +122,35 @@ const GymManageRoutine = (props) => {
 
     const checkValidEdit = (changes, routineIndex) => {
         // need to temporary create the updated routine to compare 
-        let workouts = Object.assign([], props.routine[routineIndex].workouts);
-        Object.keys(changes).map((key, index) => { 
-            console.log(workouts[key])
+        let newData = [];
+        Object.keys(changes).map((key, index) => { newData.push(changes[key].newData) })
+        let workouts = props.routine[routineIndex].workouts.map(prop => {
+            return { workout: prop.workout }
+        })
+        Object.keys(changes).map((key, index) => {
             workouts[key] = {
-                workout: changes[key].newData.workout,
-                sets: changes[key].newData.sets,
-                reps: changes[key].newData.reps,
-                rest: changes[key].newData.rest
+                workout: changes[key].newData.workout
             }
         });
-        console.log(workouts)
+        //true = no dups, false = dups
+        var valueArr = workouts.map(function (item) { return item.workout });
+        var isDuplicate = valueArr.some(function (item, idx) {
+            return valueArr.indexOf(item) != idx
+        });
+        if (!isDuplicate) {
+            let val2 = [];
+            newData.map(prop => {
+                val2.push(validInput(prop, "edit"))
+            })
+            if (val2.includes(false)) {
+                return false;
+            }
+        } else {
+            console.log(isDuplicate)
+            setMessage("Duplicate of workout exists");
+            setSnackbarOpen(true);
+            return false;
+        }
         return true;
     }
 
@@ -210,7 +229,6 @@ const GymManageRoutine = (props) => {
                                                         } else {
                                                             // need docId, new workout obj to add
                                                             const docId = props.routine[rowData.tableData.id].id
-                                                            console.log(docId, newData, rowData.tableData.id)
                                                             props.addRoutineWorkout(docId, newData, rowData.tableData.id)
                                                             resolve();
                                                         }
@@ -221,29 +239,26 @@ const GymManageRoutine = (props) => {
                                                 new Promise((resolve, reject) => {
                                                     setTimeout(() => {
                                                         if (Object.keys(changes).length !== 0) {
-                                                            if (!checkValidEdit(changes, rowData.tableData.id)) {
-                                                                setMessage("Duplicate of workout exists");
-                                                                setSnackbarOpen(true);
+                                                            if (checkValidEdit(changes, rowData.tableData.id)) {
+                                                                let updatedRoutineWorkout = Object.assign([], props.routine[rowData.tableData.id].workouts)
+                                                                Object.keys(changes).map((key, index) => {
+                                                                    updatedRoutineWorkout[key] = {
+                                                                        workout: changes[key].newData.workout,
+                                                                        sets: changes[key].newData.sets,
+                                                                        reps: changes[key].newData.reps,
+                                                                        rest: changes[key].newData.rest
+                                                                    }
+                                                                });
+                                                                const docId = props.routine[rowData.tableData.id].id
+                                                                props.bulkRoutineUpdate(docId, updatedRoutineWorkout, rowData.tableData.id)
+                                                                resolve();
+                                                            } else {
                                                                 reject();
                                                             }
-
+                                                        } else {
+                                                            //no changes made
+                                                            resolve();
                                                         }
-                                                        // if (routineExists(newData, rowData.tableData.id)) {
-                                                        //     setMessage("Workout already exists")
-                                                        //     setSnackbarOpen(true);
-                                                        //     reject();
-                                                        // } else if (!validInput(newData)) {
-                                                        //     reject();
-                                                        // } else {
-                                                        //     const temp = [...routine];
-                                                        //     const dataUpdate = temp[rowData.tableData.id]
-                                                        //     dataUpdate[oldData.tableData.id] = newData
-                                                        //     temp[rowData.tableData.id] = dataUpdate
-                                                        //     setRoutine(temp)
-                                                        //     db.child('workoutRoutine').set(temp)
-                                                        //     resolve();
-                                                        // }
-                                                        resolve();
                                                     }, 1000);
                                                 }),
                                             onRowDelete: oldData =>
@@ -329,7 +344,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteRoutine: (routine, id) => dispatch(deleteRoutine(routine, id)),
         updateRoutine: (routine, index, docId) => dispatch(updateRoutine(routine, index, docId)),
         addRoutineWorkout: (docId, workout, rowId) => dispatch(addRoutineWorkout(docId, workout, rowId)),
-        deleteRoutineWorkout: (docId, index, rowId) => dispatch(deleteRoutineWorkout(docId, index, rowId))
+        deleteRoutineWorkout: (docId, index, rowId) => dispatch(deleteRoutineWorkout(docId, index, rowId)),
+        bulkRoutineUpdate: (docId, obj, rowId) => dispatch(bulkRoutineUpdate(docId, obj, rowId))
     }
 }
 

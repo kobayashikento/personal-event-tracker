@@ -142,6 +142,26 @@ export function deleteRoutineWorkout(docId, index, rowId) {
     }
 }
 
+export function bulkRoutineUpdate(docId, obj, rowId) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        const sfDocRef = firestore.collection("workoutRoutine").doc(docId);
+        return firestore.runTransaction((transaction) => {
+            // This code may get re-run multiple times if there are conflicts.
+            return transaction.get(sfDocRef).then((sfDoc) => {
+                if (!sfDoc.exists) {
+                    throw "Document does not exist!";
+                }
+                transaction.update(sfDocRef, { workouts: obj });
+            });
+        }).then(() => {
+            dispatch({ type: UPDATE_ROUTINE_WORKOUT, index: rowId, payload: obj });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        });
+    }
+}
+
 export function setEntries(object) {
     return { type: SET_ENTRIES, payload: object }
 }
