@@ -5,6 +5,11 @@ export const SET_ALL_ROUTINE = 'SET_ALL_ROUTINE'
 export const SET_ENTRIES = 'SET_ENTRIES'
 export const SET_SCHEDULE = 'SET_SCHEDULE'
 export const ADD_WORKOUT = 'ADD_WORKOUT'
+export const ADD_ROUTINE = 'ADD_ROUTINE'
+export const ADD_ROUTINE_WORKOUT = 'ADD_ROUTINE_WORKOUT'
+export const UPDATE_ALL_ROUTINE = 'UPDATE_ALL_ROUTINE'
+export const UPDATE_ROUTINE_WORKOUT = 'UPDATE_ROUTINE_WORKOUT'
+export const DELETE_ROUTINE_WORKOUT = 'DELETE_ROUTINE_WORKOUT'
 export const ERROR = 'ERROR'
 
 export function setRoutine(object) {
@@ -33,7 +38,6 @@ export function addWorkout(object) {
 export function deleteWorkout(object, id) {
     return (dispatch, getState, { getFirestore, getFirebase }) => {
         const firestore = getFirestore();
-        console.loeg(id)
         firestore.collection('workout').doc(id).delete().then(() => {
             dispatch({ type: SET_WORKOUT, payload: object });
         }).catch((err) => {
@@ -63,6 +67,79 @@ export function updateWorkout(object, newObj) {
 
 export function setAllRoutine(object) {
     return { type: SET_ALL_ROUTINE, payload: object }
+}
+
+export function addRoutine(object) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('workoutRoutine').add({
+            routineName: object.name.trim(),
+            workouts: []
+        }).then(() => {
+            dispatch({ type: ADD_ROUTINE, payload: object });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}
+
+export function deleteRoutine(object, id) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('workoutRoutine').doc(id).delete().then(() => {
+            dispatch({ type: SET_ALL_ROUTINE, payload: object });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}
+
+export function updateRoutine(obj, index, docId) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('workoutRoutine').doc(docId).update({
+            routineName: obj.name.trim()
+        }).then(() => {
+            dispatch({ type: UPDATE_ALL_ROUTINE, payload: obj, index: index });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}
+
+export function addRoutineWorkout(docId, workout, index) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('workoutRoutine').doc(docId).update({
+            workouts: firestore.FieldValue.arrayUnion(workout)
+        }).then(() => {
+            dispatch({ type: ADD_ROUTINE_WORKOUT, payload: workout, index: index });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}
+
+export function deleteRoutineWorkout(docId, index, rowId) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        const sfDocRef = firestore.collection("workoutRoutine").doc(docId);
+        return firestore.runTransaction((transaction) => {
+            // This code may get re-run multiple times if there are conflicts.
+            return transaction.get(sfDocRef).then((sfDoc) => {
+                if (!sfDoc.exists) {
+                    throw "Document does not exist!";
+                }
+                var dataDelete = sfDoc.data();
+                dataDelete.workouts.splice(index, 1);
+                transaction.update(sfDocRef, { workouts: dataDelete.workouts });
+            });
+        }).then((dataDelete) => {
+            dispatch({ type: UPDATE_ROUTINE_WORKOUT, index: rowId, payload: dataDelete });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        });
+    }
 }
 
 export function setEntries(object) {

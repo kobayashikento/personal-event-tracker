@@ -31,7 +31,6 @@ const useStyles = makeStyles(styles);
 const MainMenu = (props) => {
     const classes = useStyles();
     const ref = React.createRef();
-    const data = useSelector((reducer) => reducer.dataReducer)
 
     let theme;
     themes.forEach(th => {
@@ -47,6 +46,7 @@ const MainMenu = (props) => {
         } else {
             props.setWorkout(props.data.workout)
             props.setData(props.data.music)
+            props.setAllRoutine(props.data.workoutRoutine)
         }
     }, [props.data])
 
@@ -185,14 +185,15 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setWorkout: (workout) => dispatch(setWorkout(workout)),
-        setData: (data) => dispatch(setData(data))
+        setData: (data) => dispatch(setData(data)),
+        setAllRoutine: (data) => dispatch(setAllRoutine(data))
     }
 }
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect([
-        { collection: "music" }, {collection: "workout"}
+        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }
     ])
 )(MainMenu)
 

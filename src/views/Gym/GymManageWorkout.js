@@ -35,7 +35,30 @@ const GymManageWorkout = (props) => {
         return false;
     }
 
-    const validInput = (input) => {
+    const validInputAdd = (input) => {
+        if (Object.keys(input).length !== 3) {
+            setMessage("Complete all inputs")
+            setSnackbarOpen(true);
+            return false;
+        } else {
+            if (input.name.length < 3) {
+                setMessage("Workout Name has to be longer than 3 letters")
+                setSnackbarOpen(true);
+                return false;
+            } else if (input.musclegroup.length < 3) {
+                setMessage("Muscle group has to be longer than 3 letters")
+                setSnackbarOpen(true);
+                return false;
+            } else if (input.movement.length < 3) {
+                setMessage("Movement has to be longer than 3 letters")
+                setSnackbarOpen(true);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const validInputEdit = (input) => {
         if (Object.keys(input).length !== 4) {
             setMessage("Complete all inputs")
             setSnackbarOpen(true);
@@ -94,7 +117,7 @@ const GymManageWorkout = (props) => {
                                         setMessage("Workout already exists")
                                         setSnackbarOpen(true);
                                         reject();
-                                    } else if (validInput(newData)) {
+                                    } else if (validInputAdd(newData)) {
                                         newData.name.replace(/ /g, '').trim()
                                         newData.musclegroup.replace(/ /g, '').trim()
                                         newData.movement.replace(/ /g, '').trim()
@@ -111,7 +134,7 @@ const GymManageWorkout = (props) => {
                         onRowUpdate: (newData, oldData) =>
                             new Promise((resolve, reject) => {
                                 setTimeout(() => {
-                                    if (!validInput(newData)) {
+                                    if (!validInputEdit(newData)) {
                                         reject();
                                     } else if (workoutExists(newData)) {
                                         setMessage("Workout already exists")
@@ -156,6 +179,7 @@ const GymManageWorkout = (props) => {
 const mapStateToProps = (state) => {
     return {
         workout: state.dataReducer.workout,
+        routine: state.dataReducer.allRoutines
     }
 }
 

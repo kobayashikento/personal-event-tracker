@@ -4,7 +4,7 @@ import {
     SET_WORKOUT,
     SET_ALL_ROUTINE,
     SET_ENTRIES,
-    SET_SCHEDULE, ADD_WORKOUT,
+    SET_SCHEDULE, ADD_WORKOUT, ADD_ROUTINE, UPDATE_ALL_ROUTINE, ADD_ROUTINE_WORKOUT, UPDATE_ROUTINE_WORKOUT
 } from '../actions/dataAction.js';
 
 export function dataReducer(state = {
@@ -55,6 +55,30 @@ export function dataReducer(state = {
             return {
                 ...state,
                 schedule: action.payload
+            }
+        }
+        case ADD_ROUTINE: {
+            return {
+                ...state,
+                allRoutines: state.allRoutines.push(action.payload)
+            }
+        }
+        case UPDATE_ALL_ROUTINE: {
+            return {
+                ...state,
+                allRoutines: state.allRoutines[action.index].routineName = action.payload.name.trim()
+            }
+        }
+        case ADD_ROUTINE_WORKOUT: {
+            return {
+                ...state, 
+                allRoutines: state.allRoutines[action.index].workouts.push(action.payload)
+            }
+        }
+        case UPDATE_ROUTINE_WORKOUT: {
+            return {
+                ...state, 
+                allRoutines: state.allRoutines[action.index].workouts = action.payload
             }
         }
         default: return state;

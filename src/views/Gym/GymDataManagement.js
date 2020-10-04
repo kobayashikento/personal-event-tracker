@@ -123,7 +123,7 @@ export default function GymContainer(props) {
                 <GymManageWorkout />
             </TabPanel>
             <TabPanel className={classes.tabpanel} value={state.tabIndex} index={3}>
-               {/* <GymManageRoutine /> */}
+               <GymManageRoutine />
             </TabPanel>
         </Grid>);
 }
