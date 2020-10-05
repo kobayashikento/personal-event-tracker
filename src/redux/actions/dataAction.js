@@ -10,6 +10,8 @@ export const ADD_ROUTINE_WORKOUT = 'ADD_ROUTINE_WORKOUT'
 export const UPDATE_ALL_ROUTINE = 'UPDATE_ALL_ROUTINE'
 export const UPDATE_ROUTINE_WORKOUT = 'UPDATE_ROUTINE_WORKOUT'
 export const DELETE_ROUTINE_WORKOUT = 'DELETE_ROUTINE_WORKOUT'
+export const ADD_WORKOUT_ENRTY = 'ADD_WORKOUT_ENRTY'
+export const UPDATE_ENTRIES = 'UPDATE_ENTRIES'
 export const ERROR = 'ERROR'
 
 export function setRoutine(object) {
@@ -164,6 +166,49 @@ export function bulkRoutineUpdate(docId, obj, rowId) {
 
 export function setEntries(object) {
     return { type: SET_ENTRIES, payload: object }
+}
+
+export function addEntries(obj) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('gymEntries').add({
+            workout: obj.workout,
+            weight: obj.weight,
+            reps: obj.reps,
+            date: obj.date.getTime()
+        }).then(() => {
+            dispatch({ type: ADD_WORKOUT_ENRTY, payload: obj });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}
+
+export function updateEntries(docId, obj, index) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('gymEntries').doc(docId).update({
+            workout: obj.workout,
+            weight: obj.weight,
+            reps: obj.reps,
+            date: obj.date.getTime()
+        }).then(() => {
+            dispatch({ type: UPDATE_ENTRIES, payload: obj, index: index });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}
+
+export function deleteEntries(object, id) {
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('gymEntries').doc(id).delete().then(() => {
+            dispatch({ type: SET_ENTRIES, payload: object });
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
 }
 
 export function setSchedule(object) {

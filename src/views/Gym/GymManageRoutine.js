@@ -14,7 +14,6 @@ import styles from '../../assets/styles/views/gym/gymdatamanagementStyle.js';
 import { connect } from 'react-redux';
 
 import MaterialTable from 'material-table';
-import { prototype } from 'bootstrap-daterangepicker';
 
 const useStyles = makeStyles(styles);
 
@@ -116,7 +115,7 @@ const GymManageRoutine = (props) => {
             temp.map(prop => Object.assign(temp1, prop))
             return temp1
         } else {
-            return temp
+            return {}
         }
     }
 
@@ -264,7 +263,6 @@ const GymManageRoutine = (props) => {
                                             onRowDelete: oldData =>
                                                 new Promise((resolve, reject) => {
                                                     setTimeout(() => {
-                                                        let dataDelete = props.routine;
                                                         const docId = props.routine[rowData.tableData.id].id
                                                         const index = oldData.tableData.id;
                                                         props.deleteRoutineWorkout(docId, index, rowData.tableData.id);

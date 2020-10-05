@@ -47,6 +47,7 @@ const MainMenu = (props) => {
             props.setWorkout(props.data.workout)
             props.setData(props.data.music)
             props.setAllRoutine(props.data.workoutRoutine)
+            props.setEntries(props.data.gymEntries)
         }
     }, [props.data])
 
@@ -186,14 +187,15 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setWorkout: (workout) => dispatch(setWorkout(workout)),
         setData: (data) => dispatch(setData(data)),
-        setAllRoutine: (data) => dispatch(setAllRoutine(data))
+        setAllRoutine: (data) => dispatch(setAllRoutine(data)),
+        setEntries: (data) => dispatch(setEntries(data))
     }
 }
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect([
-        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }
+        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }, {collection: "gymEntries"}
     ])
 )(MainMenu)
 
