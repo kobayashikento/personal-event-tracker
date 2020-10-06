@@ -41,23 +41,21 @@ import MediaPlayer from '../../components/MediaPlayer.js'
 import styles from '../../assets/styles/views/dashboard/dashcontainerStyle.js';
 import { icons, titleCase } from '../../assets/styles/masterStyle.js';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { setEntries } from '../../redux/actions/dataAction.js';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import db from '../../firebase.js';
+import { connect } from 'react-redux';
+import { addEntries } from '../../redux/actions/dataAction.js';
 
 import EntryContent from '../../components/EntryContent.js';
 
 const useStyle = makeStyles(styles);
 
-export default function DashContainer(props) {
+const DashContainer = (props) => {
     // variables
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
     const theme = useTheme(styles);
     const targetRef = React.useRef();
     const classes = useStyle();
-    const data = useSelector((reducer) => reducer.dataReducer)
-    const dispatch = useDispatch();
 
     // states 
     const [state, setState] = React.useState(
@@ -69,7 +67,6 @@ export default function DashContainer(props) {
             workoutModalOpen: false,
             selectedWorkout: undefined,
             entry: undefined,
-            allEntries: data.entries,
             disableRemoveSet: false,
             disableAddSet: false,
             disableRemoveWorkout: false,
@@ -86,13 +83,6 @@ export default function DashContainer(props) {
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
-
-    // React.useEffect(() => {
-    //     db.child("gymEntries").once('value', snap => {
-    //         dispatch(setEntries(snap.val()))
-    //     })
-    // }, [])
-
 
     const handleAutoComplete = (event, values) => {
         if (values === null) {
@@ -170,18 +160,16 @@ export default function DashContainer(props) {
                             }
                         })
                     }
-                    if (data.entries === undefined || data.entries === null) {
-                        //db.child("gymEntries").set(dbEntry);
+                    if (props.entries === undefined || props.entries === null) {
+                        props.addEntries(dbEntry);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
                         setActiveStep(0);
                         return;
                     } else {
-                        const temp = [...data.entries];
                         dbEntry.map(entry => {
-                            temp.push(entry);
+                            props.addEntries(entry);
                         })
-                        //db.child("gymEntries").set(temp);
                         setState({ ...state, modalOpen: false, entry: undefined, selectedWorkout: undefined });
                         setSelectedDate(new Date());
                         setActiveStep(0);
@@ -324,7 +312,7 @@ export default function DashContainer(props) {
                     <CardContent>
                         <Autocomplete
                             options={
-                                data.allRoutines
+                                props.routine
                             }
                             getOptionLabel={(option) => titleCase(option.routineName)}
                             renderInput={(params) => <TextField {...params} label="Routines" variant="outlined" />}
@@ -413,7 +401,7 @@ export default function DashContainer(props) {
                             <CardContent>
                                 <Autocomplete
                                     options={
-                                        data.workout
+                                        props.workout
                                     }
                                     getOptionLabel={(option) => titleCase(option.name)}
                                     renderInput={(params) => <TextField {...params} label="Workouts" variant="outlined" />}
@@ -477,75 +465,104 @@ export default function DashContainer(props) {
         return lifts;
     }
 
-    return (
-        <Grid
-            container
-            spacing={5}
-        >
-            <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
-            <Grid item xs={7} ref={targetRef}>
-                <MediaPlayer
-                    theme={props.theme}
-                    mode={"dash"}
-                />
-            </Grid>
-            <Grid item xs={3} >
-                <Card>
-                    <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
+    const getNextWorkout = () => {
+        const today = new Date();
+        console.log(props.schedule[0].schedule[moment(today).weekday() - 1])
+    }
+
+    if (props.entries !== undefined && props.schedule !== undefined) {
+        console.log(getNextWorkout())
+        return (
+            <Grid
+                container
+                spacing={5}
+            >
+                <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
+                <Grid item xs={7} ref={targetRef}>
+                    <MediaPlayer
+                        theme={props.theme}
+                        mode={"dash"}
+                    />
+                </Grid>
+                <Grid item xs={3} >
+                    <Card>
+                        <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
+                            <CardContent>
+                                <div className={classes.cardColumn}>
+                                    <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
+                                    <Typography gutterBottom variant="body1" component="h2"> Add Gym Entry </Typography>
+                                </div>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                    {addGymEntryModal()}
+                </Grid>
+                <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
+                <Grid item xs={5}>
+                    <Card style={{ height: "100%" }}>
                         <CardContent>
                             <div className={classes.cardColumn}>
-                                <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
-                                <Typography gutterBottom variant="body1" component="h2"> Add Gym Entry </Typography>
+                                <InsertInvitationIcon style={{ marginRight: "16px" }} />
+                                <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
+                            </div>
+                            {/* <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
+                                Next workout day is : {titleCase(data.routine.routineName)}
+                            </Typography>
+                            <Grid container>
+                                <Grid item xs={7}>
+                                    {data.routine.workouts.map((routine, index) => {
+                                        return (
+                                            <Typography key={routine.workout.name + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                {(index + 1)} : {titleCase(routine.workout.name)}
+                                            </Typography>
+                                        );
+                                    })}
+                                </Grid>
+                                <Grid item xs={5}>
+                                    {data.routine.workouts.map((routine, index) => {
+                                        return (
+                                            <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                Sets: {routine.sets} / Reps: {routine.reps}
+                                            </Typography>
+                                        );
+                                    })}
+                                </Grid>
+                            </Grid> */}
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={5} >
+                    <Card style={{ height: "100%", background: props.theme.colors.primary }}>
+                        <CardContent >
+                            <div className={classes.cardColumn}>
+                                <InsertInvitationIcon style={{ marginRight: "16px" }} />
+                                <Typography gutterBottom variant="body1" component="h2"> Previous Weights </Typography>
                             </div>
                         </CardContent>
-                    </CardActionArea>
-                </Card>
-                {addGymEntryModal()}
-            </Grid>
-            <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
-            <Grid item xs={5}>
-                <Card style={{ height: "100%" }}>
-                    <CardContent>
-                        {/* <div className={classes.cardColumn}>
-                            <InsertInvitationIcon style={{ marginRight: "16px" }} />
-                            <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
-                        </div>
-                        <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
-                            Next workout day is : {titleCase(data.routine.routineName)}
-                        </Typography>
-                        <Grid container>
-                            <Grid item xs={7}>
-                                {data.routine.workouts.map((routine, index) => {
-                                    return (
-                                        <Typography key={routine.workout.name + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                            {(index + 1)} : {titleCase(routine.workout.name)}
-                                        </Typography>
-                                    );
-                                })}
-                            </Grid>
-                            <Grid item xs={5}>
-                                {data.routine.workouts.map((routine, index) => {
-                                    return (
-                                        <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                            Sets: {routine.sets} / Reps: {routine.reps}
-                                        </Typography>
-                                    );
-                                })}
-                            </Grid>
-                        </Grid> */}
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Grid item xs={5} >
-                <Card style={{ height: "100%", background: props.theme.colors.primary }}>
-                    <CardContent >
-                    <div className={classes.cardColumn}>
-                            <InsertInvitationIcon style={{ marginRight: "16px" }} />
-                            <Typography gutterBottom variant="body1" component="h2"> Previous Weights </Typography>
-                        </div>
-                    </CardContent>
-                </Card>
-            </Grid>
-        </Grid >
-    );
+                    </Card>
+                </Grid>
+            </Grid >
+        );
+    } else {
+        return (
+            <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
+        )
+    }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        workout: state.dataReducer.workout,
+        entries: state.dataReducer.entries,
+        routine: state.dataReducer.allRoutines,
+        schedule: state.dataReducer.schedule
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addEntries: (entry) => dispatch(addEntries(entry)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashContainer)

@@ -144,7 +144,6 @@ const GymManageEnrties = (props) => {
     }
 }
 
-
 const mapStateToProps = (state) => {
     return {
         workout: state.dataReducer.workout,

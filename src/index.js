@@ -42,7 +42,7 @@ ReactDOM.render(
     <ReactReduxFirebaseProvider {...rrfProps}>
       <Router history={history}>
         <Route path="/main-menu/" component={MainMenu} />
-        {/* <Redirect to="/main-menu/dashboard" /> */}
+        <Redirect to="/main-menu/dashboard" />
       </Router>
     </ReactReduxFirebaseProvider>
   </Provider>,

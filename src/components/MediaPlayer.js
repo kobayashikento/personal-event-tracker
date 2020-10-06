@@ -210,7 +210,7 @@ const MediaPlayer = (props) => {
                 </Grid>
                 <Grid item xs={5} style={{ display: props.mode === "dash" ? "flex" : "none", height: "inherit" }}>
                     {(Object.keys(props.playerData).length === 0 && props.playerData.constructor === Object || props.playerData === undefined) ?
-                         <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
+                        <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
                         : <img
                             style={{ height: "inherit", marginLeft: "auto" }}
                             src={`https://img.youtube.com/vi/${props.playerData[props.playerIndex].src}/0.jpg`}
