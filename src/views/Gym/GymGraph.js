@@ -55,7 +55,7 @@ export default function GymGraph(props) {
             return [];
         } else {
             return {
-                name: props.data[0].workout,
+                name: props.data[0].name,
                 workoutdata:
                     props.data.map(entry => {
                         if (moment(entry.date).isBetween(state.selectedStart, state.selectedEnd)) {

@@ -214,3 +214,15 @@ export function deleteEntries(object, id) {
 export function setSchedule(object) {
     return { type: SET_SCHEDULE, payload: object }
 }
+
+export function updateSchedule(object, docId){
+    return (dispatch, getState, { getFirestore, getFirebase }) => {
+        const firestore = getFirestore();
+        firestore.collection('workoutSchedule').doc(docId).update({
+            schedule: object
+        }).then(() => {
+        }).catch((err) => {
+            dispatch({ type: ERROR, payload: err });
+        })
+    }
+}

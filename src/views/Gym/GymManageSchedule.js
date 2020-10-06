@@ -14,108 +14,143 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { icons, titleCase } from '../../assets/styles/masterStyle.js';
-import { useSelector, useDispatch } from 'react-redux';
+import { titleCase } from '../../assets/styles/masterStyle.js';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { setEntries } from '../../redux/actions/dataAction.js';
+import { updateSchedule } from '../../redux/actions/dataAction.js';
 
 import styles from '../../assets/styles/views/gym/gymdatamanagementStyle.js';
 
-import db from '../../firebase.js';
+import { connect } from 'react-redux';
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles(styles);
 
-export default function GymManageSchedule(props) {
+const GymManageSchedule = (props) => {
     const classes = useStyles();
-    const data = useSelector((reducer) => reducer.dataReducer)
-    const [schedule, setSchedule] = React.useState(data.schedule)
 
-    const handleAutoComplete = (event, value) => {
+    const handleAutoCompletePrimary = (event, values, index, key) => {
+        let clone = Object.assign({}, props.schedule[0].schedule[index][key])
+        if (values === null) {
+            clone.primary = ""
+        } else {
+            clone.primary = values.id
+        }
+        let tempDay = Object.assign({}, props.schedule[0].schedule[index])
+        tempDay[key] = clone
+        let tempSchedule = Object.assign([], props.schedule[0].schedule)
+        tempSchedule[index] = tempDay
+        props.updateSchedule(tempSchedule, props.schedule[0].id)
+    }
 
-        console.log(event, value)
+    const handleAutoCompleteSecondary = (event, values, index, key) => {
+        let clone = Object.assign({}, props.schedule[0].schedule[index][key])
+        if (values === null) {
+            clone.secondary = ""
+        } else {
+            clone.seconday = values.id
+        }
+        let tempDay = Object.assign({}, props.schedule[0].schedule[index])
+        tempDay[key] = clone
+        let tempSchedule = Object.assign([], props.schedule[0].schedule)
+        tempSchedule[index] = tempDay
+        props.updateSchedule(tempSchedule, props.schedule[0].id)
+    }
+
+    const getDefaultValue = (optionsArry, value) => {
+        let defaultValue = null
+        if (value === undefined || value === null || value.length === 0) {
+        } else {
+            optionsArry.map((prop, index) => {
+                if (prop.id === value) {
+                    defaultValue = index;
+                }
+            })
+        }
+        return defaultValue;
     }
 
     const makeTableCells = () => {
         const container = [];
-        if (schedule === undefined || schedule === null) {
-            let temp = {
-                "monday": { "primary": undefined, "secondary": undefined, "routineIndex": 0 },
-                "tuesday": { "primary": undefined, "secondary": undefined, "routineIndex": 1 },
-                "wednesday": { "primary": undefined, "secondary": undefined, "routineIndex": 2 },
-                "thursday": { "primary": undefined, "secondary": undefined, "routineIndex": 3 },
-                "friday": { "primary": undefined, "secondary": undefined, "routineIndex": 4 },
-                "saturday": { "primary": undefined, "secondary": undefined, "routineIndex": 5 },
-                "sunday": { "primary": undefined, "secondary": undefined, "routineIndex": 6 },
+        const options = props.routine.map(prop => {
+            return {
+                id: prop.id,
+                name: titleCase(prop.routineName)
             }
-            setSchedule(temp);
-        }
-        for (var key in schedule) {
+        })
+        props.schedule[0].schedule.map((prop, index) => {
+            const day = prop[Object.keys(prop)];
             container.push(
-                < TableRow key={key}>
-                    <TableCell component="th" scope="row">{titleCase(key)}</TableCell>
+                < TableRow key={Object.keys(prop)}>
+                    <TableCell component="th" scope="row">{Object.keys(prop)}</TableCell>
                     <TableCell align="right">
                         <Autocomplete
-                            options={
-                                data.allRoutines
-                            }
-                            getOptionLabel={(option) => titleCase(option.routineName)}
+                            PopperComponent={"bottom-start"}
+                            options={options}
+                            getOptionLabel={(option) => option.name}
                             renderInput={(params) => <TextField {...params} label="Routines" variant="outlined" />}
-                            value
-                            onChange={handleAutoComplete}
+                            defaultValue={getDefaultValue(options, prop[Object.keys(prop)].primary) === null ? null : options[getDefaultValue(options, day.primary)]}
+                            onChange={(event, values) => handleAutoCompletePrimary(event, values, index, Object.keys(prop))}
                         />
                     </TableCell>
                     <TableCell align="right">
                         <Autocomplete
-                            options={
-                                data.allRoutines
-                            }
-                            getOptionLabel={(option) => titleCase(option.routineName)}
+                            PopperComponent={"bottom-start"}
+                            options={options}
+                            getOptionLabel={(option) => option.title}
                             renderInput={(params) => <TextField {...params} label="Routines" variant="outlined" />}
-                        //onChange={handleAutoComplete}
+                            defaultValue={getDefaultValue(options, prop[Object.keys(prop)].secondary) === null ? null : options[getDefaultValue(options, day.secondary)]}
+                            onChange={(event, values) => handleAutoCompleteSecondary(event, values, index, Object.keys(prop))}
                         />
                     </TableCell>
                 </TableRow >
             )
-        }
-        //db.child("schedule").set(temp);
+        })
         return container;
     }
 
-    return (
-        <Card >
-            <CardContent style={{ display: "flex", flexDirection: "column", paddingBottom: "0px" }}>
-                <TableContainer component={Paper} style={classes.manageDataTable} style={{ marginTop: "16px", maginBottom: "16px" }}>
-                    <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell width="30%" align="right">Primary Workout</TableCell>
-                                <TableCell width="30%" align="right">Secondary Workout (Stretches)</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {makeTableCells()}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <div style={{ marginLeft: "auto" }}>
-                    <Button
-                        variant="outlined"
-                        style={{ margin: "16px" }}
-                    >
-                        Cancel
-                </Button>
-                    <Button
-                        variant="contained" color="primary"
-                        style={{ margin: "16px" }}
-                    >
-                        Save
-                </Button>
-                </div>
-            </CardContent>
-        </Card>
-    )
+    if (props.schedule === undefined || props.routine.length === 0) {
+        return (
+            <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
+        )
+    } else {
+        return (
+            <Card >
+                <CardContent style={{ display: "flex", flexDirection: "column", paddingBottom: "0px" }}>
+                    <TableContainer component={Paper} style={classes.manageDataTable} style={{ marginTop: "16px", maginBottom: "16px" }}>
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell width="30%" align="right">Primary Workout</TableCell>
+                                    <TableCell width="30%" align="right">Secondary Workout (Stretches)</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {makeTableCells()}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </CardContent>
+            </Card>
+        )
+    }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        schedule: state.dataReducer.schedule,
+        routine: state.dataReducer.allRoutines
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateSchedule: (object, docId) => dispatch(updateSchedule(object, docId))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GymManageSchedule)

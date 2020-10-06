@@ -14,7 +14,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine, setEntries, setSchedule } from '../redux/actions/dataAction.js';
 import { setData } from '../redux/actions/mediaPlayerActions.js';
 
@@ -48,6 +47,7 @@ const MainMenu = (props) => {
             props.setData(props.data.music)
             props.setAllRoutine(props.data.workoutRoutine)
             props.setEntries(props.data.gymEntries)
+            props.setSchedule(props.data.workoutSchedule)
         }
     }, [props.data])
 
@@ -188,14 +188,15 @@ const mapDispatchToProps = (dispatch) => {
         setWorkout: (workout) => dispatch(setWorkout(workout)),
         setData: (data) => dispatch(setData(data)),
         setAllRoutine: (data) => dispatch(setAllRoutine(data)),
-        setEntries: (data) => dispatch(setEntries(data))
+        setEntries: (data) => dispatch(setEntries(data)),
+        setSchedule: (data) => dispatch(setSchedule(data))
     }
 }
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect([
-        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }, {collection: "gymEntries"}
+        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }, {collection: "gymEntries"}, {collection: "workoutSchedule"}
     ])
 )(MainMenu)
 

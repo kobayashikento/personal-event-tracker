@@ -170,9 +170,7 @@ const GymManageRoutine = (props) => {
 
     if (props.routine === undefined) {
         return (
-            <div>
-                <p>loading...</p>
-            </div>
+            <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
         )
     } else {
         return (

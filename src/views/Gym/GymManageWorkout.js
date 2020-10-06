@@ -83,7 +83,7 @@ const GymManageWorkout = (props) => {
 
     if (props.workout === undefined) {
         return (
-            <CircularProgress style={{ position: "relative", top: "15rem", left: "50%" }} color="primary" />
+            <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
         )
     } else {
         return (

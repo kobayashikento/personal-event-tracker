@@ -35,7 +35,6 @@ const GymManageEnrties = (props) => {
             })
             let temp1 = {};
             temp.map(prop => Object.assign(temp1, prop))
-            console.log(temp1)
             return temp1
         } else {
             return {}
@@ -69,9 +68,7 @@ const GymManageEnrties = (props) => {
 
     if (props.entries === undefined) {
         return (
-            <div>
-                <p>loading...</p>
-            </div>
+            <CircularProgress style={{ position: "relative", top: "15rem", left: "45%" }} color="primary" />
         )
     } else {
         return (
