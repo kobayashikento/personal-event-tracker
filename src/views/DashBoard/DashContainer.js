@@ -436,47 +436,80 @@ const DashContainer = (props) => {
         );
     }
 
-    const getMostRecent = (props) => {
+    const getMostRecent = () => {
         let recentDate = moment('2010-10-20');
-        let recentEntry = null;
-        props.data.map(data => {
-            if (recentDate.isBefore(data.date)) {
-                recentDate = moment(data.date);
-                recentEntry = data;
+        props.entries.map(entry => {
+            if (recentDate.isBefore(entry.date)) {
+                recentDate = moment(entry.date);
             }
         })
-        return recentEntry;
+        return recentDate;
     }
 
     const getPrevLiftsData = () => {
         let lifts = [];
-        // workoutRoutine[0].workouts.map(workout => {
-        //     let temp = null;
-        //     gymData.map(props => {
-        //         if (workout.workout.name === props.workout.name) {
-        //             temp = getMostRecent(props);
-        //         }
-        //     })
-        //     lifts.push({
-        //         name: workout.workout.name,
-        //         data: temp
-        //     })
-        // })
-        return lifts;
+        const recentDate = getMostRecent();
+        //Get all entries with the most recent datae
+        props.entries.map(prop => {
+            if (recentDate.isSame(moment(prop.date))) {
+                lifts.push(prop)
+            }
+        })
+        return lifts
     }
 
     const getNextWorkout = () => {
         const today = new Date();
-        console.log(props.schedule[0].schedule[moment(today).weekday() - 1])
+        const schedule = props.schedule[0].schedule[moment(new Date()).weekday() - 1];
+        if (schedule[Object.keys(schedule)].primary === "") {
+            return false;
+        } else {
+            return schedule[Object.keys(schedule)].primary
+        }
     }
 
+    const getRoutineFromId = (id) => {
+        let temp = null
+        props.routine.map(prop => {
+            if (prop.id === id) {
+                temp = prop;
+            }
+        })
+        return temp;
+    }
+
+    const getWorkoutFromId = (id) => {
+        let temp = null
+        props.workout.map(prop => {
+            if (prop.id === id) {
+                temp = prop;
+            }
+        })
+        return temp;
+    }
+
+    const [open, setOpen] = React.useState(true)
+
     if (props.entries !== undefined && props.schedule !== undefined) {
-        console.log(getNextWorkout())
         return (
             <Grid
                 container
                 spacing={5}
             >
+                <Modal
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    style={{top: "40%", left: "10%", right:"10%", margin: "auto"}}
+                >
+                    <Card>
+                        <CardContent style={{display: "flex", alignItems: "center"}}>
+                            The website is currently being worked to convert the database from Firebase realtimeDatabase to Firebase Firestore.
+                            Any attempt to modify the data will not work.
+                        </CardContent>
+                    </Card>
+                </Modal>
                 <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
                 <Grid item xs={7} ref={targetRef}>
                     <MediaPlayer
@@ -505,29 +538,42 @@ const DashContainer = (props) => {
                                 <InsertInvitationIcon style={{ marginRight: "16px" }} />
                                 <Typography gutterBottom variant="body1" component="h2"> Next Workout </Typography>
                             </div>
-                            {/* <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
-                                Next workout day is : {titleCase(data.routine.routineName)}
-                            </Typography>
-                            <Grid container>
-                                <Grid item xs={7}>
-                                    {data.routine.workouts.map((routine, index) => {
-                                        return (
-                                            <Typography key={routine.workout.name + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                {(index + 1)} : {titleCase(routine.workout.name)}
+                            {getNextWorkout() === false ?
+                                <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
+                                    There are no workouts planned for today. Manage routines in Manage Data menu.
+                                </Typography>
+                                : <div>
+                                    <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
+                                        Workout routine for {moment(new Date()).format("dddd")} is : {titleCase(getRoutineFromId(getNextWorkout()).routineName)}
+                                    </Typography>
+                                    <Grid container>
+                                        <Grid item xs={7}>
+                                            <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                Workout Name:
                                             </Typography>
-                                        );
-                                    })}
-                                </Grid>
-                                <Grid item xs={5}>
-                                    {data.routine.workouts.map((routine, index) => {
-                                        return (
-                                            <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                Sets: {routine.sets} / Reps: {routine.reps}
+                                            {getRoutineFromId(getNextWorkout()).workouts.map((prop, index) => {
+                                                return (
+                                                    <Typography key={prop.workout + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                        {(index + 1)} : {titleCase(getWorkoutFromId(prop.workout).name)}
+                                                    </Typography>
+                                                );
+                                            })}
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                            <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                Sets: / Reps:
                                             </Typography>
-                                        );
-                                    })}
-                                </Grid>
-                            </Grid> */}
+                                            {getRoutineFromId(getNextWorkout()).workouts.map((prop, index) => {
+                                                return (
+                                                    <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                        Sets: {prop.sets} / Reps: {prop.reps}
+                                                    </Typography>
+                                                );
+                                            })}
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            }
                         </CardContent>
                     </Card>
                 </Grid>
@@ -538,6 +584,41 @@ const DashContainer = (props) => {
                                 <InsertInvitationIcon style={{ marginRight: "16px" }} />
                                 <Typography gutterBottom variant="body1" component="h2"> Previous Weights </Typography>
                             </div>
+                            {props.entries === undefined ?
+                                <Typography gutterBottom variant="body1" component="h2"> No Gym entries... Go hit the gym... </Typography>
+                                :
+                                <div>
+                                    <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
+                                        Most recent session on : {getMostRecent().format("MMMM Do dddd")} {console.log(getPrevLiftsData())}
+                                    </Typography>
+                                    <Grid container>
+                                        <Grid item xs={7}>
+                                            <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                Workout Name:
+                                     </Typography>
+                                            {getPrevLiftsData().map((prop, index) => {
+                                                return (
+                                                    <Typography key={prop.workout + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                        {(index + 1)} : {titleCase(getWorkoutFromId(prop.workout).name)}
+                                                    </Typography>
+                                                );
+                                            })}
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                            <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                Weight: / Reps:
+                                     </Typography>
+                                            {getPrevLiftsData().map((prop, index) => {
+                                                return (
+                                                    <Typography  variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                         {prop.weight} / {prop.reps}
+                                                    </Typography>
+                                                );
+                                            })}
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            }
                         </CardContent>
                     </Card>
                 </Grid>
