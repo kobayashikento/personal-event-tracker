@@ -13,6 +13,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // import files 
 import Sidebar from '../components/Sidebar.js';
 import styles from '../assets/styles/components/mainmenuStyle.js';
+import Modal from '@material-ui/core/Modal';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 import { setRoutine, setRoutineIndex, setWorkout, setAllRoutine, setEntries, setSchedule } from '../redux/actions/dataAction.js';
 import { setData } from '../redux/actions/mediaPlayerActions.js';
@@ -154,9 +157,24 @@ const MainMenu = (props) => {
     })
 
     muiTheme = responsiveFontSizes(muiTheme)
+    const [open, setOpen] = React.useState(true)
 
     return (
         <MuiThemeProvider theme={muiTheme}>
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+                style={{ top: "40%", left: "10%", right: "10%", margin: "auto" }}
+            >
+                <Card>
+                    <CardContent style={{ display: "flex", alignItems: "center" }}>
+                        The website is currently being worked to convert the database from Firebase realtimeDatabase to Firebase Firestore.
+                        Any attempt to modify the data will not work.
+                        </CardContent>
+                </Card>
+            </Modal>
             <CssBaseline />
             <div className={classes.wrapper}>
                 <Sidebar
@@ -196,7 +214,7 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect([
-        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }, {collection: "gymEntries"}, {collection: "workoutSchedule"}
+        { collection: "music" }, { collection: "workout" }, { collection: "workoutRoutine" }, { collection: "gymEntries" }, { collection: "workoutSchedule" }
     ])
 )(MainMenu)
 

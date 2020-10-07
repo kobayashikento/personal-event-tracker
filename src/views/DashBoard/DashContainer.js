@@ -488,28 +488,12 @@ const DashContainer = (props) => {
         return temp;
     }
 
-    const [open, setOpen] = React.useState(true)
-
     if (props.entries !== undefined && props.schedule !== undefined) {
         return (
             <Grid
                 container
                 spacing={5}
             >
-                <Modal
-                    open={open}
-                    onClose={() => setOpen(false)}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    style={{top: "40%", left: "10%", right:"10%", margin: "auto"}}
-                >
-                    <Card>
-                        <CardContent style={{display: "flex", alignItems: "center"}}>
-                            The website is currently being worked to convert the database from Firebase realtimeDatabase to Firebase Firestore.
-                            Any attempt to modify the data will not work.
-                        </CardContent>
-                    </Card>
-                </Modal>
                 <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
                 <Grid item xs={7} ref={targetRef}>
                     <MediaPlayer
