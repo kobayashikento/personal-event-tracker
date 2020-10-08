@@ -3,7 +3,7 @@ import React from 'react';
 // import all ui cores
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 
 import '../../assets/styles/goldenRatioGrid.scss';
 
@@ -25,7 +25,7 @@ export default function ManageThemeView(props) {
     const [currIndex, setIndex] = React.useState(0);
 
     const handleChangeIndex = (index, color) => {
-        setIndex(index, ()=>{
+        setIndex(index, () => {
             handleColorChange(color)
         })
     }
@@ -67,34 +67,56 @@ export default function ManageThemeView(props) {
                 case 4: return props.theme.colors.secondarytext;
                 default:
             }
-        } catch{ }
+        } catch { }
     }
 
     return (
-        <div className={classes.container}>
-            <Typography className={classes.pagename} variant="h5">Themes</Typography>
-            <section className={"section", classes.section}>
-                <div className="flex-col-2">
-                    <div className="tall-rect">
+        <Grid
+            container
+            className={classes.container}
+            spacing={3}
+        >
+            <Grid item xs={5}>
+                <Grid container direction="column" spacing={3}>
+                    <Grid item xsUp={7} style={{ maxWidth: "100%", zoom: "0.8" }}>
                         <Themelist
                             theme={props.theme}
                             index={currIndex}
                             handleColorChange={(color) => handleColorChange(color)}
                             handleChange={(theme) => props.handleChange(theme)}
-                            handleChangeIndex={(index,color) => handleChangeIndex(index,color)}
+                            handleChangeIndex={(index, color) => handleChangeIndex(index, color)}
                         />
-                    </div>
-                    <div className="wide-rect">
+                    </Grid>
+                    <Grid item xsUp={7} style={{ maxWidth: "100%", zoom: "0.8" }} >
                         <ColorPalette
                             handleColorChange={(currColor) => handleColorChange(currColor)}
                             color={getCurrColor()}
                         />
-                    </div>
-                </div>
-                <div className={"square", classes.square}>
-                    <ThemePreview />
-                </div>
-            </section>
-        </div>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        // <div className={classes.container}>
+        //     <Typography className={classes.pagename} variant="h5">Themes</Typography>
+        //     <section className={"section", classes.section}>
+        //         <div className="flex-col-2">
+        //             <div className="tall-rect">
+        //                 <Themelist
+        //                     theme={props.theme}
+        //                     index={currIndex}
+        //                     handleColorChange={(color) => handleColorChange(color)}
+        //                     handleChange={(theme) => props.handleChange(theme)}
+        //                     handleChangeIndex={(index,color) => handleChangeIndex(index,color)}
+        //                 />
+        //             </div>
+        //             <div className="wide-rect">
+        //                
+        //             </div>
+        //         </div>
+        //         <div className={"square", classes.square}>
+        //             <ThemePreview />
+        //         </div>
+        //     </section>
+        // </div>
     );
 }

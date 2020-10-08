@@ -33,6 +33,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 import HistoryIcon from '@material-ui/icons/History';
 import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
+import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
 
 // import material table 
 import MaterialTable from 'material-table';
@@ -111,11 +112,13 @@ const DashContainer = (props) => {
             let items = [...state.entry]
             let temp = [];
             for (var i = 0; i < state.selectedModalSets; i++) {
+                console.log(state.selectedModalWorkout)
                 temp.push({
                     workout: state.selectedModalWorkout.name,
                     date: "",
                     reps: 0,
-                    weight: 0
+                    weight: 0,
+                    id: state.selectedModalWorkout.id
                 })
             }
             items.push(temp)
@@ -167,6 +170,7 @@ const DashContainer = (props) => {
                         setActiveStep(0);
                         return;
                     } else {
+                        console.log("paasdfsadfasdfsed", dbEntry)
                         dbEntry.map(entry => {
                             props.addEntries(entry);
                         })
@@ -279,7 +283,8 @@ const DashContainer = (props) => {
                     let workoutObj = [];
                     for (var i = 0; i < parseInt(prop.sets); i++) {
                         workoutObj.push({
-                            workout: (prop.workout.name),
+                            workout: titleCase(getWorkoutFromId(prop.workout).name),
+                            id: prop.workout,
                             date: "",
                             reps: 0,
                             weight: 0
@@ -288,11 +293,14 @@ const DashContainer = (props) => {
                     temp.push(workoutObj);
                 })
                 setState({ ...state, entry: temp })
+                return;
             } else {
                 setState({ ...state, entry: temp })
+                return;
             }
         } else {
             setState({ ...state, entry: undefined })
+            return;
         }
     }, [state.selectedWorkout])
 
@@ -439,7 +447,7 @@ const DashContainer = (props) => {
     const getMostRecent = () => {
         let recentDate = moment('2010-10-20');
         props.entries.map(entry => {
-            if (recentDate.isBefore(entry.date)) {
+            if (recentDate.isBefore(entry.date, 'day')) {
                 recentDate = moment(entry.date);
             }
         })
@@ -451,11 +459,38 @@ const DashContainer = (props) => {
         const recentDate = getMostRecent();
         //Get all entries with the most recent datae
         props.entries.map(prop => {
-            if (recentDate.isSame(moment(prop.date))) {
+            if (recentDate.isSame(moment(prop.date), 'day')) {
                 lifts.push(prop)
             }
         })
-        return lifts
+        // Divide and conquer algo
+        // Step 1: divide into duplicate workouts
+        let obj = lifts.reduce((res, curr) => {
+            if (res[curr.workout])
+                res[curr.workout].push(curr);
+            else
+                Object.assign(res, { [curr.workout]: [curr] });
+            return res;
+        }, {});
+        // Step 2: divide into duplicate weight
+        for (var key in obj) {
+            let objWeight = obj[key].reduce((res, curr) => {
+                if (res[curr.weight])
+                    res[curr.weight].push(curr);
+                else
+                    Object.assign(res, { [curr.weight]: [curr] });
+                return res;
+            }, {});
+            let temp = ""
+            for (var keyWeight in objWeight) {
+                temp = temp + " " + keyWeight + " lbs" + "|"
+                objWeight[keyWeight].map(prop => {
+                    temp = temp + prop.reps + "|"
+                })
+            }
+            obj[key] = temp
+        }
+        return obj
     }
 
     const getNextWorkout = () => {
@@ -488,11 +523,31 @@ const DashContainer = (props) => {
         return temp;
     }
 
+    const getPrevWorkoutInfo = () => {
+        let temp = [[], []];
+        let index = 0;
+        for (var key in getPrevLiftsData()) {
+            temp[0].push(<Typography key={key} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                {(index + 1)} : {titleCase(getWorkoutFromId(key).name)}
+            </Typography>
+            )
+            temp[1].push(
+                <Typography key={getPrevLiftsData()[key]} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                    {getPrevLiftsData()[key]}
+                </Typography>
+            )
+            index = index + 1;
+        }
+        return temp;
+    }
+
+    const [open, setOpen] = React.useState(false);
+
     if (props.entries !== undefined && props.schedule !== undefined) {
         return (
             <Grid
                 container
-                spacing={5}
+                spacing={10}
             >
                 <Typography className={classes.typo} variant="h5" component="h1">Music</Typography>
                 <Grid item xs={7} ref={targetRef}>
@@ -501,18 +556,47 @@ const DashContainer = (props) => {
                         mode={"dash"}
                     />
                 </Grid>
-                <Grid item xs={3} >
-                    <Card>
-                        <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
-                            <CardContent>
-                                <div className={classes.cardColumn}>
-                                    <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
-                                    <Typography gutterBottom variant="body1" component="h2"> Add Gym Entry </Typography>
-                                </div>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                    {addGymEntryModal()}
+                <Grid item xs={4} >
+                    <Grid container direction="column" spacing={3} justify="space-between" style={{ height: "100%", margin: "0" }}>
+                        <Grid item xs={6} style={{ maxWidth: "100%" }}>
+                            <Card>
+                                <CardActionArea onClick={() => setState({ ...state, modalOpen: true })}>
+                                    <CardContent>
+                                        <div className={classes.cardColumn}>
+                                            <AddToPhotosIcon size="large" style={{ marginRight: "32px" }} />
+                                            <Typography gutterBottom variant="body1" component="h2"> Add Gym Entry </Typography>
+                                        </div>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                            {addGymEntryModal()}
+                        </Grid>
+                        <Grid item xs={6} style={{ maxWidth: "100%" }}>
+                            <Card>
+                                <CardActionArea onClick={() => setOpen(true)}>
+                                    <CardContent>
+                                        <div className={classes.cardColumn}>
+                                            <LibraryMusicIcon size="large" style={{ marginRight: "32px" }} />
+                                            <Typography gutterBottom variant="body1" component="h2"> Open Music Sheets </Typography>
+                                        </div>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                            <Modal
+                                open={open}
+                                onClose={() => setOpen(false)}
+                                aria-labelledby="simple-modal-title"
+                                aria-describedby="simple-modal-description"
+                                style={{ top: "40%", left: "10%", right: "10%", margin: "auto", width: "fit-content" }}
+                            >
+                                <Card>
+                                    <CardContent style={{ display: "flex", alignItems: "center" }}>
+                                        Music Library is currently being implemented.
+                        </CardContent>
+                                </Card>
+                            </Modal>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Typography className={classes.typo} variant="h5" style={{ paddingTop: theme.spacing(2) }}>Gym</Typography>
                 <Grid item xs={5}>
@@ -531,37 +615,43 @@ const DashContainer = (props) => {
                                         Workout routine for {moment(new Date()).format("dddd")} is : {titleCase(getRoutineFromId(getNextWorkout()).routineName)}
                                     </Typography>
                                     <Grid container>
-                                        <Grid item xs={7}>
+                                        {getRoutineFromId(getNextWorkout()).workouts.length === 0 ?
                                             <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                Workout Name:
+                                                There are no workouts in this routine. Try adding workouts in manage data.
                                             </Typography>
-                                            {getRoutineFromId(getNextWorkout()).workouts.map((prop, index) => {
-                                                return (
-                                                    <Typography key={prop.workout + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                        {(index + 1)} : {titleCase(getWorkoutFromId(prop.workout).name)}
-                                                    </Typography>
-                                                );
-                                            })}
-                                        </Grid>
-                                        <Grid item xs={5}>
-                                            <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                Sets: / Reps:
+                                            : <React.Fragment>
+                                                <Grid item xs={7}>
+                                                    <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                        Workout Name:
                                             </Typography>
-                                            {getRoutineFromId(getNextWorkout()).workouts.map((prop, index) => {
-                                                return (
-                                                    <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                        Sets: {prop.sets} / Reps: {prop.reps}
-                                                    </Typography>
-                                                );
-                                            })}
-                                        </Grid>
+                                                    {getRoutineFromId(getNextWorkout()).workouts.map((prop, index) => {
+                                                        return (
+                                                            <Typography key={prop.workout + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                                {(index + 1)} : {titleCase(getWorkoutFromId(prop.workout).name)}
+                                                            </Typography>
+                                                        );
+                                                    })}
+                                                </Grid>
+                                                <Grid item xs={5}>
+                                                    <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                        Sets: / Reps:
+                                            </Typography>
+                                                    {getRoutineFromId(getNextWorkout()).workouts.map((prop, index) => {
+                                                        return (
+                                                            <Typography key={index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
+                                                                Sets: {prop.sets} / Reps: {prop.reps}
+                                                            </Typography>
+                                                        );
+                                                    })}
+                                                </Grid>
+                                            </React.Fragment>}
                                     </Grid>
                                 </div>
                             }
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={5} >
+                <Grid item xs={6} >
                     <Card style={{ height: "100%", background: props.theme.colors.primary }}>
                         <CardContent >
                             <div className={classes.cardColumn}>
@@ -573,32 +663,20 @@ const DashContainer = (props) => {
                                 :
                                 <div>
                                     <Typography variant="subtitle1" color="textSecondary" component="h3" className={classes.subTypo} >
-                                        Most recent session on : {getMostRecent().format("MMMM Do dddd")} {console.log(getPrevLiftsData())}
+                                        Most recent session on : {getMostRecent().format("MMMM Do dddd")}
                                     </Typography>
                                     <Grid container>
                                         <Grid item xs={7}>
                                             <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
                                                 Workout Name:
-                                     </Typography>
-                                            {getPrevLiftsData().map((prop, index) => {
-                                                return (
-                                                    <Typography key={prop.workout + index} variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                        {(index + 1)} : {titleCase(getWorkoutFromId(prop.workout).name)}
-                                                    </Typography>
-                                                );
-                                            })}
+                                            </Typography>
+                                            {getPrevWorkoutInfo()[0]}
                                         </Grid>
                                         <Grid item xs={5}>
                                             <Typography variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
                                                 Weight: / Reps:
-                                     </Typography>
-                                            {getPrevLiftsData().map((prop, index) => {
-                                                return (
-                                                    <Typography  variant="subtitle2" color="textSecondary" componenet="h4" className={classes.subTypo}>
-                                                         {prop.weight} / {prop.reps}
-                                                    </Typography>
-                                                );
-                                            })}
+                                            </Typography>
+                                            {getPrevWorkoutInfo()[1]}
                                         </Grid>
                                     </Grid>
                                 </div>

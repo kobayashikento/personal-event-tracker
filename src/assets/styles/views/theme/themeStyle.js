@@ -1,33 +1,17 @@
-const goldenRatio = 1.61803398875;
+import {
+    appbarHeight
+} from '../../masterStyle.js';
 
 const themeStyle = theme => ({
     container: {
         height: "100%",
-        margin: "auto"
-    },
-    pagename: {
-        padding: "1.5rem"
-    },
-    previewpaper: {
-        margin: "2rem",
-        paddingBottom: "75%",
-        width: "75%",
-        height: "0"
-    },
-    section: {
-        marginLeft: "1rem",
-        marginRight: "1rem",
-        [theme.breakpoints.up("sm")]: {
-            marginLeft: "auto",
-            marginRight: "auto",
-            width: "85%"
+        [theme.breakpoints.up('sm')]: {
+            marginTop: `calc( ${appbarHeight} + ${theme.spacing(5)}px )`,
+            marginLeft: theme.spacing(10),
+            marginRight: theme.spacing(10),
+            width: "inherit"
         }
     },
-    square: {
-        [theme.breakpoints.up("sm")]: {
-            flex: goldenRatio,
-        }
-    }
 })
 
 export default themeStyle;

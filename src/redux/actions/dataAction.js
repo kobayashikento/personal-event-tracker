@@ -1,3 +1,5 @@
+import { EmojiObjectsOutlined } from "@material-ui/icons"
+
 export const SET_ROUTINE = 'SET_ROUTINE'
 export const SET_ROUTINE_INDEX = 'SET_ROUTINE_INDEX'
 export const SET_WORKOUT = 'SET_WORKOUT'
@@ -171,11 +173,12 @@ export function setEntries(object) {
 export function addEntries(obj) {
     return (dispatch, getState, { getFirestore, getFirebase }) => {
         const firestore = getFirestore();
+        console.log(obj)
         firestore.collection('gymEntries').add({
-            workout: obj.workout,
+            workout: obj.id,
             weight: obj.weight,
             reps: obj.reps,
-            date: obj.date.getTime()
+            date: obj.date
         }).then(() => {
             dispatch({ type: ADD_WORKOUT_ENRTY, payload: obj });
         }).catch((err) => {

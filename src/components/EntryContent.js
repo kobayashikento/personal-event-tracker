@@ -59,7 +59,7 @@ export default function EntryContent(props) {
         <div>
             {(props.entry !== undefined) ?
                 props.entry.map((entry, index) => {
-                    data.push({ reps: entry.reps, weight: entry.weight, workout: props.name, date: "" })
+                    data.push({ reps: entry.reps, weight: entry.weight, workout: props.name, date: "", id: entry.id })
                     return (
                         <div style={{ display: "flex" }} key={index}>
                             <Typography style={{ padding: theme.spacing(1) }}> Set {index + 1}</Typography>

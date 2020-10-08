@@ -82,22 +82,22 @@ const GymStatistics = (props) => {
     ];
 
     const getPersonalBest = (workout) => {
-        const workouts = [];
-        props.entries.map(entry => {
-            if (workout.id === entry.workout) {
-                workouts.push({
-                    ...entry,
-                    name: workout.name
-                })
+            const workouts = [];
+            props.entries.map(entry => {
+                if (workout.id === entry.workout) {
+                    workouts.push({
+                        ...entry,
+                        name: workout.name
+                    })
+                }
+            })
+            if (workouts.length !== 0) {
+                setState({ ...state, personalbest: getEntryData(workouts), selectedWorkout: workouts })
+                return;
+            } else {
+                setState({ ...state, personalbest: workouts, selectedWorkout: workouts })
+                return;
             }
-        })
-        if (workouts.length !== 0) {
-            setState({ ...state, personalbest: getEntryData(workouts), selectedWorkout: workouts })
-            return;
-        } else {
-            setState({ ...state, personalbest: workouts, selectedWorkout: workouts })
-            return;
-        }
     }
 
     const getEntryData = (workouts) => {
@@ -113,13 +113,13 @@ const GymStatistics = (props) => {
                 recent = entry;
             }
         })
-        return [personalbest, moment(recent).format('MMMM Do YYYY')];
+        return [personalbest, moment(recent.date).format('MMMM Do YYYY')];
     }
 
     const getNameFromId = (id) => {
         let name = "";
         props.workout.map(prop => {
-            if (prop.id === id) {
+            if (prop.id === id){
                 return prop.name;
             }
         })
@@ -131,7 +131,7 @@ const GymStatistics = (props) => {
         props.workout.map((option) => {
             options.push({
                 workout: getNameFromId(option.name),
-                name: titleCase(option.name),
+                name: titleCase(option.name), 
                 group: titleCase(option.musclegroup).trim(),
                 id: option.id
             })
@@ -214,7 +214,7 @@ const GymStatistics = (props) => {
                     >
                         <Grid item xs={12}>
                             <Autocomplete
-                                PopperComponent={"bottom-start"}
+                                                        PopperComponent={"bottom-start"}
                                 limitTags={1}
                                 options={getAutoCompleteList().sort((a, b) => -b.group.localeCompare(a.group))}
                                 id="multiple-limit-tags"
