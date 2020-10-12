@@ -98,8 +98,6 @@ export default function ThemeList(props) {
                 <Button style={{ backgroundColor: props.theme.colors.secondarytext }} variant="contained" className={classes.colorbutton}
                     onClick={() => props.handleChangeIndex(4, props.theme.colors.secondarytext)} />
             </Paper>
-            <Button className={classes.inputButton} variant="outlined">Save</Button>
-            <Button className={classes.inputButton} variant="outlined">Reset</Button>
         </form >
     );
 }

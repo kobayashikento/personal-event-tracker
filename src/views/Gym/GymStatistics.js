@@ -18,6 +18,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Modal from '@material-ui/core/Modal';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 import { connect } from 'react-redux';
 
@@ -68,7 +74,14 @@ const GymStatistics = (props) => {
         cardIndex: 0,
         personalbest: undefined,
         selectedWorkout: undefined
-    })
+    });
+    const [modalOpen, setModalOpen] = React.useState(true);
+    const [selectedDate, setSelectedDate] = React.useState(
+        {
+            startDate: new Date() - 1,
+            endDate: new Date()
+        });
+
     const handleAutoComplete = (event, values) => {
         if (values !== null) {
             getPersonalBest(values)
@@ -82,22 +95,22 @@ const GymStatistics = (props) => {
     ];
 
     const getPersonalBest = (workout) => {
-            const workouts = [];
-            props.entries.map(entry => {
-                if (workout.id === entry.workout) {
-                    workouts.push({
-                        ...entry,
-                        name: workout.name
-                    })
-                }
-            })
-            if (workouts.length !== 0) {
-                setState({ ...state, personalbest: getEntryData(workouts), selectedWorkout: workouts })
-                return;
-            } else {
-                setState({ ...state, personalbest: workouts, selectedWorkout: workouts })
-                return;
+        const workouts = [];
+        props.entries.map(entry => {
+            if (workout.id === entry.workout) {
+                workouts.push({
+                    ...entry,
+                    name: workout.name
+                })
             }
+        })
+        if (workouts.length !== 0) {
+            setState({ ...state, personalbest: getEntryData(workouts), selectedWorkout: workouts })
+            return;
+        } else {
+            setState({ ...state, personalbest: workouts, selectedWorkout: workouts })
+            return;
+        }
     }
 
     const getEntryData = (workouts) => {
@@ -119,7 +132,7 @@ const GymStatistics = (props) => {
     const getNameFromId = (id) => {
         let name = "";
         props.workout.map(prop => {
-            if (prop.id === id){
+            if (prop.id === id) {
                 return prop.name;
             }
         })
@@ -131,13 +144,23 @@ const GymStatistics = (props) => {
         props.workout.map((option) => {
             options.push({
                 workout: getNameFromId(option.name),
-                name: titleCase(option.name), 
+                name: titleCase(option.name),
                 group: titleCase(option.musclegroup).trim(),
                 id: option.id
             })
         })
         return options;
     }
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+
+    React.useEffect(() => {
+        if (state.tabIndex === 3) {
+            setModalOpen(true);
+        }
+    }, [state.tabIndex])
 
     if (props.workout === undefined || props.entries === undefined || props.entries === null) {
         return (
@@ -169,6 +192,7 @@ const GymStatistics = (props) => {
                                     <Tab className={classes.tab} label="Custom" {...a11yProps(3)} />
                                 </Tabs>
                             </AppBar>
+                            {console.log(state.selectedWorkout)}
                             <TabPanel value={state.tabIndex} index={0} >
                                 <GymGraph
                                     data={state.selectedWorkout}
@@ -200,7 +224,56 @@ const GymStatistics = (props) => {
                                 />
                             </TabPanel>
                             <TabPanel value={state.tabIndex} index={3}>
-
+                                <Modal
+                                    open={modalOpen}
+                                    onClose={() => setModalOpen(false)}
+                                    style={{ overflow: "scroll" }}
+                                >
+                                    <Card className={classes.modalCard}>
+                                        <CardContent >
+                                            <div style={{ display: "flex" }}>
+                                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary">
+                                                    Start Date:
+                                            </Typography>
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id="date-picker-dialog"
+                                                        label="Start Date"
+                                                        format="MM/dd/yyyy"
+                                                        value={selectedDate.startDate}
+                                                        onChange={handleDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                        style={{ margin: "16px" }}
+                                                        disableFuture={true}
+                                                        variant="dialog"
+                                                    />
+                                                </MuiPickersUtilsProvider>
+                                                <Typography className={classes.typo} variant="subtitle1" color="textSecondary">
+                                                    End Date:
+                                            </Typography>
+                                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        margin="normal"
+                                                        id="date-picker-dialog"
+                                                        label="End Date"
+                                                        format="MM/dd/yyyy"
+                                                        value={selectedDate.endDate}
+                                                        onChange={handleDateChange}
+                                                        KeyboardButtonProps={{
+                                                            'aria-label': 'change date',
+                                                        }}
+                                                        style={{ margin: "16px" }}
+                                                        disableFuture={true}
+                                                        variant="dialog"
+                                                    />
+                                                </MuiPickersUtilsProvider>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </Modal>
                             </TabPanel>
 
                         </CardContent>
@@ -214,7 +287,7 @@ const GymStatistics = (props) => {
                     >
                         <Grid item xs={12}>
                             <Autocomplete
-                                                        PopperComponent={"bottom-start"}
+                                PopperComponent={"bottom-start"}
                                 limitTags={1}
                                 options={getAutoCompleteList().sort((a, b) => -b.group.localeCompare(a.group))}
                                 id="multiple-limit-tags"

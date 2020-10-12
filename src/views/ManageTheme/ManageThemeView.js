@@ -78,7 +78,7 @@ export default function ManageThemeView(props) {
         >
             <Grid item xs={5}>
                 <Grid container direction="column" spacing={3}>
-                    <Grid item xsUp={7} style={{ maxWidth: "100%", zoom: "0.8" }}>
+                    <Grid item xs={7} style={{ maxWidth: "100%", zoom: "0.8" }}>
                         <Themelist
                             theme={props.theme}
                             index={currIndex}
@@ -87,13 +87,18 @@ export default function ManageThemeView(props) {
                             handleChangeIndex={(index, color) => handleChangeIndex(index, color)}
                         />
                     </Grid>
-                    <Grid item xsUp={7} style={{ maxWidth: "100%", zoom: "0.8" }} >
+                    <Grid item xs={7} style={{ maxWidth: "100%", zoom: "0.8" }} >
                         <ColorPalette
                             handleColorChange={(currColor) => handleColorChange(currColor)}
                             color={getCurrColor()}
                         />
                     </Grid>
                 </Grid>
+            </Grid>
+            <Grid item xs={7} > 
+                <ThemePreview 
+                    theme={props.theme}
+                />
             </Grid>
         </Grid>
         // <div className={classes.container}>

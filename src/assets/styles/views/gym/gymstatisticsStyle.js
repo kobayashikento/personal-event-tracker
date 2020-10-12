@@ -39,7 +39,19 @@ const gymstatisticsStyle = theme => ({
     daysTypo: {
         marginTop: theme.spacing(2),
         textAlign: "center"
-    }
+    },
+    modalCard: {
+        position: 'absolute',
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: "5%",
+        left: "29%",
+        width: "50rem",
+        overflow: "scroll",
+        transform: "translate(-5%, -5%)"
+    },
 });
 
 

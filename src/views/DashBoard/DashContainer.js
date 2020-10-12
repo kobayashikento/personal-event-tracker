@@ -355,7 +355,7 @@ const DashContainer = (props) => {
                                                     <KeyboardDatePicker
                                                         margin="normal"
                                                         id="date-picker-dialog"
-                                                        label="Date picker dialog"
+                                                        label="Date Picker"
                                                         format="MM/dd/yyyy"
                                                         value={selectedDate}
                                                         onChange={handleDateChange}
@@ -585,8 +585,6 @@ const DashContainer = (props) => {
                             <Modal
                                 open={open}
                                 onClose={() => setOpen(false)}
-                                aria-labelledby="simple-modal-title"
-                                aria-describedby="simple-modal-description"
                                 style={{ top: "40%", left: "10%", right: "10%", margin: "auto", width: "fit-content" }}
                             >
                                 <Card>
