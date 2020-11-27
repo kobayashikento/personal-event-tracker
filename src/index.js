@@ -30,7 +30,7 @@ const store = createStore(reducer,
 
 const rrfProps = {
   firebase,
-  config: firebase,
+  config: firebase,ki89
   dispatch: store.dispatch,
   createFirestoreInstance
 };

@@ -12,6 +12,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -230,8 +231,8 @@ const GymStatistics = (props) => {
                                     style={{ overflow: "scroll" }}
                                 >
                                     <Card className={classes.modalCard}>
-                                        <CardContent >
-                                            <div style={{ display: "flex" }}>
+                                        <CardContent style={{ paddingBottom: "0px" }}>
+                                            <div style={{ display: "flex", alignItems: "baseline" }}>
                                                 <Typography className={classes.typo} variant="subtitle1" color="textSecondary">
                                                     Start Date:
                                             </Typography>
@@ -270,6 +271,14 @@ const GymStatistics = (props) => {
                                                         variant="dialog"
                                                     />
                                                 </MuiPickersUtilsProvider>
+                                            </div>
+                                            <div style={{ display: "flex", justifyContent: "flex-end", marginRight: "24px" }}>
+                                                <Button variant="outlined" color="primary" style={{ margin: "16px", marginTop: "32px" }} onClick={() => setModalOpen(false)}>
+                                                    Cancel
+                                                 </Button>
+                                                <Button variant="contained" color="primary" style={{ margin: "16px", marginTop: "32px" }}>
+                                                    Confirm
+                                                  </Button>
                                             </div>
                                         </CardContent>
                                     </Card>
